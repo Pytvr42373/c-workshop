@@ -278,12 +278,12 @@ function renderMemory() {
   svg.style.zIndex = '5';
   grid.appendChild(svg);
 
-  // Row 1: Data variables (target + extra)
+  // Row 1: Data variables (target + extra) — compact
   const dataRow = document.createElement('div');
   dataRow.style.display = 'flex';
   dataRow.style.alignItems = 'center';
-  dataRow.style.gap = '40px';
-  dataRow.style.marginBottom = '24px';
+  dataRow.style.gap = '16px';
+  dataRow.style.marginBottom = '8px';
 
   const targetCell = createCell(ex.target, 'target-cell');
   dataRow.appendChild(targetCell);
@@ -294,11 +294,11 @@ function renderMemory() {
   }
   grid.appendChild(dataRow);
 
-  // Row 2: Pointer variable
+  // Row 2: Pointer variable — compact
   const ptrRow = document.createElement('div');
   ptrRow.style.display = 'flex';
   ptrRow.style.alignItems = 'center';
-  ptrRow.style.gap = '40px';
+  ptrRow.style.gap = '16px';
 
   const ptrCell = createCell(ex.pointer, 'pointer-cell');
   ptrRow.appendChild(ptrCell);
