@@ -189,7 +189,8 @@
       <div class="code-block" id="code-display"></div>
       <div class="string-editor">
         <label>输入字符串：</label>
-        <input type="text" id="string-input" value="Hello" oninput="updateString(this.value)" maxlength="10">
+        <input type="text" id="string-input" value="Hello" oninput="updateString(this.value)" maxlength="9">
+        <div id="str-warning" style="font-size:0.72rem;color:var(--orange);margin-top:6px;display:none;">⚠️ 已达最大长度！char s[10] 只能安全存放 9 个可见字符 + 1 个 \0 结束符</div>
       </div>
     </div>
   </div>
@@ -298,6 +299,18 @@ function renderMemory(str, fixedSize) {
 
 function updateString(val) {
   const ex = EXAMPLES[currentIdx];
+  const warning = document.getElementById('str-warning');
+  if (ex.fixedSize) {
+    // Truncate to fixedSize - 1 (reserve 1 byte for \0)
+    const maxChars = ex.fixedSize - 1;
+    if (val.length > maxChars) {
+      val = val.substring(0, maxChars);
+      document.getElementById('string-input').value = val;
+    }
+    warning.style.display = val.length >= maxChars ? 'block' : 'none';
+  } else {
+    warning.style.display = 'none';
+  }
   ex.str = val;
   renderMemory(val, ex.fixedSize);
   updateCodeDisplay();

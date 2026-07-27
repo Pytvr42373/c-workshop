@@ -54,12 +54,12 @@
   .next-link a svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
   .error-box { padding: 12px 16px; background: rgba(255,71,87,0.08); border: 1px solid rgba(255,71,87,0.2); border-radius: 8px; margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--red); }
   .ok-box { padding: 12px 16px; background: rgba(0,230,118,0.08); border: 1px solid rgba(0,230,118,0.2); border-radius: 8px; margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--green); }
-  .scope-vis { padding: 16px; background: rgba(0,0,0,0.2); border-radius: 8px; margin-top: 12px; }
-  .scope-block { border: 2px dashed; border-radius: 8px; padding: 12px; margin-bottom: 8px; }
-  .scope-global { border-color: var(--accent); background: rgba(108,92,231,0.05); }
-  .scope-local { border-color: var(--green); background: rgba(0,230,118,0.05); margin-left: 20px; }
-  .scope-for { border-color: var(--orange); background: rgba(255,145,0,0.05); margin-left: 40px; }
-  .scope-label { font-size: 0.7rem; font-weight: 700; margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; }
+  .scope-vis { padding: 16px; background: rgba(0,0,0,0.1); border-radius: 8px; margin-top: 12px; }
+  .scope-block { border: 1px solid; border-radius: 8px; padding: 12px; margin-bottom: 8px; }
+  .scope-global { border-color: rgba(108,92,231,0.2); background: rgba(108,92,231,0.02); }
+  .scope-local { border-color: rgba(0,230,118,0.2); background: rgba(0,230,118,0.02); margin-left: 20px; }
+  .scope-for { border-color: rgba(255,145,0,0.2); background: rgba(255,145,0,0.02); margin-left: 40px; }
+  .scope-label { font-size: 0.7rem; font-weight: 600; margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; opacity: 0.7; }
 </style>
 </head>
 <body>
@@ -86,13 +86,13 @@ const TOPICS = [
         <div class="panel-body">
           <div class="scope-vis">
             <div class="scope-block scope-global">
-              <div class="scope-label" style="color:var(--accent2);">全局作用域</div>
+              <div class="scope-label" style="color:var(--accent2);opacity:0.8">全局作用域</div>
               <div style="font-family:'JetBrains Mono',monospace; font-size:0.82rem; color:var(--text);">int global_x = 100;  // 全程序可见</div>
               <div class="scope-block scope-local">
-                <div class="scope-label" style="color:var(--green);">main() 函数作用域</div>
+                <div class="scope-label" style="color:var(--green);opacity:0.8">main() 函数作用域</div>
                 <div style="font-family:'JetBrains Mono',monospace; font-size:0.82rem; color:var(--text);">int local_y = 10;  // 只在 main 内可见</div>
                 <div class="scope-block scope-for">
-                  <div class="scope-label" style="color:var(--orange);">for 循环作用域</div>
+                  <div class="scope-label" style="color:var(--orange);opacity:0.8">for 循环作用域</div>
                   <div style="font-family:'JetBrains Mono',monospace; font-size:0.82rem; color:var(--text);">int i;  // 只在 for 内可见</div>
                 </div>
               </div>
