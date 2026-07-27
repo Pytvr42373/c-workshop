@@ -65,7 +65,7 @@
     <h1>C 语言交互实验室</h1>
     <p class="subtitle">从 Python 到 C，<strong>看见</strong>内存里发生的一切。<br>每个课件都是一个可交互的"内存显微镜"。</p>
     <div class="stats-bar">
-      <div class="stat-item"><span class="dot green"></span><span class="num" id="course-count">18</span><span>个交互课件</span></div>
+      <div class="stat-item"><span class="dot green"></span><span class="num" id="course-count">27</span><span>个交互课件</span></div>
       <div class="stat-item"><span class="dot cyan"></span><span>点击 · 拖拽 · 观察</span></div>
       <div class="stat-item"><span class="dot orange"></span><span>零依赖 · 打开即用</span></div>
     </div>
@@ -75,28 +75,38 @@
 </div>
 <script>
 const SECTIONS = [
-  { title: '🐍 Python → C++ 衔接（逐行讲解）', sub: '从 Python 出发，逐行拆解 C++ 的每个关键概念', lineColor: 'var(--accent2)' },
-  { num: '01', icon: '📦', iconClass: 'icon-purple', title: '头文件详解', desc: '#include 是什么？<iostream> vs <cstdio>？尖括号 vs 双引号？点击代码逐行查看解释。', tags: ['#include', '预处理', '头文件'], tagClass: 'tag-purple', file: 'courseware/headers.html' },
-  { num: '02', icon: '🏷️', iconClass: 'icon-purple', title: '命名空间详解', desc: 'using namespace std 是什么？std:: 前缀可以省吗？为什么需要命名空间？和 Python import 对比。', tags: ['namespace', 'std', '命名冲突'], tagClass: 'tag-purple', file: 'courseware/namespace.html' },
-  { num: '03', icon: '⬅️', iconClass: 'icon-green', title: 'cin / cout 详解', desc: '>> 和 << 的方向、cin 自动分隔、endl vs \n、缓冲区、速度优化。点击代码逐行讲解。', tags: ['cin', 'cout', '流'], tagClass: 'tag-green', file: 'courseware/cin-cout.html' },
-  { num: '04', icon: '⌨️', iconClass: 'icon-orange', title: 'scanf / printf 详解', desc: '%d %f %lf %c %s 格式控制、& 取地址、宽度对齐精度、竞赛中的速度优势。逐行讲解。', tags: ['scanf', 'printf', '格式控制'], tagClass: 'tag-orange', file: 'courseware/scanf-printf.html' },
-  { num: '05', icon: '🐍➜⚡', iconClass: 'icon-purple', title: 'Python → C++ 综合对比', desc: '从 Python 出发快速上手 C++：输入输出、数据类型、条件判断，左右对比一目了然。', tags: ['过渡', '对比', '综合'], tagClass: 'tag-purple', file: 'courseware/python-to-cpp.html' },
+  { title: '🖥️ 计算机基础（完全零基础从这里开始）', sub: '计算机怎么工作？内存是什么？为什么 C++ 要编译？', lineColor: 'var(--cyan)' },
+  { icon: '🖥️', iconClass: 'icon-cyan', title: '计算机硬件与内存', desc: 'CPU、内存、硬盘、输入输出是什么？变量存在哪？为什么 C++ 有指针而 Python 没有？', tags: ['CPU', '内存', '硬件'], tagClass: 'tag-cyan', file: 'courseware/hardware-memory.html' },
+  { icon: '🔢', iconClass: 'icon-cyan', title: '二进制与数据表示', desc: '0 和 1、位与字节、为什么 int 是 4 字节？点击位切换看十进制变化。', tags: ['二进制', '字节', '数据类型'], tagClass: 'tag-cyan', file: 'courseware/binary-basics.html' },
+  { icon: '⚙️', iconClass: 'icon-cyan', title: '编译运行流程', desc: '.cpp 怎么变成 .exe？预处理→编译→链接→运行。编译错误 vs 运行错误。', tags: ['编译', '链接', 'OJ'], tagClass: 'tag-cyan', file: 'courseware/compile-run.html' },
+  { title: '🐍 Python → C++ 语法过渡（你已经会 Python，这些是不同的地方）', sub: '分号、花括号、声明类型、布尔值大小写——最容易踩坑的区别', lineColor: 'var(--accent2)' },
+  { icon: '❗', iconClass: 'icon-purple', title: '分号与花括号', desc: 'C++ 每句要加分号 ; ，代码块用 {} 不用缩进。初学者最高频的编译错误。', tags: ['分号', '花括号', '编译错误'], tagClass: 'tag-purple', file: 'courseware/semicolon-braces.html' },
+  { icon: '📋', iconClass: 'icon-purple', title: '变量声明 vs 赋值', desc: 'C++ 必须先声明类型（int x = 10），Python 随用随赋（x = 10）。为什么？', tags: ['声明', '类型', '静态类型'], tagClass: 'tag-purple', file: 'courseware/declare-vs-assign.html' },
+  { icon: '💬', iconClass: 'icon-purple', title: '注释规范', desc: 'Python 用 # ，C++ 用 // 和 /* */ 。Ctrl+/ 快捷键注释。', tags: ['注释', '//', '/* */'], tagClass: 'tag-purple', file: 'courseware/comments.html' },
+  { icon: '⚖️', iconClass: 'icon-pink', title: '布尔值与比较运算', desc: 'C++ 用 true/false（小写！），逻辑用 && || ! 不是 and or not。', tags: ['bool', 'true/false', '逻辑运算'], tagClass: 'tag-pink', file: 'courseware/bool-compare.html' },
+  { icon: '📦', iconClass: 'icon-purple', title: '头文件详解', desc: '#include 是什么？<iostream> vs <cstdio>？尖括号 vs 双引号？点击代码逐行查看解释。', tags: ['#include', '预处理', '头文件'], tagClass: 'tag-purple', file: 'courseware/headers.html' },
+  { icon: '🏷️', iconClass: 'icon-purple', title: '命名空间详解', desc: 'using namespace std 是什么？std:: 前缀可以省吗？为什么需要命名空间？和 Python import 对比。', tags: ['namespace', 'std', '命名冲突'], tagClass: 'tag-purple', file: 'courseware/namespace.html' },
+  { icon: '⬅️', iconClass: 'icon-green', title: 'cin / cout 详解', desc: '>> 和 << 的方向、cin 自动分隔、endl vs \\n、缓冲区、速度优化。点击代码逐行讲解。', tags: ['cin', 'cout', '流'], tagClass: 'tag-green', file: 'courseware/cin-cout.html' },
+  { icon: '⌨️', iconClass: 'icon-orange', title: 'scanf / printf 详解', desc: '%d %f %lf %c %s 格式控制、& 取地址、宽度对齐精度、竞赛中的速度优势。逐行讲解。', tags: ['scanf', 'printf', '格式控制'], tagClass: 'tag-orange', file: 'courseware/scanf-printf.html' },
+  { icon: '🐍➜⚡', iconClass: 'icon-purple', title: 'Python → C++ 综合对比', desc: '从 Python 出发快速上手 C++：输入输出、数据类型、条件判断，左右对比一目了然。', tags: ['过渡', '对比', '综合'], tagClass: 'tag-purple', file: 'courseware/python-to-cpp.html' },
   { title: '📖 零基础入门 · GESP 1级', sub: 'C++ 语法核心：变量、运算、输入输出、分支、循环', lineColor: 'var(--accent)' },
-  { num: '02', icon: '🏗️', iconClass: 'icon-purple', title: 'C++ 程序结构基础', desc: '#include 是什么？using namespace std 干嘛的？main 函数怎么来的？编译和运行有什么区别？', tags: ['头文件', '命名空间', '编译流程'], tagClass: 'tag-purple', file: 'courseware/cpp-basics.html' },
-  { num: '03', icon: '🧩', iconClass: 'icon-purple', title: '变量与数据类型', desc: 'int / long long / float / double / char / bool，每种类型占多大内存？范围是多少？', tags: ['类型系统', '内存大小', 'GESP 1级'], tagClass: 'tag-purple', file: 'courseware/variables.html' },
-  { num: '04', icon: '➕➖', iconClass: 'icon-orange', title: '算术运算与赋值', desc: '加减乘除、取模、复合赋值、类型转换、自增自减，C++ 运算的完整细节。', tags: ['运算符', '类型转换', 'GESP 1级'], tagClass: 'tag-orange', file: 'courseware/arithmetic.html' },
-  { num: '05', icon: '⌨️', iconClass: 'icon-orange', title: '输入输出', desc: 'cin/cout 与 scanf/printf 的格式控制、宽度对齐、小数精度、竞赛常用技巧。', tags: ['printf', 'scanf', 'GESP 1级'], tagClass: 'tag-orange', file: 'courseware/stdio.html' },
-  { num: '06', icon: '🎮', iconClass: 'icon-purple', title: '分支结构', desc: 'if-else if-else、switch-case、条件表达式、多层嵌套，单步执行看条件怎么走。', tags: ['条件', '分支', 'GESP 1级'], tagClass: 'tag-purple', file: 'courseware/control-flow.html' },
-  { num: '07', icon: '🔄⚡', iconClass: 'icon-cyan', title: '循环与运算符', desc: 'i++ 与 ++i 的区别、for/while/do-while 执行流程、break/continue、嵌套循环，单步执行看清楚每一步。', tags: ['自增自减', '循环细节', 'GESP 1级'], tagClass: 'tag-cyan', file: 'courseware/cpp-loops-and-ops.html' },
-  { title: '📐 进阶语法 · GESP 2级', sub: '数组、字符串、函数、结构体', lineColor: 'var(--green)' },
-  { num: '08', icon: '📊', iconClass: 'icon-green', title: '数组', desc: '一排连续的内存格子。索引就是偏移量，鼠标悬停看地址，理解 arr[i] 的本质。', tags: ['连续内存', '索引', 'GESP 2级'], tagClass: 'tag-green', file: 'courseware/arrays.html' },
-  { num: '09', icon: '🔤', iconClass: 'icon-orange', title: '字符串', desc: 'C 语言没有字符串类型！每个字符占一格，末尾藏着 \0。string 类操作函数。', tags: ['char[]', '\0结尾', 'GESP 2级'], tagClass: 'tag-orange', file: 'courseware/strings.html' },
-  { num: '10', icon: '🔄', iconClass: 'icon-pink', title: '函数传参', desc: '值传递复制一份，引用传递指向同一份。看函数调用时栈帧里发生了什么。', tags: ['值传递', '引用传递', 'GESP 2级'], tagClass: 'tag-pink', file: 'courseware/functions.html' },
-  { num: '11', icon: '📦', iconClass: 'icon-pink', title: '结构体', desc: 'struct 自定义类型，嵌套结构体，内存对齐，typedef 简化，看内存布局一目了然。', tags: ['struct', '自定义类型', 'GESP 2级'], tagClass: 'tag-pink', file: 'courseware/structs.html' },
-  { title: '⚙️ 算法入门 · GESP 3-4级', sub: '指针、枚举、模拟、排序、查找、递归', lineColor: 'var(--orange)' },
-  { num: '12', icon: '🎯', iconClass: 'icon-cyan', title: '指针入门', desc: '& 取地址，* 解引用。指针就是一个箭头，指向内存里的某个位置。', tags: ['地址', '箭头', 'GESP 3级'], tagClass: 'tag-cyan', file: 'courseware/pointers.html' },
-  { num: '13', icon: '📡', iconClass: 'icon-green', title: '排序算法', desc: '冒泡 / 选择 / 插入排序，柱状图可视化，每一步比较和交换都看得清清楚楚。', tags: ['算法', '可视化', 'GESP 3级'], tagClass: 'tag-green', file: 'courseware/sorting.html' },
-  { num: '14', icon: '🔍', iconClass: 'icon-cyan', title: '查找算法', desc: '线性查找 vs 二分查找，动态输入目标值，看 left/right/mid 边界怎么移动。', tags: ['算法', '二分', 'GESP 3级'], tagClass: 'tag-cyan', file: 'courseware/searching.html' }
+  { icon: '🏗️', iconClass: 'icon-purple', title: 'C++ 程序结构基础', desc: '#include 是什么？using namespace std 干嘛的？main 函数怎么来的？编译和运行有什么区别？', tags: ['头文件', '命名空间', '编译流程'], tagClass: 'tag-purple', file: 'courseware/cpp-basics.html' },
+  { icon: '🧩', iconClass: 'icon-purple', title: '变量与数据类型', desc: 'int / long long / float / double / char / bool，每种类型占多大内存？范围是多少？', tags: ['类型系统', '内存大小', 'GESP 1级'], tagClass: 'tag-purple', file: 'courseware/variables.html' },
+  { icon: '➕➖', iconClass: 'icon-orange', title: '算术运算与赋值', desc: '加减乘除、取模、复合赋值、类型转换、自增自减，C++ 运算的完整细节。', tags: ['运算符', '类型转换', 'GESP 1级'], tagClass: 'tag-orange', file: 'courseware/arithmetic.html' },
+  { icon: '⌨️', iconClass: 'icon-orange', title: '输入输出', desc: 'cin/cout 与 scanf/printf 的格式控制、宽度对齐、小数精度、竞赛常用技巧。', tags: ['printf', 'scanf', 'GESP 1级'], tagClass: 'tag-orange', file: 'courseware/stdio.html' },
+  { icon: '🎮', iconClass: 'icon-purple', title: '分支结构', desc: 'if-else if-else、switch-case、条件表达式、多层嵌套，单步执行看条件怎么走。', tags: ['条件', '分支', 'GESP 1级'], tagClass: 'tag-purple', file: 'courseware/control-flow.html' },
+  { icon: '🔄⚡', iconClass: 'icon-cyan', title: '循环与运算符', desc: 'i++ 与 ++i 的区别、for/while/do-while 执行流程、break/continue、嵌套循环，单步执行看清楚每一步。', tags: ['自增自减', '循环细节', 'GESP 1级'], tagClass: 'tag-cyan', file: 'courseware/cpp-loops-and-ops.html' },
+  { title: '📐 进阶语法 · GESP 2级', sub: '数组、字符、字符串、函数、结构体、作用域', lineColor: 'var(--green)' },
+  { icon: '📊', iconClass: 'icon-green', title: '数组', desc: '一排连续的内存格子。索引就是偏移量，鼠标悬停看地址，理解 arr[i] 的本质。', tags: ['连续内存', '索引', 'GESP 2级'], tagClass: 'tag-green', file: 'courseware/arrays.html' },
+  { icon: '🔤', iconClass: 'icon-orange', title: 'ASCII 码与字符', desc: 'char 本质是数字！A=65，a=97。大小写转换、字符运算、点击 ASCII 表查看。', tags: ['ASCII', 'char', '字符运算'], tagClass: 'tag-orange', file: 'courseware/ascii-char.html' },
+  { icon: '📝', iconClass: 'icon-orange', title: '字符串', desc: 'C 语言没有字符串类型！每个字符占一格，末尾藏着 \\0。string 类操作函数。', tags: ['char[]', '\\0结尾', 'GESP 2级'], tagClass: 'tag-orange', file: 'courseware/strings.html' },
+  { icon: '🔄', iconClass: 'icon-pink', title: '函数传参', desc: '值传递复制一份，引用传递指向同一份。看函数调用时栈帧里发生了什么。', tags: ['值传递', '引用传递', 'GESP 2级'], tagClass: 'tag-pink', file: 'courseware/functions.html' },
+  { icon: '📦', iconClass: 'icon-pink', title: '结构体', desc: 'struct 自定义类型，嵌套结构体，内存对齐，typedef 简化，看内存布局一目了然。', tags: ['struct', '自定义类型', 'GESP 2级'], tagClass: 'tag-pink', file: 'courseware/structs.html' },
+  { icon: '👁️', iconClass: 'icon-green', title: '作用域', desc: 'for 里的 i 出了循环就不见！全局变量 vs 局部变量，同名变量遮蔽。', tags: ['作用域', '全局', '局部'], tagClass: 'tag-green', file: 'courseware/scope.html' },
+  { title: '⚙️ 算法入门 · GESP 3-4级', sub: '指针、排序、查找', lineColor: 'var(--orange)' },
+  { icon: '🎯', iconClass: 'icon-cyan', title: '指针入门', desc: '& 取地址，* 解引用。指针就是一个箭头，指向内存里的某个位置。', tags: ['地址', '箭头', 'GESP 3级'], tagClass: 'tag-cyan', file: 'courseware/pointers.html' },
+  { icon: '📡', iconClass: 'icon-green', title: '排序算法', desc: '冒泡 / 选择 / 插入排序，柱状图可视化，每一步比较和交换都看得清清楚楚。', tags: ['算法', '可视化', 'GESP 3级'], tagClass: 'tag-green', file: 'courseware/sorting.html' },
+  { icon: '🔍', iconClass: 'icon-cyan', title: '查找算法', desc: '线性查找 vs 二分查找，动态输入目标值，看 left/right/mid 边界怎么移动。', tags: ['算法', '二分', 'GESP 3级'], tagClass: 'tag-cyan', file: 'courseware/searching.html' }
 ];
 const grid = document.getElementById('course-grid');
 let seq = 0;

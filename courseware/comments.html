@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>注释规范 — C 语言交互实验室</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --bg: #0b0d1a; --surface: #12142a; --surface2: #1a1d3a; --border: #2a2d5a; --accent: #6c5ce7; --accent2: #a29bfe; --green: #00e676; --cyan: #00e5ff; --orange: #ff9100; --pink: #ff4081; --text: #e0e0ff; --text-dim: #7878aa; --red: #ff4757; --py: #f7df1e; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 24px; }
+  .top-bar { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; flex-wrap: wrap; }
+  .back-btn { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }
+  .back-btn:hover { border-color: var(--accent); color: var(--text); }
+  .back-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .top-bar h1 { font-size: 1.3rem; font-weight: 700; background: linear-gradient(135deg, var(--text-dim), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .top-bar .sub { font-size: 0.78rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
+  .workspace { max-width: 1100px; margin: 0 auto; }
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 800px) { .compare-grid { grid-template-columns: 1fr; } }
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .panel-header { padding: 10px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+  .panel-header .lang-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+  .panel-header .py-label { color: var(--py); }
+  .panel-header .cpp-label { color: var(--cyan); }
+  .panel-body { padding: 20px; }
+  .code-block { font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; line-height: 1.8; white-space: pre; overflow-x: auto; color: var(--text); }
+  .code-block .kw { color: var(--accent2); } .code-block .str { color: var(--green); } .code-block .comment { color: var(--text-dim); font-style: italic; } .code-block .num { color: var(--orange); } .code-block .type { color: var(--cyan); }
+  .code-block .line-num { color: var(--text-dim); user-select: none; margin-right: 10px; }
+  .tip-box { padding: 14px 18px; background: rgba(0,229,255,0.06); border: 1px solid rgba(0,229,255,0.15); border-radius: 8px; margin-top: 16px; }
+  .tip-box .tip-label { font-size: 0.72rem; font-weight: 700; color: var(--cyan); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .tip-box .tip-text { font-size: 0.85rem; color: var(--text-dim); line-height: 1.7; }
+  .tip-box .tip-text strong { color: var(--text); }
+  .next-link { display: flex; justify-content: space-between; margin-top: 24px; }
+  .next-link a { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }
+  .next-link a:hover { border-color: var(--accent); color: var(--text); }
+  .next-link a svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <a href="../index.html" class="back-btn"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>返回</a>
+  <h1>注释规范</h1>
+  <span class="sub">// 单行 · /* */ 多行 · # vs //</span>
+</div>
+<div class="workspace">
+  <div class="compare-grid">
+    <div class="panel">
+      <div class="panel-header"><span class="lang-label py-label">🐍 Python</span></div>
+      <div class="panel-body">
+        <div class="code-block"><span class="comment"># 这是单行注释</span>
+x = <span class="num">10</span>  <span class="comment"># 行尾注释</span>
+
+<span class="comment">"""
+这是多行注释
+用三引号包裹
+"""</span></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-header"><span class="lang-label cpp-label">⚡ C++</span></div>
+      <div class="panel-body">
+        <div class="code-block"><span class="comment">// 这是单行注释</span>
+<span class="type">int</span> x = <span class="num">10</span>;  <span class="comment">// 行尾注释</span>
+
+<span class="comment">/*
+这是多行注释
+用斜杠星号包裹
+*/</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="tip-box">
+    <div class="tip-label">📌 注释的区别</div>
+    <div class="tip-text">
+      <strong>Python</strong>：用 <code>#</code> 单行注释，<code>""" """</code> 多行注释<br>
+      <strong>C++</strong>：用 <code>//</code> 单行注释，<code>/* */</code> 多行注释<br><br>
+      注释被编译器忽略，不影响程序运行。作用是给<strong>人</strong>看的。<br><br>
+      竞赛中注释不用写太多，但关键算法思路建议注释。
+    </div>
+  </div>
+  <div class="tip-box">
+    <div class="tip-label">💡 快捷键</div>
+    <div class="tip-text">
+      大多数编辑器（VS Code、Dev-C++）支持：<br>
+      <strong>Ctrl + /</strong>：把选中行变成注释（或取消注释）<br>
+      不管是 Python 还是 C++ 都适用。
+    </div>
+  </div>
+  <div class="next-link">
+    <a href="declare-vs-assign.html"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>上一页：变量声明</a>
+    <a href="bool-compare.html">下一页：布尔值与比较<svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </div>
+</div>
+</body>
+</html>
