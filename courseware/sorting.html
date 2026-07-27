@@ -59,6 +59,50 @@
   .data-input-row input[type="number"]:focus { border-color: var(--accent); }
   .data-input-row input[type="number"].value-input { width: 52px; }
 
+  /* ── Hide default spinner arrows ── */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  /* ── Custom spinner buttons ── */
+  .spinner-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 700;
+    line-height: 1;
+    padding: 0;
+    transition: all 0.15s;
+    user-select: none;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .spinner-btn:hover {
+    border-color: var(--accent);
+    background: rgba(108,92,231,0.15);
+    color: var(--accent2);
+  }
+  .spinner-btn:active {
+    transform: scale(0.92);
+  }
+  .value-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+  }
+
   .data-input-row button { padding: 6px 14px; border-radius: 6px; border: 1px solid var(--accent); background: rgba(108,92,231,0.15); color: var(--accent2); cursor: pointer; font-family: inherit; font-size: 0.78rem; transition: all 0.2s; }
   .data-input-row button:hover { background: rgba(108,92,231,0.25); }
   .data-input-row button.secondary { border-color: var(--border); color: var(--text); background: var(--surface); }
@@ -450,6 +494,9 @@ function generateValueInputs() {
   const area = document.getElementById('values-input-area');
   area.innerHTML = '';
   currentArray.forEach((val, i) => {
+    const group = document.createElement('span');
+    group.className = 'value-group';
+
     const inp = document.createElement('input');
     inp.type = 'number';
     inp.className = 'value-input';
@@ -464,10 +511,40 @@ function generateValueInputs() {
         regenerateSteps();
       }
     });
-    area.appendChild(inp);
+    group.appendChild(inp);
+
+    // Custom spinner buttons
+    const btnUp = document.createElement('button');
+    btnUp.type = 'button';
+    btnUp.className = 'spinner-btn';
+    btnUp.textContent = '+';
+    btnUp.addEventListener('click', () => {
+      let v = parseInt(inp.value) || 1;
+      v = Math.min(99, v + 1);
+      inp.value = v;
+      currentArray[i] = v;
+      regenerateSteps();
+    });
+
+    const btnDown = document.createElement('button');
+    btnDown.type = 'button';
+    btnDown.className = 'spinner-btn';
+    btnDown.textContent = '−';
+    btnDown.addEventListener('click', () => {
+      let v = parseInt(inp.value) || 1;
+      v = Math.max(1, v - 1);
+      inp.value = v;
+      currentArray[i] = v;
+      regenerateSteps();
+    });
+
+    group.appendChild(btnDown);
+    group.appendChild(btnUp);
+
+    area.appendChild(group);
     if (i < currentArray.length - 1) {
       const sep = document.createElement('span');
-      sep.style.cssText = 'color:var(--text-dim);font-size:0.7rem';
+      sep.style.cssText = 'color:var(--text-dim);font-size:0.7rem;margin:0 2px';
       sep.textContent = ',';
       area.appendChild(sep);
     }
