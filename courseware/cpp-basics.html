@@ -86,12 +86,17 @@
   --orange: #e67e00; --pink: #d6336c; --red: #d93025; --yellow: #e6a800;
   --text: #1a1d3a; --text-dim: #6b6f8a;
 
-  rgba(108,92,231,0.15)
-  rgba(108,92,231,0.1)
-  rgba(108,92,231,0.2)
-  rgba(108,92,231,0.08)
-  rgba(0,0,0,0.2)
-  rgba(0,0,0,0.3)
+
+.topic-btn.active { border-color: var(--accent); background: rgba(91,75,212,0.10); }
+.step-btn.primary { background: rgba(91,75,212,0.14); border-color: var(--accent); }
+.output-area { margin-top: 12px; padding: 14px; background: rgba(0,0,0,0.09); border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--green); line-height: 1.6; min-height: 40px; }
+.step-info { margin-top: 10px; padding: 10px 14px; background: rgba(91,75,212,0.06); border-radius: 8px; font-size: 0.85rem; color: var(--accent2); font-family: 'Inter', sans-serif; line-height: 1.5; }
+.85rem; color: var(--text-dim); line-height: 1.7; }
+
+  /* Interactive diagram */
+  .flow-diagram { margin-top: 12px; padding: 16px; background: rgba(0,0,0,0.06); border-radius: 8px; }
+.7rem; margin-left: auto; }
+  .flow-step.active { border-color: var(--accent); background: rgba(91,75,212,0.07); }
 }
   .next-link { display: flex; justify-content: space-between; margin-top: 24px; }
   .next-link a { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }

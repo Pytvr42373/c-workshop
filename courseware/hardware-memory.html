@@ -111,12 +111,130 @@
   --orange: #e67e00; --pink: #d6336c; --red: #d93025; --yellow: #e6a800;
   --text: #1a1d3a; --text-dim: #6b6f8a;
 
-  rgba(108,92,231,0.15)
-  rgba(108,92,231,0.2)
-  rgba(108,92,231,0.08)
-  rgba(108,92,231,0.25)
-  rgba(108,92,231,0.12)
-  rgba(0,0,0,0.2)
+
+.topic-btn.active { border-color: var(--accent); background: rgba(91,75,212,0.10); }
+.tip-box { padding: 14px 18px; background: rgba(0,153,204,0.05); border: 1px solid rgba(0,153,204,0.10); border-radius: 8px; margin-bottom: 14px; }
+.term:hover { background: rgba(91,75,212,0.08); border-radius: 3px; }
+.term-card { position: fixed; z-index: 9999; width: 340px; max-width: 90vw; background: var(--surface2); border: 1px solid var(--accent); border-radius: 12px; padding: 14px 18px; box-shadow: 0 8px 32px rgba(91,75,212,0.17); display: none; pointer-events: none; }
+.term-card .tc-body code { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--orange); background: rgba(230,126,0,0.06); padding: 1px 5px; border-radius: 3px; }
+.1rem; margin-bottom: 4px; }
+
+  /* Hardware diagram */
+  .hw-diagram { display: flex; flex-direction: column; gap: 12px; padding: 20px; background: rgba(0,0,0,0.06); border-radius: 8px; }
+.7rem; color: var(--text-dim); line-height: 1.5; }
+  .hw-cpu { border-color: var(--accent); background: rgba(91,75,212,0.06); }
+.hw-cpu:hover { border-color: var(--accent2); box-shadow: 0 0 16px rgba(91,75,212,0.14); }
+.hw-ram { border-color: var(--green); background: rgba(0,184,107,0.06); }
+.hw-ram:hover { border-color: var(--green); box-shadow: 0 0 16px rgba(0,184,107,0.14); }
+.hw-disk { border-color: var(--orange); background: rgba(230,126,0,0.06); }
+.hw-disk:hover { border-color: var(--orange); box-shadow: 0 0 16px rgba(230,126,0,0.14); }
+.hw-io { border-color: var(--cyan); background: rgba(0,153,204,0.06); }
+.hw-io:hover { border-color: var(--cyan); box-shadow: 0 0 16px rgba(0,153,204,0.14); }
+.mem-vis { padding: 16px; background: rgba(0,0,0,0.06); border-radius: 8px; }
+.mem-cell.occupied { background: rgba(91,75,212,0.14); border-color: var(--accent); color: var(--accent2); }
+.mem-cell.var-a { background: rgba(0,184,107,0.14); border-color: var(--green); color: var(--green); }
+.mem-cell.var-b { background: rgba(230,126,0,0.14); border-color: var(--orange); color: var(--orange); }
+.mem-cell.var-c { background: rgba(214,51,108,0.14); border-color: var(--pink); color: var(--pink); }
+.step-info { margin-top: 10px; padding: 10px 14px; background: rgba(91,75,212,0.06); border-radius: 8px; font-size: 0.85rem; color: var(--accent2); font-family: 'Inter', sans-serif; line-height: 1.5; }
+.cpp<br>存在硬盘上</div>
+          </div>
+        </div>
+        <div class="hw-arrow">↓ 编译（g++）</div>
+        <div class="hw-row">
+          <div class="hw-block hw-disk" style="flex:1">
+            <div class="hw-icon">📦</div>
+            <div class="hw-name">可执行文件</div>
+            <div class="hw-desc">hello.exe<br>存在硬盘上</div>
+          </div>
+        </div>
+        <div class="hw-arrow">↓ 双击运行</div>
+        <div class="hw-row">
+          <div class="hw-block hw-ram" style="flex:1">
+            <div class="hw-icon">⚡</div>
+            <div class="hw-name">加载到内存</div>
+            <div class="hw-desc">程序代码 + 变量<br>都在内存里</div>
+          </div>
+        </div>
+        <div class="hw-arrow">↓ CPU 执行</div>
+        <div class="hw-row">
+          <div class="hw-block hw-io" style="flex:1">
+            <div class="hw-icon">🖥️</div>
+            <div class="hw-name">输出结果</div>
+            <div class="hw-desc">显示器显示<br>Hello World!</div>
+          </div>
+        </div>
+      </div>
+    `,
+    knowledge: `
+      <div class="tip-box" style="margin-top:0">
+        <div class="tip-label">📌 从代码到运行的完整流程</div>
+        <div class="tip-text">
+          <strong>① 写代码</strong>：在硬盘上创建 <code>hello.cpp</code> 文件<br>
+          <strong>② 编译</strong>：编译器（g++）把 <code>.cpp</code> 翻译成机器码，生成 <code>hello.exe</code><br>
+          <strong>③ 运行</strong>：操作系统把 <code>.exe</code> 从硬盘加载到<strong>内存</strong><br>
+          <strong>④ 执行</strong>：<strong>CPU</strong> 从内存读取指令，逐条执行<br>
+          <strong>⑤ 输出</strong>：<code>cout</code> 把结果送到显示器<br><br>
+          <strong>Python 跳过了第②步</strong>——Python 解释器直接在内存里逐行执行 <code>.py</code> 文件。
+        </div>
+      </div>
+      <table class="compare-table">
+        <tr><th>步骤</th><th class="py-col">Python</th><th class="cpp-col">C++</th></tr>
+        <tr><td>写代码</td><td>.py 文件</td><td>.cpp 文件</td></tr>
+        <tr><td>编译</td><td style="color:var(--text-dim)">不需要</td><td>g++ 编译成 .exe</td></tr>
+        <tr><td>运行</td><td>python hello.py</td><td>./hello</td></tr>
+        <tr><td>执行方式</td><td>逐行解释</td><td>直接执行机器码</td></tr>
+        <tr><td>速度</td><td>较慢</td><td>快（编译后是原生速度）</td></tr>
+      </table>
+    `
+  },
+  {
+    name: '为什么 C++ 快',
+    diagram: `
+      <div class="hw-diagram">
+        <div style="text-align:center; padding: 20px;">
+          <div style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 16px;">同样的循环 10 亿次加法：</div>
+          <div style="display: flex; gap: 24px; justify-content: center;">
+            <div style="text-align: center;">
+              <div style="font-size: 2rem; margin-bottom: 4px;">🐍</div>
+              <div style="font-size: 0.78rem; color: var(--py); font-weight: 700;">Python</div>
+              <div style="font-size: 1.4rem; color: var(--text); font-weight: 800; margin: 8px 0;">~30 秒</div>
+              <div style="font-size: 0.68rem; color: var(--text-dim); max-width: 120px;">每行都要解释器翻译</div>
+            </div>
+            <div style="text-align: center;">
+              <div style="font-size: 2rem; margin-bottom: 4px;">⚡</div>
+              <div style="font-size: 0.78rem; color: var(--cyan); font-weight: 700;">C++</div>
+              <div style="font-size: 1.4rem; color: var(--green); font-weight: 800; margin: 8px 0;">~0.5 秒</div>
+              <div style="font-size: 0.68rem; color: var(--text-dim); max-width: 120px;">CPU 直接执行机器码</div>
+            </div>
+          </div>
+          <div style="margin-top: 20px; padding: 12px; background: rgba(0,184,107,0.06); border-radius: 8px; font-size: 0.75rem; color: var(--green);">
+            C++ 比 Python 快约 60 倍！这就是竞赛用 C++ 的原因。
+          </div>
+        </div>
+      </div>
+    `,
+    knowledge: `
+      <div class="tip-box" style="margin-top:0">
+        <div class="tip-label">📌 为什么竞赛用 C++ 不用 Python</div>
+        <div class="tip-text">
+          <strong>Python</strong> 是<span class="term" data-term="interpreted">解释型语言</span>：运行时逐行翻译，每行都要"现场翻译"。<br><br>
+          <strong>C++</strong> 是<span class="term" data-term="compiled">编译型语言</span>：提前把整个程序翻译成机器码，运行时 CPU 直接执行。<br><br>
+          竞赛题目数据量大（百万级），Python 容易<strong>超时</strong>（TLE），C++ 几乎不会。
+        </div>
+      </div>
+      <div class="danger-box">
+        <div class="danger-label">⚠️ 但是 C++ 写起来更麻烦</div>
+        <div class="danger-text">
+          C++ 的代价是：<br>
+          ① 必须先声明变量类型（<code>int x;</code>）<br>
+          ② 每句要加分号（<code>;</code>）<br>
+          ③ 数组大小固定，不能 <code>append</code><br>
+          ④ 要自己管理内存<br><br>
+          换来了<strong>速度</strong>和<strong>对底层的控制力</strong>。
+        </div>
+      </div>
+    `
+  }
 }
 </style>
 </head>
