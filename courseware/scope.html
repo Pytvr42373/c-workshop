@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>作用域 — C 语言交互实验室</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --bg: #0b0d1a; --surface: #12142a; --surface2: #1a1d3a; --border: #2a2d5a; --accent: #6c5ce7; --accent2: #a29bfe; --green: #00e676; --cyan: #00e5ff; --orange: #ff9100; --pink: #ff4081; --text: #e0e0ff; --text-dim: #7878aa; --red: #ff4757; --py: #f7df1e; }
+  body { font-size: 17px; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 24px; }
+  .top-bar { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; flex-wrap: wrap; }
+  .back-btn { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }
+  .back-btn:hover { border-color: var(--accent); color: var(--text); }
+  .back-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .top-bar h1 { font-size: 1.3rem; font-weight: 700; background: linear-gradient(135deg, var(--pink), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .top-bar .sub { font-size: 0.78rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
+  .workspace { max-width: 1100px; margin: 0 auto; }
+  .topic-nav { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
+  .topic-btn { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.82rem; cursor: pointer; transition: all 0.2s; }
+  .topic-btn:hover { border-color: var(--accent); }
+  .topic-btn.active { border-color: var(--accent); background: rgba(108,92,231,0.15); }
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 800px) { .compare-grid { grid-template-columns: 1fr; } }
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .panel-header { padding: 10px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+  .panel-header .lang-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+  .panel-header .py-label { color: var(--py); }
+  .panel-header .cpp-label { color: var(--cyan); }
+  .panel-body { padding: 20px; }
+  .code-block { font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; line-height: 1.8; white-space: pre; overflow-x: auto; color: var(--text); }
+  .code-block .kw { color: var(--accent2); } .code-block .str { color: var(--green); } .code-block .comment { color: var(--text-dim); font-style: italic; } .code-block .num { color: var(--orange); } .code-block .type { color: var(--cyan); }
+  .code-block .line-num { color: var(--text-dim); user-select: none; margin-right: 10px; }
+  .tip-box { padding: 14px 18px; background: rgba(0,229,255,0.06); border: 1px solid rgba(0,229,255,0.15); border-radius: 8px; margin-top: 16px; }
+  .tip-box .tip-label { font-size: 0.72rem; font-weight: 700; color: var(--cyan); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .tip-box .tip-text { font-size: 0.85rem; color: var(--text-dim); line-height: 1.7; }
+  .tip-box .tip-text strong { color: var(--text); }
+  .danger-box { padding: 14px 18px; background: rgba(255,71,87,0.06); border: 1px solid rgba(255,71,87,0.15); border-radius: 8px; margin-top: 16px; }
+  .danger-box .danger-label { font-size: 0.72rem; font-weight: 700; color: var(--red); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .danger-box .danger-text { font-size: 0.85rem; color: var(--text-dim); line-height: 1.7; }
+  .term { border-bottom: 2px dotted var(--accent2); cursor: help; color: var(--accent2); font-weight: 600; position: relative; }
+  .term:hover { background: rgba(108,92,231,0.12); border-radius: 3px; }
+  .term-card { position: fixed; z-index: 9999; width: 340px; max-width: 90vw; background: var(--surface2); border: 1px solid var(--accent); border-radius: 12px; padding: 14px 18px; box-shadow:  8px 32px rgba(108,92,231,0.25); display: none; pointer-events: none; }
+  .term-card.show { display: block; animation: termFadeIn 0.18s ease-out; }
+  @keyframes termFadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .term-card .tc-title { font-size: 0.82rem; font-weight: 700; color: var(--cyan); margin-bottom: 6px; }
+  .term-card .tc-body { font-size: 0.8rem; color: var(--text-dim); line-height: 1.7; }
+  .term-card .tc-body strong { color: var(--text); }
+  .term-card .tc-body code { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--orange); background: rgba(255,145,0,0.08); padding: 1px 5px; border-radius: 3px; }
+  .term-card .tc-icon { font-size: 1.1rem; margin-bottom: 4px; }
+  .next-link { display: flex; justify-content: space-between; margin-top: 24px; }
+  .next-link a { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }
+  .next-link a:hover { border-color: var(--accent); color: var(--text); }
+  .next-link a svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .error-box { padding: 12px 16px; background: rgba(255,71,87,0.08); border: 1px solid rgba(255,71,87,0.2); border-radius: 8px; margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--red); }
+  .ok-box { padding: 12px 16px; background: rgba(0,230,118,0.08); border: 1px solid rgba(0,230,118,0.2); border-radius: 8px; margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--green); }
+  .scope-vis { padding: 16px; background: rgba(0,0,0,0.2); border-radius: 8px; margin-top: 12px; }
+  .scope-block { border: 2px dashed; border-radius: 8px; padding: 12px; margin-bottom: 8px; }
+  .scope-global { border-color: var(--accent); background: rgba(108,92,231,0.05); }
+  .scope-local { border-color: var(--green); background: rgba(0,230,118,0.05); margin-left: 20px; }
+  .scope-for { border-color: var(--orange); background: rgba(255,145,0,0.05); margin-left: 40px; }
+  .scope-label { font-size: 0.7rem; font-weight: 700; margin-bottom: 6px; font-family: 'JetBrains Mono', monospace; }
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <a href="../index.html" class="back-btn"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>返回</a>
+  <h1>作用域</h1>
+  <span class="sub">{} 内可见 · for 里的 i 外面用不了 · 全局 vs 局部</span>
+</div>
+<div class="workspace">
+  <div class="topic-nav" id="topic-nav"></div>
+  <div id="content-area"></div>
+  <div class="next-link">
+    <a href="ascii-char.html"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>上一页：ASCII 码</a>
+    <a href="pointers.html">下一页：指针入门<svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </div>
+</div>
+<script>
+const TOPICS = [
+  {
+    name: '作用域是什么',
+    content: `
+      <div class="panel">
+        <div class="panel-header"><span class="lang-label cpp-label">⚡ 作用域可视化</span></div>
+        <div class="panel-body">
+          <div class="scope-vis">
+            <div class="scope-block scope-global">
+              <div class="scope-label" style="color:var(--accent2);">全局作用域</div>
+              <div style="font-family:'JetBrains Mono',monospace; font-size:0.82rem; color:var(--text);">int global_x = 100;  // 全程序可见</div>
+              <div class="scope-block scope-local">
+                <div class="scope-label" style="color:var(--green);">main() 函数作用域</div>
+                <div style="font-family:'JetBrains Mono',monospace; font-size:0.82rem; color:var(--text);">int local_y = 10;  // 只在 main 内可见</div>
+                <div class="scope-block scope-for">
+                  <div class="scope-label" style="color:var(--orange);">for 循环作用域</div>
+                  <div style="font-family:'JetBrains Mono',monospace; font-size:0.82rem; color:var(--text);">int i;  // 只在 for 内可见</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tip-box">
+        <div class="tip-label">📌 作用域 = 变量"活"的范围</div>
+        <div class="tip-text">
+          变量只在声明它的 <code>{ }</code> 内"活着"。<br>
+          出了 <code>{ }</code> 就"死了"（销毁），不能再访问。<br><br>
+          <strong>全局变量</strong>：在所有 <code>{ }</code> 外面声明，全程序可见。<br>
+          <strong>局部变量</strong>：在函数或 <code>{ }</code> 内声明，出了就不见。
+        </div>
+      </div>
+    `
+  },
+  {
+    name: 'for 里的 i',
+    content: `
+      <div class="compare-grid">
+        <div class="panel">
+          <div class="panel-header"><span class="lang-label py-label">🐍 Python</span></div>
+          <div class="panel-body">
+            <div class="code-block"><span class="kw">for</span> i <span class="kw">in</span> <span class="kw">range</span>(<span class="num">5</span>):
+    <span class="kw">print</span>(i)
+
+<span class="comment"># 循环结束后 i 还能用！</span>
+<span class="kw">print</span>(i)  <span class="comment"># 输出 4</span></div>
+            <div class="ok-box">✅ Python: i 在循环外依然可用</div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><span class="lang-label cpp-label">⚡ C++</span></div>
+          <div class="panel-body">
+            <div class="code-block"><span class="kw">for</span> (<span class="type">int</span> i = <span class="num">0</span>; i &lt; <span class="num">5</span>; i++) {
+    <span class="kw">cout</span> &lt;&lt; i;
+}
+
+<span class="comment">// 循环结束后 i 已销毁！</span>
+<span class="comment">// cout &lt;&lt; i;  // 编译错误！</span></div>
+            <div class="ok-box">✅ C++: i 只在 for 的 {} 内可见</div>
+          </div>
+        </div>
+      </div>
+      <div class="danger-box">
+        <div class="danger-label">⚠️ 初学者常见错误</div>
+        <div class="danger-text">
+          Python 习惯：<code>for i in range(5)</code> 之后 <code>i</code> 还在。<br>
+          C++ 不同：<code>for (int i = 0; ...)</code> 中的 <code>i</code> 出了循环就<strong>不存在了</strong>。<br><br>
+          如果循环外要用 <code>i</code>，在循环外声明：<br>
+          <code>int i;</code><br>
+          <code>for (i = 0; i &lt; 5; i++) { ... }</code><br>
+          <code>cout &lt;&lt; i;</code> ← 现在可以了
+        </div>
+      </div>
+    `
+  },
+  {
+    name: '同名变量',
+    content: `
+      <div class="panel">
+        <div class="panel-header"><span class="lang-label cpp-label">⚡ 内层会"遮蔽"外层</span></div>
+        <div class="panel-body">
+          <div class="code-block"><span class="type">int</span> x = <span class="num">10</span>;           <span class="comment">// 外层 x</span>
+
+{
+    <span class="type">int</span> x = <span class="num">20</span>;       <span class="comment">// 内层 x，遮蔽了外层</span>
+    <span class="kw">cout</span> &lt;&lt; x;    <span class="comment">// 输出 20（用内层的）</span>
+}
+
+<span class="kw">cout</span> &lt;&lt; x;        <span class="comment">// 输出 10（外层的还活着）</span></div>
+        </div>
+      </div>
+      <div class="tip-box">
+        <div class="tip-label">📌 内层优先</div>
+        <div class="tip-text">
+          如果内外层有同名变量，内层的会<strong>遮蔽</strong>（shadow）外层的。<br>
+          出了内层 <code>{ }</code>，外层的又"恢复"可见。<br><br>
+          <strong>建议</strong>：避免同名变量，容易混淆。
+        </div>
+      </div>
+    `
+  }
+];
+
+let currentIdx = 0;
+
+function renderTopic(idx) {
+  const topic = TOPICS[idx];
+  document.querySelectorAll('.topic-btn').forEach((btn, i) => btn.classList.toggle('active', i === idx));
+  document.getElementById('content-area').innerHTML = topic.content;
+}
+
+function init() {
+  const nav = document.getElementById('topic-nav');
+  TOPICS.forEach((t, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'topic-btn' + (i === 0 ? ' active' : '');
+    btn.textContent = t.name;
+    btn.onclick = () => renderTopic(i);
+    nav.appendChild(btn);
+  });
+  renderTopic(0);
+}
+
+init();
+</script>
+</body>
+</html>
