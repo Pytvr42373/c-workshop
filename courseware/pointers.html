@@ -356,11 +356,42 @@ function drawArrow(svg, from, to) {
   const x2 = tRect.right - cRect.left;
   const y2 = tRect.top + tRect.height / 2 - cRect.top;
 
-  // Draw right-angle connector
-  const midX = (x1 + x2) / 2;
-  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-  const d = `M ${x1} ${y1} L ${midX} ${y1} L ${midX} ${y2} L ${x2} ${y2}`;
-  path.setAttribute('d', d);
+  // Check if there are elements between from and to (pointer on right, target on left)
+  // If so, route the arrow above all elements to avoid overlapping
+  const allCells = container.querySelectorAll('[data-addr]');
+  let hasMiddle = false;
+  allCells.forEach(el => {
+    const addr = parseInt(el.getAttribute('data-addr'));
+    if (addr !== from.addr && addr !== to.addr) {
+      const r = el.getBoundingClientRect();
+      // Check if this element is horizontally between from and to
+      if (r.left > Math.min(fRect.left, tRect.left) && r.right < Math.max(fRect.right, tRect.right)) {
+        hasMiddle = true;
+      }
+    }
+  });
+
+  let path, label;
+  if (hasMiddle) {
+    // Route above: go up, across, then down
+    const topY = Math.min(fRect.top, tRect.top) - cRect.top - 24;
+    const d = `M ${x1} ${y1} L ${x1} ${topY} L ${x2} ${topY} L ${x2} ${y2}`;
+    path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', d);
+    label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    label.setAttribute('x', (x1 + x2) / 2);
+    label.setAttribute('y', topY - 4);
+  } else {
+    // Original: right-angle connector
+    const midX = (x1 + x2) / 2;
+    const d = `M ${x1} ${y1} L ${midX} ${y1} L ${midX} ${y2} L ${x2} ${y2}`;
+    path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', d);
+    label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    label.setAttribute('x', (midX + x2) / 2);
+    label.setAttribute('y', y2 - 6);
+  }
+
   path.setAttribute('stroke', 'var(--green)');
   path.setAttribute('stroke-width', '2.5');
   path.setAttribute('fill', 'none');
@@ -382,10 +413,7 @@ function drawArrow(svg, from, to) {
   arrowHead.setAttribute('opacity', '0.9');
   svg.appendChild(arrowHead);
 
-  // Label on the horizontal segment
-  const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-  label.setAttribute('x', (midX + x2) / 2);
-  label.setAttribute('y', y2 - 6);
+  // Label
   label.setAttribute('fill', 'var(--green)');
   label.setAttribute('font-size', '10');
   label.setAttribute('font-family', 'JetBrains Mono, monospace');
