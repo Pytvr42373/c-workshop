@@ -55,6 +55,12 @@
   .compare-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.78rem; }
   .compare-table th { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--text-dim); font-weight: 600; }
   .compare-table td { padding: 8px 12px; border-bottom: 1px solid rgba(42,45,90,0.5); font-family: 'JetBrains Mono', monospace; }
+[data-theme="light"] {
+  --bg: #f0f4ff; --surface: #ffffff; --surface2: #e8edf5; --border: #d0d8e8;
+  --accent: #5b4bd4; --accent2: #7c6df0; --green: #00b86b; --cyan: #0099cc;
+  --orange: #e67e00; --pink: #d6336c; --red: #d93025; --yellow: #e6a800;
+  --text: #1a1d3a; --text-dim: #6b6f8a;
+}
 </style>
 </head>
 <body>
@@ -62,6 +68,8 @@
   <a href="../index.html" class="back-btn"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>返回</a>
   <h1>布尔值与比较运算</h1>
   <span class="sub">true/false · && || ! · == != &lt; &gt; · Python vs C++</span>
+
+  <button id="theme-toggle" style="margin-left:auto;background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1rem;color:var(--text-dim);transition:all 0.2s;" onclick="toggleTheme()" title="切换主题">🌙</button>
 </div>
 <div class="workspace">
   <div class="topic-nav" id="topic-nav"></div>
@@ -212,6 +220,31 @@ function init() {
 }
 
 init();
+</script>
+
+<script>
+(function() {
+  const key = 'c-workshop-theme';
+  const saved = localStorage.getItem(key);
+  if (saved === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    const btn = document.getElementById('theme-toggle');
+    if (btn) btn.textContent = '☀️';
+  }
+})();
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  if (isLight) {
+    html.removeAttribute('data-theme');
+    localStorage.setItem('c-workshop-theme', 'dark');
+    document.getElementById('theme-toggle').textContent = '🌙';
+  } else {
+    html.setAttribute('data-theme', 'light');
+    localStorage.setItem('c-workshop-theme', 'light');
+    document.getElementById('theme-toggle').textContent = '☀️';
+  }
+}
 </script>
 </body>
 </html>

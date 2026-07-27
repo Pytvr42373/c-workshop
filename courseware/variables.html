@@ -376,6 +376,17 @@
 
   .size-bar .label { color: var(--text-dim); margin-bottom: 4px; }
   .size-bar .bytes { font-weight: 700; color: var(--text); }
+[data-theme="light"] {
+  --bg: #f0f4ff; --surface: #ffffff; --surface2: #e8edf5; --border: #d0d8e8;
+  --accent: #5b4bd4; --accent2: #7c6df0; --green: #00b86b; --cyan: #0099cc;
+  --orange: #e67e00; --pink: #d6336c; --red: #d93025; --yellow: #e6a800;
+  --text: #1a1d3a; --text-dim: #6b6f8a;
+}
+  .next-link { display: flex; justify-content: space-between; margin-top: 24px; }
+  .next-link a { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }
+  .next-link a:hover { border-color: var(--accent); color: var(--text); }
+  .next-link a svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+
 </style>
 </head>
 <body>
@@ -387,6 +398,8 @@
   </a>
   <h1>变量与内存</h1>
   <span class="sub">int · float · char · 内存大小</span>
+
+  <button id="theme-toggle" style="margin-left:auto;background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1rem;color:var(--text-dim);transition:all 0.2s;" onclick="toggleTheme()" title="切换主题">🌙</button>
 </div>
 
 <div class="workspace">
@@ -580,5 +593,30 @@ init();
     <a href="cpp-basics.html"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>上一页：C++ 程序结构基础</a>
     <a href="arithmetic.html">下一页：算术运算与赋值<svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
   </div>
+
+<script>
+(function() {
+  const key = 'c-workshop-theme';
+  const saved = localStorage.getItem(key);
+  if (saved === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    const btn = document.getElementById('theme-toggle');
+    if (btn) btn.textContent = '☀️';
+  }
+})();
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  if (isLight) {
+    html.removeAttribute('data-theme');
+    localStorage.setItem('c-workshop-theme', 'dark');
+    document.getElementById('theme-toggle').textContent = '🌙';
+  } else {
+    html.setAttribute('data-theme', 'light');
+    localStorage.setItem('c-workshop-theme', 'light');
+    document.getElementById('theme-toggle').textContent = '☀️';
+  }
+}
+</script>
 </body>
 </html>

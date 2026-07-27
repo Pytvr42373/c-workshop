@@ -56,6 +56,12 @@
   .card-arrow svg { width: 16px; height: 16px; fill: none; stroke: var(--text); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
   footer { text-align: center; margin-top: 60px; padding-top: 30px; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--text-dim); }
   @media (max-width: 640px) { h1 { font-size: 2rem; } .container { padding: 24px 16px 60px; } .course-grid { grid-template-columns: 1fr; } .stats-bar { gap: 20px; } }
+[data-theme="light"] {
+  --bg: #f0f4ff; --surface: #ffffff; --surface2: #e8edf5; --border: #d0d8e8;
+  --accent: #5b4bd4; --accent2: #7c6df0; --green: #00b86b; --cyan: #0099cc;
+  --orange: #e67e00; --pink: #d6336c; --red: #d93025; --yellow: #e6a800;
+  --text: #1a1d3a; --text-dim: #6b6f8a;
+}
 </style>
 </head>
 <body>
@@ -69,6 +75,7 @@
       <div class="stat-item"><span class="dot cyan"></span><span>点击 · 拖拽 · 观察</span></div>
       <div class="stat-item"><span class="dot orange"></span><span>零依赖 · 打开即用</span></div>
     </div>
+    <button id="theme-toggle" style="margin-top:16px;background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1rem;color:var(--text-dim);transition:all 0.2s;" onclick="toggleTheme()" title="切换主题">🌙</button>
   </header>
   <div class="course-grid" id="course-grid"></div>
   <footer>从 Python 到 C · 看见内存 · 理解本质</footer>
@@ -125,6 +132,31 @@ SECTIONS.forEach(item => {
     grid.appendChild(card);
   }
 });
+</script>
+
+<script>
+(function() {
+  const key = 'c-workshop-theme';
+  const saved = localStorage.getItem(key);
+  if (saved === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    const btn = document.getElementById('theme-toggle');
+    if (btn) btn.textContent = '☀️';
+  }
+})();
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  if (isLight) {
+    html.removeAttribute('data-theme');
+    localStorage.setItem('c-workshop-theme', 'dark');
+    document.getElementById('theme-toggle').textContent = '🌙';
+  } else {
+    html.setAttribute('data-theme', 'light');
+    localStorage.setItem('c-workshop-theme', 'light');
+    document.getElementById('theme-toggle').textContent = '☀️';
+  }
+}
 </script>
 </body>
 </html>

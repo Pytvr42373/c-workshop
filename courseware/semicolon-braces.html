@@ -56,6 +56,12 @@
   .next-link a svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
   .error-box { padding: 12px 16px; background: rgba(255,71,87,0.08); border: 1px solid rgba(255,71,87,0.2); border-radius: 8px; margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: var(--red); font-weight: 500; }
   .ok-box { padding: 12px 16px; background: rgba(0,230,118,0.08); border: 1px solid rgba(0,230,118,0.2); border-radius: 8px; margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; color: var(--green); font-weight: 500; }
+[data-theme="light"] {
+  --bg: #f0f4ff; --surface: #ffffff; --surface2: #e8edf5; --border: #d0d8e8;
+  --accent: #5b4bd4; --accent2: #7c6df0; --green: #00b86b; --cyan: #0099cc;
+  --orange: #e67e00; --pink: #d6336c; --red: #d93025; --yellow: #e6a800;
+  --text: #1a1d3a; --text-dim: #6b6f8a;
+}
 </style>
 </head>
 <body>
@@ -63,6 +69,8 @@
   <a href="../index.html" class="back-btn"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>返回</a>
   <h1>分号与花括号</h1>
   <span class="sub">; 结束语句 · {} 代码块 · 最常见的编译错误</span>
+
+  <button id="theme-toggle" style="margin-left:auto;background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1rem;color:var(--text-dim);transition:all 0.2s;" onclick="toggleTheme()" title="切换主题">🌙</button>
 </div>
 <div class="workspace">
   <div class="topic-nav" id="topic-nav"></div>
@@ -253,6 +261,31 @@ function initTerms() {
 }
 
 init();
+</script>
+
+<script>
+(function() {
+  const key = 'c-workshop-theme';
+  const saved = localStorage.getItem(key);
+  if (saved === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    const btn = document.getElementById('theme-toggle');
+    if (btn) btn.textContent = '☀️';
+  }
+})();
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  if (isLight) {
+    html.removeAttribute('data-theme');
+    localStorage.setItem('c-workshop-theme', 'dark');
+    document.getElementById('theme-toggle').textContent = '🌙';
+  } else {
+    html.setAttribute('data-theme', 'light');
+    localStorage.setItem('c-workshop-theme', 'light');
+    document.getElementById('theme-toggle').textContent = '☀️';
+  }
+}
 </script>
 </body>
 </html>

@@ -89,6 +89,12 @@
   .term-card .tc-body strong { color: var(--text); }
   .term-card .tc-body code { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--orange); background: rgba(255,145,0,0.08); padding: 1px 5px; border-radius: 3px; }
   .term-card .tc-icon { font-size: 1.1rem; margin-bottom: 4px; }
+[data-theme="light"] {
+  --bg: #f0f4ff; --surface: #ffffff; --surface2: #e8edf5; --border: #d0d8e8;
+  --accent: #5b4bd4; --accent2: #7c6df0; --green: #00b86b; --cyan: #0099cc;
+  --orange: #e67e00; --pink: #d6336c; --red: #d93025; --yellow: #e6a800;
+  --text: #1a1d3a; --text-dim: #6b6f8a;
+}
 </style>
 </head>
 <body>
@@ -100,6 +106,8 @@
   </a>
   <h1>scanf / printf 详解</h1>
   <span class="sub">%d %f %lf %c %s &amp; · 格式控制 · 竞赛利器</span>
+
+  <button id="theme-toggle" style="margin-left:auto;background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1rem;color:var(--text-dim);transition:all 0.2s;" onclick="toggleTheme()" title="切换主题">🌙</button>
 </div>
 
 <div class="workspace">
@@ -373,6 +381,31 @@ function initTerms() {
   });
 }
 initTerms();
+</script>
+
+<script>
+(function() {
+  const key = 'c-workshop-theme';
+  const saved = localStorage.getItem(key);
+  if (saved === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    const btn = document.getElementById('theme-toggle');
+    if (btn) btn.textContent = '☀️';
+  }
+})();
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  if (isLight) {
+    html.removeAttribute('data-theme');
+    localStorage.setItem('c-workshop-theme', 'dark');
+    document.getElementById('theme-toggle').textContent = '🌙';
+  } else {
+    html.setAttribute('data-theme', 'light');
+    localStorage.setItem('c-workshop-theme', 'light');
+    document.getElementById('theme-toggle').textContent = '☀️';
+  }
+}
 </script>
 </body>
 </html>
