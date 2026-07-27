@@ -56,24 +56,40 @@
   .hw-block .hw-name { font-size: 0.85rem; font-weight: 700; margin-bottom: 4px; }
   .hw-block .hw-desc { font-size: 0.7rem; color: var(--text-dim); line-height: 1.5; }
   .hw-cpu { border-color: var(--accent); background: rgba(108,92,231,0.08); }
+  .hw-cpu:hover { border-color: var(--accent2); box-shadow: 0 0 16px rgba(108,92,231,0.2); }
   .hw-ram { border-color: var(--green); background: rgba(0,230,118,0.08); }
+  .hw-ram:hover { border-color: var(--green); box-shadow: 0 0 16px rgba(0,230,118,0.2); }
   .hw-disk { border-color: var(--orange); background: rgba(255,145,0,0.08); }
+  .hw-disk:hover { border-color: var(--orange); box-shadow: 0 0 16px rgba(255,145,0,0.2); }
   .hw-io { border-color: var(--cyan); background: rgba(0,229,255,0.08); }
+  .hw-io:hover { border-color: var(--cyan); box-shadow: 0 0 16px rgba(0,229,255,0.2); }
   .hw-arrow { text-align: center; color: var(--text-dim); font-size: 0.7rem; font-family: 'JetBrains Mono', monospace; }
+  .hw-arrow svg { width: 24px; height: 24px; stroke: var(--text-dim); fill: none; stroke-width: 2; }
   .mem-vis { padding: 16px; background: rgba(0,0,0,0.2); border-radius: 8px; }
   .mem-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 3px; }
   .mem-cell { aspect-ratio: 1; border-radius: 4px; border: 1px solid var(--border); background: var(--surface2); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 0.55rem; color: var(--text-dim); transition: all 0.3s; cursor: pointer; }
+  .mem-cell:hover { border-color: var(--accent); }
+  .mem-cell.occupied { background: rgba(108,92,231,0.2); border-color: var(--accent); color: var(--accent2); }
   .mem-cell.var-a { background: rgba(0,230,118,0.2); border-color: var(--green); color: var(--green); }
   .mem-cell.var-b { background: rgba(255,145,0,0.2); border-color: var(--orange); color: var(--orange); }
   .mem-cell.var-c { background: rgba(255,64,129,0.2); border-color: var(--pink); color: var(--pink); }
-  .step-info { margin-top: 10px; padding: 10px 14px; background: rgba(108,92,231,0.08); border-radius: 8px; font-size: 0.85rem; color: var(--accent2); }
-  .compare-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.78rem; }
-  .compare-table th { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--text-dim); font-weight: 600; }
-  .compare-table td { padding: 8px 12px; border-bottom: 1px solid rgba(42,45,90,0.5); }
+  .mem-label { font-size: 0.7rem; color: var(--text-dim); margin-bottom: 8px; font-family: 'JetBrains Mono', monospace; }
+  .mem-var-list { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+  .mem-var-item { display: flex; align-items: center; gap: 8px; font-size: 0.75rem; font-family: 'JetBrains Mono', monospace; }
+  .mem-var-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
+  .mem-var-dot.a { background: var(--green); }
+  .mem-var-dot.b { background: var(--orange); }
+  .mem-var-dot.c { background: var(--pink); }
   .next-link { display: flex; justify-content: flex-end; margin-top: 24px; }
   .next-link a { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }
   .next-link a:hover { border-color: var(--accent); color: var(--text); }
   .next-link a svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .step-info { margin-top: 10px; padding: 10px 14px; background: rgba(108,92,231,0.08); border-radius: 8px; font-size: 0.85rem; color: var(--accent2); font-family: 'Inter', sans-serif; line-height: 1.5; }
+  .compare-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.78rem; }
+  .compare-table th { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--text-dim); font-weight: 600; }
+  .compare-table td { padding: 8px 12px; border-bottom: 1px solid rgba(42,45,90,0.5); }
+  .compare-table .py-col { color: var(--py); }
+  .compare-table .cpp-col { color: var(--cyan); }
 </style>
 </head>
 <body>
@@ -284,11 +300,18 @@ const TOPICS = [
 
 let currentIdx = 0;
 
+const HINTS = [
+  '👆 点击硬件模块查看详情',
+  '每种变量占不同字节数，拖动边界观察',
+  '从 .cpp 到输出的完整流程',
+  '同样运算量 C++ 快约 60 倍'
+];
+
 function renderTopic(idx) {
   const topic = TOPICS[idx];
   document.querySelectorAll('.topic-btn').forEach((btn, i) => btn.classList.toggle('active', i === idx));
   document.getElementById('hw-diagram').innerHTML = topic.diagram;
-  document.getElementById('hw-info').textContent = '👆 点击图中的硬件模块查看详情';
+  document.getElementById('hw-info').textContent = HINTS[idx] || '';
   document.getElementById('knowledge-content').innerHTML = topic.knowledge;
   initTerms();
 }
@@ -301,6 +324,9 @@ function showHW(type) {
     io: '⌨️ 输入/输出：键盘输入数据到内存，CPU 处理后从内存输出到显示器。cin 从键盘读，cout 到显示器写。'
   };
   document.getElementById('hw-info').textContent = info[type] || '';
+  document.querySelectorAll('.hw-block').forEach(b => b.style.opacity = '0.5');
+  const el = document.querySelector('[onclick*="' + type + '"]');
+  if (el) el.style.opacity = '1';
 }
 
 function init() {
@@ -323,7 +349,11 @@ const TERM_DEFS = {
   'compiled': { icon: '⚡', title: '编译型语言', body: '运行前先把整个程序翻译成机器码。C、C++、Rust 都是编译型。<br><br>优点：运行速度快（CPU 直接执行）。<br>缺点：每次改代码都要重新编译。' }
 };
 
+let TERMS_INITED = false;
+
 function initTerms() {
+  if (TERMS_INITED) return;
+  TERMS_INITED = true;
   let currentTerm = null, currentCard = null;
   function showCard(term) {
     if (term === currentTerm && currentCard) return;
