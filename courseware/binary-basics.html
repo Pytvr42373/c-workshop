@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>二进制与数据表示 — C 语言交互实验室</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --bg: #0b0d1a; --surface: #12142a; --surface2: #1a1d3a; --border: #2a2d5a; --accent: #6c5ce7; --accent2: #a29bfe; --green: #00e676; --cyan: #00e5ff; --orange: #ff9100; --pink: #ff4081; --text: #e0e0ff; --text-dim: #7878aa; --red: #ff4757; }
+  body { font-size: 17px; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 24px; }
+  .top-bar { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; flex-wrap: wrap; }
+  .back-btn { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }
+  .back-btn:hover { border-color: var(--accent); color: var(--text); }
+  .back-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .top-bar h1 { font-size: 1.3rem; font-weight: 700; background: linear-gradient(135deg, var(--cyan), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .top-bar .sub { font-size: 0.78rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
+  .workspace { max-width: 1100px; margin: 0 auto; }
+  .topic-nav { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
+  .topic-btn { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.82rem; cursor: pointer; transition: all 0.2s; }
+  .topic-btn:hover { border-color: var(--accent); }
+  .topic-btn.active { border-color: var(--accent); background: rgba(108,92,231,0.15); }
+  .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 900px) { .main-grid { grid-template-columns: 1fr; } }
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .panel-header { padding: 12px 16px; background: var(--surface2); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .panel-header .label { font-size: 0.72rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+  .panel-body { padding: 20px; }
+  .tip-box { padding: 14px 18px; background: rgba(0,229,255,0.06); border: 1px solid rgba(0,229,255,0.15); border-radius: 8px; margin-bottom: 14px; }
+  .tip-box .tip-label { font-size: 0.72rem; font-weight: 700; color: var(--cyan); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .tip-box .tip-text { font-size: 0.85rem; color: var(--text-dim); line-height: 1.7; }
+  .tip-box .tip-text strong { color: var(--text); }
+  .danger-box { padding: 14px 18px; background: rgba(255,71,87,0.06); border: 1px solid rgba(255,71,87,0.15); border-radius: 8px; margin-bottom: 14px; }
+  .danger-box .danger-label { font-size: 0.72rem; font-weight: 700; color: var(--red); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .danger-box .danger-text { font-size: 0.85rem; color: var(--text-dim); line-height: 1.7; }
+  .term { border-bottom: 2px dotted var(--accent2); cursor: help; color: var(--accent2); font-weight: 600; position: relative; }
+  .term:hover { background: rgba(108,92,231,0.12); border-radius: 3px; }
+  .term-card { position: fixed; z-index: 9999; width: 340px; max-width: 90vw; background: var(--surface2); border: 1px solid var(--accent); border-radius: 12px; padding: 14px 18px; box-shadow: 0 8px 32px rgba(108,92,231,0.25); display: none; pointer-events: none; }
+  .term-card.show { display: block; animation: termFadeIn 0.18s ease-out; }
+  @keyframes termFadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .term-card .tc-title { font-size: 0.82rem; font-weight: 700; color: var(--cyan); margin-bottom: 6px; }
+  .term-card .tc-body { font-size: 0.8rem; color: var(--text-dim); line-height: 1.7; }
+  .term-card .tc-body strong { color: var(--text); }
+  .term-card .tc-body code { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--orange); background: rgba(255,145,0,0.08); padding: 1px 5px; border-radius: 3px; }
+  .term-card .tc-icon { font-size: 1.1rem; margin-bottom: 4px; }
+  .next-link { display: flex; justify-content: space-between; margin-top: 24px; }
+  .next-link a { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }
+  .next-link a:hover { border-color: var(--accent); color: var(--text); }
+  .next-link a svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .bit-vis { display: flex; gap: 4px; justify-content: center; margin: 16px 0; }
+  .bit { width: 36px; height: 36px; border-radius: 6px; border: 2px solid var(--border); background: var(--surface2); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; font-weight: 700; color: var(--text-dim); transition: all 0.3s; cursor: pointer; }
+  .bit.on { background: rgba(0,230,118,0.2); border-color: var(--green); color: var(--green); }
+  .bit:hover { border-color: var(--accent); }
+  .bit-label { font-size: 0.55rem; color: var(--text-dim); text-align: center; margin-top: 2px; font-family: 'JetBrains Mono', monospace; }
+  .bit-col { display: flex; flex-direction: column; align-items: center; }
+  .type-card { display: flex; gap: 12px; padding: 14px; background: rgba(0,0,0,0.2); border-radius: 8px; margin-bottom: 8px; align-items: center; }
+  .type-card .tc-name { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 700; min-width: 80px; }
+  .type-card .tc-bytes { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--accent2); min-width: 60px; }
+  .type-card .tc-range { font-size: 0.72rem; color: var(--text-dim); flex: 1; }
+  .type-card .tc-bar { height: 6px; border-radius: 3px; background: var(--accent); min-width: 20px; }
+  .result-box { padding: 12px 16px; background: rgba(0,230,118,0.08); border-radius: 8px; margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--green); text-align: center; }
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <a href="../index.html" class="back-btn"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>返回</a>
+  <h1>二进制与数据表示</h1>
+  <span class="sub">0 和 1 · 字节 · 位 · 数据类型大小</span>
+</div>
+<div class="workspace">
+  <div class="topic-nav" id="topic-nav"></div>
+  <div class="main-grid">
+    <div class="panel">
+      <div class="panel-header"><span class="label">可视化</span></div>
+      <div class="panel-body"><div id="vis-content"></div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-header"><span class="label">关键知识</span></div>
+      <div class="panel-body"><div id="knowledge-content"></div></div>
+    </div>
+  </div>
+  <div class="next-link">
+    <a href="hardware-memory.html"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>上一页：计算机硬件</a>
+    <a href="compile-run.html">下一页：编译运行流程<svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </div>
+</div>
+<script>
+const TOPICS = [
+  {
+    name: '0 和 1',
+    vis: `
+      <div style="text-align:center; padding: 20px;">
+        <div style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 16px;">计算机只认识 0 和 1（开关：关/开）</div>
+        <div style="display: flex; gap: 20px; justify-content: center; margin: 20px 0;">
+          <div style="text-align:center;">
+            <div style="font-size: 2.5rem;">🔌</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size: 1.5rem; color: var(--text-dim); font-weight: 700;">0</div>
+            <div style="font-size: 0.7rem; color: var(--text-dim);">关 / false</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-size: 2.5rem;">💡</div>
+            <div style="font-family:'JetBrains Mono',monospace; font-size: 1.5rem; color: var(--green); font-weight: 700;">1</div>
+            <div style="font-size: 0.7rem; color: var(--text-dim);">开 / true</div>
+          </div>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-dim); margin-top: 16px; line-height: 1.8;">
+          所有数据最终都变成 0 和 1 的组合<br>
+          数字 42 → <code style="color:var(--green);">00101010</code><br>
+          字母 'A' → <code style="color:var(--green);">01000001</code>
+        </div>
+      </div>
+    `,
+    knowledge: `
+      <div class="tip-box" style="margin-top:0">
+        <div class="tip-label">📌 什么是二进制</div>
+        <div class="tip-text">
+          计算机底层是<span class="term" data-term="circuit">电子电路</span>，只有两种状态：<strong>通电(1)</strong> 和 <strong>断电(0)</strong>。<br><br>
+          所以计算机用的数字系统是<strong>二进制</strong>（只有 0 和 1），不是我们日常用的十进制（0-9）。<br><br>
+          一个 0 或 1 叫一个<span class="term" data-term="bit">位（bit）</span>。
+        </div>
+      </div>
+      <div class="danger-box">
+        <div class="danger-label">⚠️ Python 帮你隐藏了这些</div>
+        <div class="danger-text">
+          在 Python 里 <code>42</code> 就是 42，你不用管它怎么存。<br>
+          但 C++ 里你需要知道：<code>int</code> 用 32 位（32 个 0/1）存一个数。<br>
+          这就是为什么 C++ 有<strong>类型</strong>和<strong>溢出</strong>——不同类型占的位数不同。
+        </div>
+      </div>
+    `
+  },
+  {
+    name: '位与字节',
+    vis: `
+      <div style="padding: 20px;">
+        <div style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 12px;">1 字节 = 8 位</div>
+        <div class="bit-vis">
+          <div class="bit-col"><div class="bit on">1</div><div class="bit-label">位7</div></div>
+          <div class="bit-col"><div class="bit">0</div><div class="bit-label">位6</div></div>
+          <div class="bit-col"><div class="bit on">1</div><div class="bit-label">位5</div></div>
+          <div class="bit-col"><div class="bit">0</div><div class="bit-label">位4</div></div>
+          <div class="bit-col"><div class="bit on">1</div><div class="bit-label">位3</div></div>
+          <div class="bit-col"><div class="bit">0</div><div class="bit-label">位2</div></div>
+          <div class="bit-col"><div class="bit on">1</div><div class="bit-label">位1</div></div>
+          <div class="bit-col"><div class="bit">0</div><div class="bit-label">位0</div></div>
+        </div>
+        <div class="result-box">10101010 (二进制) = 170 (十进制)</div>
+        <div style="margin-top:16px; font-size:0.78rem; color:var(--text-dim); line-height:1.8;">
+          <strong>位（bit）</strong>：一个 0 或 1<br>
+          <strong>字节（Byte）</strong>：8 个位<br>
+          <strong>KB</strong>：1024 字节<br>
+          <strong>MB</strong>：1024 KB<br>
+          <strong>GB</strong>：1024 MB
+        </div>
+      </div>
+    `,
+    knowledge: `
+      <div class="tip-box" style="margin-top:0">
+        <div class="tip-label">📌 位、字节、KB、MB、GB</div>
+        <div class="tip-text">
+          <strong>1 位 (bit)</strong> = 一个 0 或 1<br>
+          <strong>1 字节 (Byte)</strong> = 8 位 → 能表示 0~255 共 256 种状态<br>
+          <strong>1 KB</strong> = 1024 字节<br>
+          <strong>1 MB</strong> = 1024 KB<br>
+          <strong>1 GB</strong> = 1024 MB<br><br>
+          你的内存条 8GB = 约 85 亿个字节！
+        </div>
+      </div>
+      <div class="tip-box">
+        <div class="tip-label">💡 为什么是 1024 不是 1000</div>
+        <div class="tip-text">
+          因为计算机用二进制，<strong>2¹⁰ = 1024</strong>，所以用 1024 作为进率。<br>
+          这就像十进制用 1000（10³）一样。
+        </div>
+      </div>
+    `
+  },
+  {
+    name: '数据类型大小',
+    vis: `
+      <div style="padding: 20px;">
+        <div style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 12px;">C++ 各类型占多少字节？</div>
+        <div class="type-card"><div class="tc-name" style="color:var(--green);">char</div><div class="tc-bytes">1 字节</div><div class="tc-bar" style="width:12px;"></div><div class="tc-range">-128 ~ 127</div></div>
+        <div class="type-card"><div class="tc-name" style="color:var(--accent2);">short</div><div class="tc-bytes">2 字节</div><div class="tc-bar" style="width:24px;"></div><div class="tc-range">-32768 ~ 32767</div></div>
+        <div class="type-card"><div class="tc-name" style="color:var(--accent);">int</div><div class="tc-bytes">4 字节</div><div class="tc-bar" style="width:48px;"></div><div class="tc-range">-21亿 ~ 21亿</div></div>
+        <div class="type-card"><div class="tc-name" style="color:var(--cyan);">long long</div><div class="tc-bytes">8 字节</div><div class="tc-bar" style="width:96px;"></div><div class="tc-range">±9.2×10¹⁸</div></div>
+        <div class="type-card"><div class="tc-name" style="color:var(--orange);">float</div><div class="tc-bytes">4 字节</div><div class="tc-bar" style="width:48px;"></div><div class="tc-range">~7 位有效数字</div></div>
+        <div class="type-card"><div class="tc-name" style="color:var(--orange);">double</div><div class="tc-bytes">8 字节</div><div class="tc-bar" style="width:96px;"></div><div class="tc-range">~15 位有效数字</div></div>
+        <div class="type-card"><div class="tc-name" style="color:var(--pink);">bool</div><div class="tc-bytes">1 字节</div><div class="tc-bar" style="width:12px;"></div><div class="tc-range">true / false</div></div>
+      </div>
+    `,
+    knowledge: `
+      <div class="tip-box" style="margin-top:0">
+        <div class="tip-label">📌 C++ 类型 = 占多少字节</div>
+        <div class="tip-text">
+          C++ 声明变量时必须指定类型，因为不同类型<strong>占的内存大小不同</strong>。<br><br>
+          <code>int</code> → 4 字节 → 能存 -21 亿 ~ 21 亿<br>
+          <code>long long</code> → 8 字节 → 能存 ±9.2×10¹⁸<br>
+          <code>char</code> → 1 字节 → 存一个字符<br><br>
+          <strong>Python 没有这个问题</strong>——Python 的 <code>int</code> 可以无限大，自动扩展内存。
+        </div>
+      </div>
+      <div class="danger-box">
+        <div class="danger-label">⚠️ int 会溢出！</div>
+        <div class="danger-text">
+          <code>int</code> 最大 2147483647（约 21 亿）。<br>
+          如果你算 <code>int a = 3000000000;</code>（30 亿）→ <strong>溢出</strong>！变成负数。<br><br>
+          竞赛中大数要用 <code>long long</code>（最大 9.2×10¹⁸）。<br>
+          Python 不会溢出，C++ 会——这是最大的区别之一。
+        </div>
+      </div>
+    `
+  },
+  {
+    name: '二进制转十进制',
+    vis: `
+      <div style="padding: 20px;">
+        <div style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 12px;">点击位切换 0/1，看十进制结果</div>
+        <div class="bit-vis" id="bit-vis-interactive"></div>
+        <div class="result-box" id="bit-result">十进制: 0</div>
+        <div style="margin-top:16px; font-size:0.75rem; color:var(--text-dim); line-height:1.8; text-align:center;">
+          每位的权重：128 64 32 16 8 4 2 1<br>
+          把亮着的位加起来就是十进制值
+        </div>
+      </div>
+    `,
+    knowledge: `
+      <div class="tip-box" style="margin-top:0">
+        <div class="tip-label">📌 二进制怎么变成十进制</div>
+        <div class="tip-text">
+          每个位有一个"权重"，从右到左是 1, 2, 4, 8, 16, 32, 64, 128...<br>
+          （就是 2 的 0 次方、1 次方、2 次方...）<br><br>
+          把亮着的位（值为 1）的权重加起来，就是十进制数。<br><br>
+          例如 <code>1010</code> = 8 + 2 = <strong>10</strong>
+        </div>
+      </div>
+      <div class="tip-box">
+        <div class="tip-label">💡 为什么你要知道这个</div>
+        <div class="tip-text">
+          理解二进制才能理解：<br>
+          ① 为什么 <code>int</code> 最大是 2147483647（2³¹-1）<br>
+          ② 为什么 <code>char</code> 能存 256 种字符（2⁸）<br>
+          ③ 位运算（&、|、<<、>>）在做什么<br><br>
+          竞赛中位运算很常用，理解二进制是基础。
+        </div>
+      </div>
+    `
+  }
+];
+
+let currentIdx = 0;
+
+function renderTopic(idx) {
+  const topic = TOPICS[idx];
+  document.querySelectorAll('.topic-btn').forEach((btn, i) => btn.classList.toggle('active', i === idx));
+  document.getElementById('vis-content').innerHTML = topic.vis;
+  document.getElementById('knowledge-content').innerHTML = topic.knowledge;
+  initTerms();
+  if (idx === 3) initBitInteractive();
+}
+
+function initBitInteractive() {
+  const container = document.getElementById('bit-vis-interactive');
+  if (!container) return;
+  const weights = [128, 64, 32, 16, 8, 4, 2, 1];
+  let bits = [0,0,0,0,0,0,0,0];
+  container.innerHTML = '';
+  bits.forEach((b, i) => {
+    const col = document.createElement('div');
+    col.className = 'bit-col';
+    const bit = document.createElement('div');
+    bit.className = 'bit';
+    bit.textContent = '0';
+    bit.onclick = () => {
+      bits[i] = bits[i] ? 0 : 1;
+      bit.textContent = bits[i];
+      bit.classList.toggle('on', bits[i] === 1);
+      const val = bits.reduce((sum, b, j) => sum + b * weights[j], 0);
+      document.getElementById('bit-result').textContent = '十进制: ' + val;
+    };
+    col.appendChild(bit);
+    const label = document.createElement('div');
+    label.className = 'bit-label';
+    label.textContent = weights[i];
+    col.appendChild(label);
+    container.appendChild(col);
+  });
+}
+
+function init() {
+  const nav = document.getElementById('topic-nav');
+  TOPICS.forEach((t, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'topic-btn' + (i === 0 ? ' active' : '');
+    btn.textContent = t.name;
+    btn.onclick = () => renderTopic(i);
+    nav.appendChild(btn);
+  });
+  renderTopic(0);
+}
+
+const TERM_DEFS = {
+  'bit': { icon: '🔢', title: '位（bit）', body: '计算机最小的数据单位。一个位存一个 <strong>0 或 1</strong>。<br><br>8 个位 = 1 字节（Byte）。<br><br>就像一盏灯：亮=1，灭=0。' },
+  'circuit': { icon: '🔌', title: '电子电路', body: '计算机内部是数十亿个微小开关（晶体管），每个开关只有<strong>开/关</strong>两种状态。<br><br>开 = 通电 = 1<br>关 = 断电 = 0<br><br>所有计算都是这些开关的排列组合。' }
+};
+
+function initTerms() {
+  let ct = null, cc = null;
+  function show(t) { if (t===ct&&cc) return; hide(); ct=t; const d=TERM_DEFS[t.dataset.term]; if(!d) return; cc=document.createElement('div'); cc.className='term-card show'; cc.innerHTML='<div class="tc-icon">'+d.icon+'</div><div class="tc-title">'+d.title+'</div><div class="tc-body">'+d.body+'</div>'; document.body.appendChild(cc); const r=t.getBoundingClientRect(); let l=r.left+r.width/2-170, p=r.bottom+8; if(l+340>innerWidth)l=innerWidth-350; if(p+200>innerHeight)p=r.top-208; if(l<10)l=10; cc.style.left=l+'px'; cc.style.top=p+'px'; }
+  function hide() { if(cc){cc.remove();cc=null;} ct=null; }
+  document.addEventListener('mouseover', e => { const t=e.target.closest('.term'); if(t) show(t); else if(!e.target.closest('.term-card')) hide(); });
+}
+
+init();
+</script>
+</body>
+</html>
