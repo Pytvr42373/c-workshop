@@ -278,21 +278,31 @@ function renderMemory() {
   svg.style.zIndex = '5';
   grid.appendChild(svg);
 
-  // Render target variable
-  const targetCell = createCell(ex.target, 'target-cell');
-  targetCell.style.marginRight = '40px';
-  grid.appendChild(targetCell);
+  // Row 1: Data variables (target + extra)
+  const dataRow = document.createElement('div');
+  dataRow.style.display = 'flex';
+  dataRow.style.alignItems = 'center';
+  dataRow.style.gap = '40px';
+  dataRow.style.marginBottom = '24px';
 
-  // Render extra variable if exists
+  const targetCell = createCell(ex.target, 'target-cell');
+  dataRow.appendChild(targetCell);
+
   if (ex.extra) {
     const extraCell = createCell(ex.extra, '');
-    extraCell.style.marginRight = '40px';
-    grid.appendChild(extraCell);
+    dataRow.appendChild(extraCell);
   }
+  grid.appendChild(dataRow);
 
-  // Render pointer variable
+  // Row 2: Pointer variable
+  const ptrRow = document.createElement('div');
+  ptrRow.style.display = 'flex';
+  ptrRow.style.alignItems = 'center';
+  ptrRow.style.gap = '40px';
+
   const ptrCell = createCell(ex.pointer, 'pointer-cell');
-  grid.appendChild(ptrCell);
+  ptrRow.appendChild(ptrCell);
+  grid.appendChild(ptrRow);
 
   // Draw arrow after layout
   requestAnimationFrame(() => {
@@ -485,5 +495,9 @@ function init() {
 init();
 </script>
 
+  <div class="next-link">
+    <a href="scope.html"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>上一页：作用域</a>
+    <a href="sorting.html">下一页：排序算法<svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </div>
 </body>
 </html>
