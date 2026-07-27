@@ -168,6 +168,27 @@
   --accent: #5b4bd4; --accent2: #7c6df0; --green: #00b86b; --cyan: #0099cc;
   --orange: #e67e00; --pink: #d6336c; --red: #d93025; --yellow: #e6a800;
   --text: #1a1d3a; --text-dim: #6b6f8a;
+
+  rgba(108,92,231,0.15)
+  rgba(108,92,231,0.2)
+  rgba(108,92,231,0.08)
+  rgba(108,92,231,0.1)
+  rgba(108,92,231,0.25)
+  rgba(0,0,0,0.2)
+  rgba(0,0,0,0.5)
+
+  .bar-rect.comparing { background: linear-gradient(180deg, var(--yellow), #ffc107); }
+  .bar-rect.swapping { background: linear-gradient(180deg, var(--red), #ffc107); }
+  .bar-rect.sorted { background: linear-gradient(180deg, var(--green), #ffc107); }
+  .bar-rect.pivot { background: linear-gradient(180deg, var(--pink), #ffc107); }
+  .bar-rect.key { background: linear-gradient(180deg, var(--orange), #ffc107); }
+
+  .bar-rect.bound-l { background: linear-gradient(180deg, var(--green), #69f0ae); }
+  .bar-rect.bound-r { background: linear-gradient(180deg, var(--red), #ff5252); }
+  .bar-rect.bound-lr { background: linear-gradient(180deg, var(--yellow), #ffc107); }
+  .bar-rect.checking { background: linear-gradient(180deg, var(--yellow), #ffc107); }
+  .bar-rect.found { background: linear-gradient(180deg, var(--green), #69f0ae); }
+  .bar-rect.mid { background: linear-gradient(180deg, var(--pink), #ff4081); }
 }
   .next-link { display: flex; justify-content: space-between; margin-top: 24px; }
   .next-link a { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }
