@@ -111,7 +111,7 @@ const SECTIONS = [
 const grid = document.getElementById('course-grid');
 let seq = 0;
 SECTIONS.forEach(item => {
-  if (item.title && !item.num) {
+  if (item.sub) {
     const header = document.createElement('div');
     header.className = 'section-header';
     header.innerHTML = '<h2>' + item.title + '</h2><div class="section-sub">' + item.sub + '</div><div class="section-line" style="background:linear-gradient(90deg, ' + item.lineColor + ', transparent)"></div>';
