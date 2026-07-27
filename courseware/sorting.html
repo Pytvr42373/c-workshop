@@ -668,6 +668,23 @@ function renderBars(containerId, step, compact) {
     valSpan.textContent = val;
     rect.appendChild(valSpan);
 
+    // Click to set value
+    rect.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (isPlaying) return;
+      const newVal = prompt(`输入 arr[${i}] 的新数值（1~99）`, val);
+      if (newVal !== null) {
+        const parsed = parseInt(newVal);
+        if (!isNaN(parsed) && parsed >= 1 && parsed <= 99) {
+          currentArray[i] = parsed;
+          syncValueInputs();
+          regenerateSteps();
+        } else {
+          alert('请输入 1~99 之间的整数');
+        }
+      }
+    });
+
     const idx = document.createElement('div');
     idx.className = 'bar-index';
     idx.textContent = i;

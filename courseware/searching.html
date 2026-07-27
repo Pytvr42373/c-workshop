@@ -80,6 +80,10 @@
   .controls-row input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--accent); cursor: pointer; border: 2px solid var(--surface); }
   .controls-row input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: var(--accent); cursor: pointer; border: 2px solid var(--surface); }
   .controls-row .range-val { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--accent2); min-width: 24px; text-align: center; }
+
+  .speed-control { display: flex; align-items: center; gap: 6px; }
+  .speed-control label { font-size: 0.7rem; color: var(--text-dim); }
+  .speed-control input[type="range"] { width: 60px; accent-color: var(--accent); }
   .ctrl-btn { padding: 6px 14px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-family: inherit; font-size: 0.78rem; cursor: pointer; transition: all 0.2s; }
   .ctrl-btn:hover { border-color: var(--accent); background: rgba(108,92,231,0.08); }
   .ctrl-btn.primary { border-color: var(--accent); background: rgba(108,92,231,0.15); color: var(--accent2); }
@@ -235,6 +239,11 @@
           <div class="flow-controls">
             <button class="flow-btn primary" id="step-btn" onclick="stepForward()">▶ 单步执行</button>
             <button class="flow-btn" id="run-btn" onclick="runAll()">⏩ 运行全部</button>
+            <div class="speed-control">
+              <label>速度</label>
+              <input type="range" id="speed-range" min="1" max="5" value="3" step="1">
+              <span style="font-size:0.7rem;color:var(--text-dim);font-family:'JetBrains Mono',monospace" id="speed-label">3</span>
+            </div>
           </div>
           <div class="state-info" id="state-info-main" style="margin-left:auto;"></div>
         </div>
@@ -645,6 +654,12 @@ function stepForward() {
   updateStepButtons();
 }
 
+function getSpeedDelay() {
+  const speed = parseInt(document.getElementById('speed-range').value);
+  const delays = [800, 500, 300, 150, 50];
+  return delays[speed - 1] || 300;
+}
+
 function runAll() {
   if (isRunning) return;
   isRunning = true;
@@ -654,6 +669,7 @@ function runAll() {
   document.getElementById('run-btn-code').disabled = true;
   
   let i = currentStep;
+  const delay = getSpeedDelay();
   const interval = setInterval(() => {
     currentStep = i;
     renderBothViews();
@@ -663,7 +679,7 @@ function runAll() {
       isRunning = false;
       updateStepButtons();
     }
-  }, 400);
+  }, delay);
 }
 
 function updateStepButtons() {
@@ -848,6 +864,11 @@ function init() {
     btn.textContent = a.name;
     btn.onclick = () => selectAlgo(i);
     selector.appendChild(btn);
+  });
+
+  // Speed control
+  document.getElementById('speed-range').addEventListener('input', function() {
+    document.getElementById('speed-label').textContent = this.value;
   });
 
   // Set initial data
