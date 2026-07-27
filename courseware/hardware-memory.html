@@ -208,19 +208,15 @@ const TOPICS = [
     name: '内存是什么',
     diagram: `
       <div class="hw-diagram">
-        <div class="mem-label">内存可视化（每个格子 = 1 字节）</div>
-        <div class="mem-grid" id="mem-grid-2">
-          <div class="mem-cell var-a">a</div><div class="mem-cell var-a">a</div><div class="mem-cell var-a">a</div><div class="mem-cell var-a">a</div>
-          <div class="mem-cell var-b">b</div><div class="mem-cell var-b">b</div><div class="mem-cell var-b">b</div><div class="mem-cell var-b">b</div>
-          <div class="mem-cell var-c">c</div><div class="mem-cell var-c">c</div><div class="mem-cell">·</div><div class="mem-cell">·</div>
-          <div class="mem-cell">·</div><div class="mem-cell">·</div><div class="mem-cell">·</div><div class="mem-cell">·</div>
-          <div class="mem-cell">·</div><div class="mem-cell">·</div><div class="mem-cell">·</div><div class="mem-cell">·</div>
-          <div class="mem-cell">·</div><div class="mem-cell">·</div><div class="mem-cell">·</div><div class="mem-cell">·</div>
-        </div>
-        <div class="mem-var-list">
-          <div class="mem-var-item"><div class="mem-var-dot a"></div> int a = 42 → 占 4 字节</div>
-          <div class="mem-var-item"><div class="mem-var-dot b"></div> int b = 100 → 占 4 字节</div>
-          <div class="mem-var-item"><div class="mem-var-dot c"></div> char c = 'A' → 占 1 字节</div>
+        <div class="mem-label">内存可视化 — 拖动边界观察不同变量类型</div>
+        <div class="mem-strip-wrap">
+          <div class="mem-addr-label"><span>0x00</span><span>0x04</span><span>0x08</span><span>0x0C</span><span>0x10</span><span>0x14</span><span>0x18</span><span>0x1C</span></div>
+          <div class="mem-strip" id="mem-strip">
+            <div class="mem-cells" id="mem-cells"></div>
+            <div class="mem-boundary" id="mem-boundary"></div>
+          </div>
+          <div class="mem-info" id="mem-info">← 拖动紫色边界，观察不同变量类型占多少字节</div>
+          <div class="mem-type-label" id="mem-type-label"></div>
         </div>
       </div>
     `,
