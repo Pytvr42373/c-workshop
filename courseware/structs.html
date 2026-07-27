@@ -40,7 +40,7 @@
   .code-block .comment { color: var(--text-dim); font-style: italic; }
   .code-block .hl-struct { color: #ff6b6b; font-weight: 700; }
   .code-block .hl-member { color: #ffd93d; }
-  .code-block .line-num { color: #3a3a6a; user-select: none; margin-right: 12px; }
+  .code-block .line-num { color: var(--text-dim); user-select: none; margin-right: 12px; }
 
   .example-selector { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
   .example-btn { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; cursor: pointer; transition: all 0.2s; }
@@ -51,7 +51,7 @@
   .memory-viz { padding: 16px; background: rgba(0,0,0,0.3); border-radius: 8px; margin-top: 12px; }
   .mem-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
   .mem-label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-dim); min-width: 60px; }
-  .mem-addr { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: #4a4a7a; min-width: 70px; }
+  .mem-addr { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-dim); min-width: 70px; }
   .mem-cell { display: flex; align-items: center; justify-content: center; width: 42px; height: 36px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text); border: 1px solid var(--border); background: var(--surface2); }
   .mem-cell.highlight { border-color: var(--accent2); box-shadow: 0 0 8px rgba(108,92,231,0.3); }
   .mem-cell.field-name { font-size: 0.6rem; color: var(--text-dim); border: none; background: transparent; width: auto; }
@@ -59,7 +59,7 @@
   .mem-cell.field-char { background: rgba(0,230,118,0.15); border-color: var(--green); }
   .mem-cell.field-float { background: rgba(0,229,255,0.15); border-color: var(--cyan); }
   .mem-cell.field-double { background: rgba(255,145,0,0.15); border-color: var(--orange); }
-  .mem-cell.field-padding { background: rgba(255,255,255,0.03); border-color: transparent; color: #3a3a3a; }
+  .mem-cell.field-padding { background: rgba(255,255,255,0.03); border-color: transparent; color: var(--text-dim); }
 
   .mem-legend { display: flex; gap: 16px; margin-top: 12px; flex-wrap: wrap; }
   .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.68rem; color: var(--text-dim); }

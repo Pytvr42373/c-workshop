@@ -104,7 +104,7 @@
   .bar-rect .bar-val { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 700; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
   .bar-rect.checking { background: linear-gradient(180deg, var(--yellow), #ffa000); box-shadow: 0 0 18px rgba(255,215,64,0.5); transform: scaleY(1.05); transform-origin: bottom; }
   .bar-rect.found { background: linear-gradient(180deg, var(--green), #00c853); box-shadow: 0 0 20px rgba(0,230,118,0.5); transform: scaleY(1.08); transform-origin: bottom; }
-  .bar-rect.eliminated { background: linear-gradient(180deg, #3a3a5a, #2a2a4a); opacity: 0.35; }
+  .bar-rect.eliminated { background: linear-gradient(180deg, var(--text-dim), var(--text-dim)); opacity: 0.35; }
   .bar-rect.mid { background: linear-gradient(180deg, var(--pink), #c51162); box-shadow: 0 0 18px rgba(255,64,129,0.5); }
   .bar-rect.bound-l { background: linear-gradient(180deg, var(--green), #00c853); box-shadow: 0 0 12px rgba(0,230,118,0.3); }
   .bar-rect.bound-r { background: linear-gradient(180deg, var(--red), #d50000); box-shadow: 0 0 12px rgba(255,82,82,0.3); }
@@ -270,7 +270,7 @@
           <div class="legend-item"><div class="legend-color" style="background:linear-gradient(180deg,var(--pink),#c51162)"></div> 中间值</div>
           <div class="legend-item"><div class="legend-color" style="background:linear-gradient(180deg,var(--green),#00c853);opacity:0.7"></div> 左边界 L</div>
           <div class="legend-item"><div class="legend-color" style="background:linear-gradient(180deg,var(--red),#d50000);opacity:0.7"></div> 右边界 R</div>
-          <div class="legend-item"><div class="legend-color" style="background:#3a3a5a;opacity:0.35"></div> 已排除</div>
+          <div class="legend-item"><div class="legend-color" style="background:var(--text-dim);opacity:0.35"></div> 已排除</div>
         </div>
       </div>
     </div>
