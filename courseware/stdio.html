@@ -237,9 +237,16 @@ let currentIdx = 0;
 function getCodeHTML(ex) {
   let html = '';
   ex.code.forEach((line, i) => {
+    let hl = line;
+    hl = hl.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    // Strings FIRST
+    hl = hl.replace(/"([^"]*)"/g, '<span class="str">"$1"</span>');
+    hl = hl.replace(/\/\/.*/g, '<span class="comment">$&</span>');
+    hl = hl.replace(/(int|double|float|char|string|bool|void|long|auto|for|while|do|if|else|return|break|continue|cout|cin|endl|main|using|namespace|include|true|false|scanf|printf)/g, '<span class="kw">$1</span>');
+    hl = hl.replace(/(\d+\.?\d*)/g, '<span class="num">$1</span>');
     let cls = '';
     if (line.includes('printf') || line.includes('scanf')) cls = 'highlight';
-    html += `<div class="${cls}"><span class="line-num">${String(i + 1).padStart(2)}</span>${escapeHtml(line)}</div>`;
+    html += `<div class="${cls}"><span class="line-num">${String(i + 1).padStart(2)}</span>${hl}</div>`;
   });
   return html;
 }

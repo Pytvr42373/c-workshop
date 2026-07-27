@@ -372,6 +372,7 @@ function renderTopic(idx) {
   document.getElementById('hw-info').textContent = HINTS[idx] || '';
   document.getElementById('knowledge-content').innerHTML = topic.knowledge;
   initTerms();
+  if (idx === 1) setTimeout(initMemDrag, 50);
 }
 
 function showHW(type) {
@@ -386,6 +387,107 @@ function showHW(type) {
   const el = document.querySelector('[onclick*="' + type + '"]');
   if (el) el.style.opacity = '1';
 }
+
+function initMemDrag() {
+  const strip = document.getElementById('mem-strip');
+  if (!strip) return;
+  const cellsEl = document.getElementById('mem-cells');
+  const boundary = document.getElementById('mem-boundary');
+  const info = document.getElementById('mem-info');
+  const typeLabel = document.getElementById('mem-type-label');
+
+  const TOTAL = 32;
+  let dragging = false;
+
+  // Create cells
+  cellsEl.innerHTML = '';
+  for (let i = 0; i < TOTAL; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'cell';
+    cell.textContent = '0x' + i.toString(16).toUpperCase().padStart(2, '0');
+    cellsEl.appendChild(cell);
+  }
+
+  // Type info
+  const TYPES = [
+    { name: 'char', bytes: 1, color: '#ff4081' },
+    { name: 'short', bytes: 2, color: '#a29bfe' },
+    { name: 'int', bytes: 4, color: '#00e676' },
+    { name: 'long', bytes: 8, color: '#ff9100' },
+    { name: 'float', bytes: 4, color: '#00e5ff' },
+    { name: 'double', bytes: 8, color: '#ff5252' }
+  ];
+
+  function updateBoundary(pos) {
+    // Clamp
+    if (pos < 1) pos = 1;
+    if (pos > TOTAL - 1) pos = TOTAL - 1;
+
+    const pct = (pos / TOTAL) * 100;
+    boundary.style.left = pct + '%';
+
+    // Update cells
+    const cells = cellsEl.querySelectorAll('.cell');
+    cells.forEach((cell, i) => {
+      cell.classList.toggle('occupied', i < pos);
+    });
+
+    // Find matching type
+    const match = TYPES.find(t => t.bytes === pos);
+    const match2 = TYPES.find(t => t.bytes === TOTAL - pos);
+    if (match) {
+      info.innerHTML = '🔵 左侧 <strong>' + pos + '</strong> 字节 = <strong style="color:' + match.color + '">' + match.name + '</strong>  |  右侧 <strong>' + (TOTAL - pos) + '</strong> 字节';
+    } else {
+      info.innerHTML = '🔵 左侧 <strong>' + pos + '</strong> 字节  |  右侧 <strong>' + (TOTAL - pos) + '</strong> 字节';
+    }
+
+    // Type labels
+    typeLabel.innerHTML = TYPES.map(t =>
+      '<span class="mem-type-item"><span class="mem-type-dot" style="background:' + t.color + '"></span> ' +
+      t.name + ' = ' + t.bytes + 'B' +
+      (t.bytes === pos ? ' ← 当前' : '') +
+      '</span>'
+    ).join('');
+  }
+
+  // Mouse drag
+  function onMove(e) {
+    if (!dragging) return;
+    const rect = strip.getBoundingClientRect();
+    const x = (e.clientX || e.touches[0].clientX) - rect.left;
+    const pos = Math.round((x / rect.width) * TOTAL);
+    updateBoundary(pos);
+  }
+
+  boundary.addEventListener('mousedown', (e) => {
+    e.preventDefault();
+    dragging = true;
+    boundary.classList.add('active');
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', () => {
+      dragging = false;
+      boundary.classList.remove('active');
+      document.removeEventListener('mousemove', onMove);
+    }, { once: true });
+  });
+
+  // Touch support
+  boundary.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    dragging = true;
+    boundary.classList.add('active');
+    document.addEventListener('touchmove', onMove, { passive: true });
+    document.addEventListener('touchend', () => {
+      dragging = false;
+      boundary.classList.remove('active');
+      document.removeEventListener('touchmove', onMove);
+    }, { once: true });
+  });
+
+  // Init at 4 bytes (int)
+  updateBoundary(4);
+}
+
 
 function init() {
   const nav = document.getElementById('topic-nav');
