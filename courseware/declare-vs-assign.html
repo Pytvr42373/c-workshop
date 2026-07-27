@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>变量声明 vs 赋值 — C 语言交互实验室</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root { --bg: #0b0d1a; --surface: #12142a; --surface2: #1a1d3a; --border: #2a2d5a; --accent: #6c5ce7; --accent2: #a29bfe; --green: #00e676; --cyan: #00e5ff; --orange: #ff9100; --pink: #ff4081; --text: #e0e0ff; --text-dim: #7878aa; --red: #ff4757; --py: #f7df1e; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; padding: 24px; }
+  .top-bar { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; flex-wrap: wrap; }
+  .back-btn { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }
+  .back-btn:hover { border-color: var(--accent); color: var(--text); }
+  .back-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .top-bar h1 { font-size: 1.3rem; font-weight: 700; background: linear-gradient(135deg, var(--accent2), var(--green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .top-bar .sub { font-size: 0.78rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
+  .workspace { max-width: 1100px; margin: 0 auto; }
+  .topic-nav { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
+  .topic-btn { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.82rem; cursor: pointer; transition: all 0.2s; }
+  .topic-btn:hover { border-color: var(--accent); }
+  .topic-btn.active { border-color: var(--accent); background: rgba(108,92,231,0.15); }
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 800px) { .compare-grid { grid-template-columns: 1fr; } }
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .panel-header { padding: 10px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+  .panel-header .lang-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+  .panel-header .py-label { color: var(--py); }
+  .panel-header .cpp-label { color: var(--cyan); }
+  .panel-body { padding: 20px; }
+  .code-block { font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; line-height: 1.8; white-space: pre; overflow-x: auto; color: var(--text); }
+  .code-block .kw { color: var(--accent2); } .code-block .str { color: var(--green); } .code-block .comment { color: var(--text-dim); font-style: italic; } .code-block .num { color: var(--orange); } .code-block .type { color: var(--cyan); }
+  .code-block .line-num { color: var(--text-dim); user-select: none; margin-right: 10px; }
+  .tip-box { padding: 14px 18px; background: rgba(0,229,255,0.06); border: 1px solid rgba(0,229,255,0.15); border-radius: 8px; margin-top: 16px; }
+  .tip-box .tip-label { font-size: 0.72rem; font-weight: 700; color: var(--cyan); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .tip-box .tip-text { font-size: 0.85rem; color: var(--text-dim); line-height: 1.7; }
+  .tip-box .tip-text strong { color: var(--text); }
+  .danger-box { padding: 14px 18px; background: rgba(255,71,87,0.06); border: 1px solid rgba(255,71,87,0.15); border-radius: 8px; margin-top: 16px; }
+  .danger-box .danger-label { font-size: 0.72rem; font-weight: 700; color: var(--red); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .danger-box .danger-text { font-size: 0.85rem; color: var(--text-dim); line-height: 1.7; }
+  .term { border-bottom: 2px dotted var(--accent2); cursor: help; color: var(--accent2); font-weight: 600; position: relative; }
+  .term:hover { background: rgba(108,92,231,0.12); border-radius: 3px; }
+  .term-card { position: fixed; z-index: 9999; width: 340px; max-width: 90vw; background: var(--surface2); border: 1px solid var(--accent); border-radius: 12px; padding: 14px 18px; box-shadow: 0 8px 32px rgba(108,92,231,0.25); display: none; pointer-events: none; }
+  .term-card.show { display: block; animation: termFadeIn 0.18s ease-out; }
+  @keyframes termFadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .term-card .tc-title { font-size: 0.82rem; font-weight: 700; color: var(--cyan); margin-bottom: 6px; }
+  .term-card .tc-body { font-size: 0.8rem; color: var(--text-dim); line-height: 1.7; }
+  .term-card .tc-body strong { color: var(--text); }
+  .term-card .tc-body code { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--orange); background: rgba(255,145,0,0.08); padding: 1px 5px; border-radius: 3px; }
+  .term-card .tc-icon { font-size: 1.1rem; margin-bottom: 4px; }
+  .next-link { display: flex; justify-content: space-between; margin-top: 24px; }
+  .next-link a { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }
+  .next-link a:hover { border-color: var(--accent); color: var(--text); }
+  .next-link a svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .error-box { padding: 12px 16px; background: rgba(255,71,87,0.08); border: 1px solid rgba(255,71,87,0.2); border-radius: 8px; margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--red); }
+  .ok-box { padding: 12px 16px; background: rgba(0,230,118,0.08); border: 1px solid rgba(0,230,118,0.2); border-radius: 8px; margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--green); }
+</style>
+</head>
+<body>
+<div class="top-bar">
+  <a href="../index.html" class="back-btn"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>返回</a>
+  <h1>变量声明 vs 赋值</h1>
+  <span class="sub">C++ 必须先声明类型 · Python 随用随赋</span>
+</div>
+<div class="workspace">
+  <div class="topic-nav" id="topic-nav"></div>
+  <div id="content-area"></div>
+  <div class="next-link">
+    <a href="semicolon-braces.html"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>上一页：分号与花括号</a>
+    <a href="comments.html">下一页：注释规范<svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </div>
+</div>
+<script>
+const TOPICS = [
+  {
+    name: '声明 vs 赋值',
+    content: `
+      <div class="compare-grid">
+        <div class="panel">
+          <div class="panel-header"><span class="lang-label py-label">🐍 Python</span></div>
+          <div class="panel-body">
+            <div class="code-block"><span class="comment"># 随用随赋，不用声明</span>
+x = <span class="num">10</span>
+y = <span class="num">3.14</span>
+name = <span class="str">"Tom"</span>
+flag = <span class="kw">True</span>
+
+<span class="comment"># 随时可以换类型！</span>
+x = <span class="str">"hello"</span>  <span class="comment"># int 变 str</span></div>
+            <div class="ok-box">✅ Python 变量是"标签"，不用提前声明类型</div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><span class="lang-label cpp-label">⚡ C++</span></div>
+          <div class="panel-body">
+            <div class="code-block"><span class="comment">// 必须先声明类型！</span>
+<span class="type">int</span> x = <span class="num">10</span>;
+<span class="type">double</span> y = <span class="num">3.14</span>;
+<span class="type">string</span> name = <span class="str">"Tom"</span>;
+<span class="type">bool</span> flag = <span class="kw">true</span>;
+
+<span class="comment">// 类型固定，不能换！</span>
+<span class="comment">// x = "hello";  // 编译错误！</span></div>
+            <div class="ok-box">✅ C++ 变量是"信箱"，声明时确定大小和类型</div>
+          </div>
+        </div>
+      </div>
+      <div class="tip-box">
+        <div class="tip-label">📌 声明和赋值是两件事</div>
+        <div class="tip-text">
+          <strong>声明（Declare）</strong>：告诉编译器"我要用一个变量，类型是 int，名字叫 x"。<br>
+          编译器在内存中分配 4 字节的空间。<br><br>
+          <strong>赋值（Assign）</strong>：把一个值放进那个空间。<br><br>
+          C++ 可以分开写：<code>int x;</code>（声明）<code>x = 10;</code>（赋值）<br>
+          也可以合并：<code>int x = 10;</code>（声明同时赋值，也叫<span class="term" data-term="init">初始化</span>）
+        </div>
+      </div>
+    `
+  },
+  {
+    name: '为什么必须声明类型',
+    content: `
+      <div class="panel">
+        <div class="panel-header"><span class="lang-label cpp-label">⚡ C++ 为什么必须声明类型？</span></div>
+        <div class="panel-body">
+          <div class="code-block"><span class="comment">// 编译器需要知道：占多少内存？</span>
+<span class="type">int</span> a;       <span class="comment">// 分配 4 字节</span>
+<span class="type">double</span> b;    <span class="comment">// 分配 8 字节</span>
+<span class="type">char</span> c;      <span class="comment">// 分配 1 字节</span>
+
+<span class="comment">// 编译器需要知道：怎么解读二进制？</span>
+<span class="comment">// 同样的 4 字节 00000000 01000001：</span>
+<span class="comment">//   作为 int → 65</span>
+<span class="comment">//   作为 char → 'A'</span></div>
+        </div>
+      </div>
+      <div class="tip-box">
+        <div class="tip-label">📌 类型 = 大小 + 解读方式</div>
+        <div class="tip-text">
+          C++ 是<span class="term" data-term="static">静态类型语言</span>：编译时就要确定每个变量的类型。<br><br>
+          因为编译器需要知道：<br>
+          ① 这个变量占<strong>多少字节</strong>（分配内存）<br>
+          ② 这些字节<strong>怎么解读</strong>（int 还是 char？）<br><br>
+          Python 是<span class="term" data-term="dynamic">动态类型语言</span>：运行时才确定类型，所以不用提前声明。
+        </div>
+      </div>
+      <div class="danger-box">
+        <div class="danger-label">⚠️ 不初始化 = 垃圾值</div>
+        <div class="danger-text">
+          <code>int x;</code> 声明了但没有赋值。<br>
+          Python 会报 <code>NameError</code>，但 C++ <strong>不会报错</strong>——x 里是一个<strong>垃圾值</strong>（随机数）！<br><br>
+          好习惯：声明时立刻初始化：<code>int x = 0;</code>
+        </div>
+      </div>
+    `
+  },
+  {
+    name: '常见类型对照',
+    content: `
+      <div class="panel">
+        <div class="panel-header"><span class="lang-label cpp-label">⚡ Python ↔ C++ 类型对照</span></div>
+        <div class="panel-body">
+          <table style="width:100%; border-collapse:collapse; font-size:0.82rem;">
+            <tr style="border-bottom:1px solid var(--border);"><th style="text-align:left; padding:8px 12px; color:var(--py);">Python</th><th style="text-align:left; padding:8px 12px; color:var(--cyan);">C++</th><th style="text-align:left; padding:8px 12px; color:var(--text-dim);">大小</th><th style="text-align:left; padding:8px 12px; color:var(--text-dim);">范围</th></tr>
+            <tr style="border-bottom:1px solid rgba(42,45,90,0.5);"><td style="padding:8px 12px; font-family:'JetBrains Mono',monospace;">int</td><td style="padding:8px 12px; font-family:'JetBrains Mono',monospace; color:var(--accent);">int</td><td style="padding:8px 12px;">4 字节</td><td style="padding:8px 12px; font-size:0.72rem;">-21亿~21亿</td></tr>
+            <tr style="border-bottom:1px solid rgba(42,45,90,0.5);"><td style="padding:8px 12px; font-family:'JetBrains Mono',monospace;">int（大数）</td><td style="padding:8px 12px; font-family:'JetBrains Mono',monospace; color:var(--cyan);">long long</td><td style="padding:8px 12px;">8 字节</td><td style="padding:8px 12px; font-size:0.72rem;">±9.2×10¹⁸</td></tr>
+            <tr style="border-bottom:1px solid rgba(42,45,90,0.5);"><td style="padding:8px 12px; font-family:'JetBrains Mono',monospace;">float</td><td style="padding:8px 12px; font-family:'JetBrains Mono',monospace; color:var(--orange);">float</td><td style="padding:8px 12px;">4 字节</td><td style="padding:8px 12px; font-size:0.72rem;">~7 位小数</td></tr>
+            <tr style="border-bottom:1px solid rgba(42,45,90,0.5);"><td style="padding:8px 12px; font-family:'JetBrains Mono',monospace;">float</td><td style="padding:8px 12px; font-family:'JetBrains Mono',monospace; color:var(--orange);">double</td><td style="padding:8px 12px;">8 字节</td><td style="padding:8px 12px; font-size:0.72rem;">~15 位小数</td></tr>
+            <tr style="border-bottom:1px solid rgba(42,45,90,0.5);"><td style="padding:8px 12px; font-family:'JetBrains Mono',monospace;">str（单字符）</td><td style="padding:8px 12px; font-family:'JetBrains Mono',monospace; color:var(--green);">char</td><td style="padding:8px 12px;">1 字节</td><td style="padding:8px 12px; font-size:0.72rem;">单个字符</td></tr>
+            <tr style="border-bottom:1px solid rgba(42,45,90,0.5);"><td style="padding:8px 12px; font-family:'JetBrains Mono',monospace;">str</td><td style="padding:8px 12px; font-family:'JetBrains Mono',monospace; color:var(--green);">string</td><td style="padding:8px 12px;">可变</td><td style="padding:8px 12px; font-size:0.72rem;">字符串</td></tr>
+            <tr><td style="padding:8px 12px; font-family:'JetBrains Mono',monospace;">bool</td><td style="padding:8px 12px; font-family:'JetBrains Mono',monospace; color:var(--pink);">bool</td><td style="padding:8px 12px;">1 字节</td><td style="padding:8px 12px; font-size:0.72rem;">true/false</td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="tip-box">
+        <div class="tip-label">📌 关键区别</div>
+        <div class="tip-text">
+          <strong>Python int</strong>：可以无限大（自动扩展内存）<br>
+          <strong>C++ int</strong>：固定 4 字节，最大 2147483647，超了就<strong>溢出</strong><br><br>
+          <strong>Python float</strong>：等价 C++ 的 <code>double</code>（双精度）<br>
+          <strong>C++ float</strong>：单精度，精度不如 double，竞赛中一般直接用 <code>double</code><br><br>
+          <strong>Python bool</strong>：<code>True</code>/<code>False</code>（首字母大写）<br>
+          <strong>C++ bool</strong>：<code>true</code>/<code>false</code>（全小写！）
+        </div>
+      </div>
+    `
+  }
+];
+
+let currentIdx = 0;
+
+function renderTopic(idx) {
+  const topic = TOPICS[idx];
+  document.querySelectorAll('.topic-btn').forEach((btn, i) => btn.classList.toggle('active', i === idx));
+  document.getElementById('content-area').innerHTML = topic.content;
+  initTerms();
+}
+
+function init() {
+  const nav = document.getElementById('topic-nav');
+  TOPICS.forEach((t, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'topic-btn' + (i === 0 ? ' active' : '');
+    btn.textContent = t.name;
+    btn.onclick = () => renderTopic(i);
+    nav.appendChild(btn);
+  });
+  renderTopic(0);
+}
+
+const TERM_DEFS = {
+  'init': { icon: '🎯', title: '初始化（Initialization）', body: '声明变量的同时给它一个初始值。<br><br><code>int x = 10;</code> 就是声明 + 初始化。<br><br>如果不初始化（<code>int x;</code>），x 里的值是<strong>垃圾值</strong>（内存里上次留下的随机数）。<br><br>Python 没有这个问题——Python 变量必须赋值才能用。' },
+  'static': { icon: '🔒', title: '静态类型（Static Typing）', body: '编译时就知道每个变量的类型，之后不能改。<br><br>C++、Java、C 都是静态类型。<br>优点：编译器帮你检查类型错误，运行速度快。<br>缺点：写起来啰嗦，必须先声明。' },
+  'dynamic': { icon: '🐍', title: '动态类型（Dynamic Typing）', body: '运行时才确定变量类型，可以随时改。<br><br>Python、JavaScript、Ruby 都是动态类型。<br>优点：写起来方便灵活。<br>缺点：运行时才发现类型错误，速度较慢。' }
+};
+
+function initTerms() {
+  let ct = null, cc = null;
+  function show(t) { if (t===ct&&cc) return; hide(); ct=t; const d=TERM_DEFS[t.dataset.term]; if(!d) return; cc=document.createElement('div'); cc.className='term-card show'; cc.innerHTML='<div class="tc-icon">'+d.icon+'</div><div class="tc-title">'+d.title+'</div><div class="tc-body">'+d.body+'</div>'; document.body.appendChild(cc); const r=t.getBoundingClientRect(); let l=r.left+r.width/2-170, p=r.bottom+8; if(l+340>innerWidth)l=innerWidth-350; if(p+200>innerHeight)p=r.top-208; if(l<10)l=10; cc.style.left=l+'px'; cc.style.top=p+'px'; }
+  function hide() { if(cc){cc.remove();cc=null;} ct=null; }
+  document.addEventListener('mouseover', e => { const t=e.target.closest('.term'); if(t) show(t); else if(!e.target.closest('.term-card')) hide(); });
+}
+
+init();
+</script>
+</body>
+</html>
