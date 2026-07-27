@@ -388,7 +388,7 @@ function getCodeHTML(code) {
     hl = hl.replace(/\/\/.*/g, '<span class="comment">$&</span>');
     hl = hl.replace(/\b(\d+\.?\d*)\b/g, '<span class="num">$1</span>');
     hl = hl.replace(/"([^"]*)"/g, '<span class="str">"$1"</span>');
-    const cls = (stepIdx > 0 && i === EXAMPLES[currentIdx].steps[stepIdx]?.line) ? ' hl-yellow' : '';
+    const cls = (stepIdx >= 0 && i === EXAMPLES[currentIdx].steps[stepIdx]?.line) ? ' hl-yellow' : '';
     return `<div class="${cls}"><span class="line-num">${String(i+1).padStart(2)}</span>${hl}</div>`;
   }).join('');
 }
