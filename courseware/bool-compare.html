@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>布尔值与比较运算 — C 语言交互实验室</title>
+<title><span class="term" data-term="boolean">布尔值</span>与比较运算 — C 语言交互实验室</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -155,7 +155,7 @@ done = <span class="kw">False</span>    <span class="comment"># 大写！</span>
     `
   },
   {
-    name: '逻辑运算符',
+    name: '<span class="term" data-term="logic-op">逻辑运算</span>符',
     content: `
       <table class="compare-table">
         <tr><th>含义</th><th style="color:var(--py);">Python</th><th style="color:var(--cyan);">C++</th></tr>
@@ -213,6 +213,7 @@ function renderTopic(idx) {
   const topic = TOPICS[idx];
   document.querySelectorAll('.topic-btn').forEach((btn, i) => btn.classList.toggle('active', i === idx));
   document.getElementById('content-area').innerHTML = topic.content;
+  initTerms();
 }
 
 function init() {
@@ -252,6 +253,68 @@ function toggleTheme() {
     localStorage.setItem('c-workshop-theme', 'light');
     document.getElementById('theme-toggle').textContent = '☀️';
   }
+}
+</script>
+<script>
+const TERM_DEFS = {
+  'boolean': {
+    icon: '✅',
+    title: '布尔值（Boolean）',
+    body: '只有两种取值：<code>true</code>（真）和 <code>false</code>（假）。<br><br>C++ 用 <code>bool</code> 类型，Python 用 <code>True</code>/<code>False</code>。<br><br>在条件判断中，非 0 值被视为 <code>true</code>，0 被视为 <code>false</code>。',
+  },
+  'logic-op': {
+    icon: '🧩',
+    title: '逻辑运算（Logical Operation）',
+    body: '对布尔值做运算：<code>&&</code>（与）、<code>||</code>（或）、<code>!</code>（非）。<br><br>Python 用 <code>and</code>、<code>or</code>、<code>not</code>，C++ 用符号。<br><br><code>a > 0 && a < 10</code> 表示 "a 在 0 到 10 之间"。',
+  },
+  'short-circuit': {
+    icon: '⚡',
+    title: '<span class="term" data-term="short-circuit">短路求值</span>（Short-circuit Evaluation）',
+    body: '逻辑运算中，如果左边已经能确定结果，右边就不执行了。<br><br><code>a != 0 && b / a > 1</code> → 如果 a 是 0，左边为 false，右边 <code>b / a</code> 不会执行，避免了除以 0。<br><br>Python 也一样。',
+  },
+  'relational': {
+    icon: '⚖️',
+    title: '<span class="term" data-term="relational">关系运算符</span>（Relational Operator）',
+    body: '比较两个值：<code>></code>、<code><</code>、<code>>=</code>、<code><=</code>、<code>==</code>、<code>!=</code>。<br><br>结果都是布尔值（true/false）。<br><br>注意：<code>=</code> 是赋值，<code>==</code> 才是相等比较——这是初学者最常见的 bug。',
+  },
+};
+
+let TERMS_INITED = false;
+function initTerms() {
+  if (TERMS_INITED) return;
+  TERMS_INITED = true;
+  let currentTerm = null, currentCard = null;
+  function showCard(term) {
+    if (term === currentTerm && currentCard) return;
+    hideCard();
+    currentTerm = term;
+    const key = term.dataset.term;
+    const def = TERM_DEFS[key];
+    if (!def) return;
+    const card = document.createElement('div');
+    card.className = 'term-card show';
+    card.innerHTML = '<div class="tc-icon">' + def.icon + '</div><div class="tc-title">' + def.title + '</div><div class="tc-body">' + def.body + '</div>';
+    document.body.appendChild(card);
+    const rect = term.getBoundingClientRect();
+    let left = rect.left + rect.width / 2 - 170;
+    let top = rect.bottom + 8;
+    if (left + 340 > window.innerWidth) left = window.innerWidth - 350;
+    if (top + 200 > window.innerHeight) top = rect.top - 208;
+    if (left < 10) left = 10;
+    card.style.left = left + 'px';
+    card.style.top = top + 'px';
+    currentCard = card;
+  }
+  function hideCard() {
+    if (currentCard) { currentCard.remove(); currentCard = null; }
+    currentTerm = null;
+  }
+  document.addEventListener('mouseover', function(e) {
+    var term = e.target.closest('.term');
+    if (term) { showCard(term); return; }
+    var card = e.target.closest('.term-card');
+    if (!card) hideCard();
+  });
 }
 </script>
 </body>
