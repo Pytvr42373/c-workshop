@@ -84,6 +84,47 @@
   .next-link a:hover { border-color: var(--accent); color: var(--text); }
   .next-link a svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
 
+
+
+[data-theme="light"] .72rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+  .panel-header .action { font-size: 0.72rem; color: var(--accent2); cursor: pointer; padding: 4px 10px; border-radius: 6px; background: rgba(91,75,212,0.07); border: none; font-family: inherit; transition: background 0.2s; },
+[data-theme="light"] .panel-header .action:hover { background: rgba(91,75,212,0.14); },
+[data-theme="light"] .example-btn.active { border-color: var(--accent); background: rgba(91,75,212,0.10); },
+[data-theme="light"] .memory-viz { padding: 16px; background: rgba(0,0,0,0.09); border-radius: 8px; margin-top: 12px; },
+[data-theme="light"] .7rem; color: var(--text); border: 1px solid var(--border); background: var(--surface2); }
+  .mem-cell.highlight { border-color: var(--accent2); box-shadow: 0 0 8px rgba(91,75,212,0.21); },
+[data-theme="light"] .6rem; color: var(--text-dim); border: none; background: transparent; width: auto; }
+  .mem-cell.field-int { background: rgba(91,75,212,0.10); border-color: var(--accent); },
+[data-theme="light"] .mem-cell.field-char { background: rgba(0,184,107,0.10); border-color: var(--green); },
+[data-theme="light"] .mem-cell.field-float { background: rgba(0,153,204,0.10); border-color: var(--cyan); },
+[data-theme="light"] .mem-cell.field-double { background: rgba(230,126,0,0.10); border-color: var(--orange); },
+[data-theme="light"] .mem-cell.field-padding { background: rgba(255,255,255,0.01); border-color: transparent; color: #3a3a3a; },
+[data-theme="light"] .state-item { padding: 6px 12px; border-radius: 6px; background: rgba(0,0,0,0.06); font-size: 0.72rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; },
+[data-theme="light"] .info-item { padding: 8px 12px; background: rgba(0,0,0,0.06); border-radius: 6px; },
+[data-theme="light"] .join('');
+}
+
+function renderMemory(ex) {
+  const viz = document.getElementById('memory-viz');
+  let html = '<div class="mem-legend">';
+  html += '<div class="legend-item"><div class="legend-dot" style="background:rgba(91,75,212,0.10);border-color:var(--accent)"></div>int</div>';
+  html += '<div class="legend-item"><div class="legend-dot" style="background:rgba(0,184,107,0.10);border-color:var(--green)"></div>char</div>';
+  html += '<div class="legend-item"><div class="legend-dot" style="background:rgba(0,153,204,0.10);border-color:var(--cyan)"></div>float</div>';
+  html += '<div class="legend-item"><div class="legend-dot" style="background:rgba(230,126,0,0.10);border-color:var(--orange)"></div>double</div>';
+  html += '<div class="legend-item"><div class="legend-dot" style="background:rgba(255,255,255,0.01);border-color:transparent"></div>填充</div>';
+  html += '</div>';
+
+  let addr = 0x1000;
+  let byteIdx = 0;
+  
+  ex.fields.forEach((field, fi) => {
+    const fieldSize = field.size;
+    let displayBytes = field.bytes || '';
+    
+    // Row for field name
+    html += `<div class="mem-row">`;
+    html += `<span class="mem-label">${field.name}
+
 </style>
 </head>
 <body>

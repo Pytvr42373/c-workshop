@@ -387,6 +387,82 @@
   .next-link a:hover { border-color: var(--accent); color: var(--text); }
   .next-link a svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
 
+
+
+[data-theme="light"] .72rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .panel-header .action {
+    font-size: 0.72rem;
+    color: var(--accent2);
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 6px;
+    background: rgba(91,75,212,0.07);
+    border: none;
+    font-family: inherit;
+    transition: background 0.2s;
+  },
+[data-theme="light"] .panel-header .action:hover { background: rgba(91,75,212,0.14); },
+[data-theme="light"] .code-block .highlight { background: rgba(91,75,212,0.14); border-radius: 3px; padding: 0 2px; },
+[data-theme="light"] .memory-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 12px;
+    background: rgba(0,0,0,0.06);
+    border-radius: 8px;
+    min-height: 120px;
+    align-content: flex-start;
+  },
+[data-theme="light"] .55rem;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  .mem-cell.active {
+    border-color: var(--accent);
+    box-shadow: 0 0 12px rgba(91,75,212,0.21);
+  },
+[data-theme="light"] .var-btn.active {
+    border-color: var(--accent);
+    background: rgba(91,75,212,0.10);
+    box-shadow: 0 0 12px rgba(91,75,212,0.14);
+  },
+[data-theme="light"] .value-editor {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 16px;
+    padding: 12px 16px;
+    background: rgba(0,0,0,0.06);
+    border-radius: 8px;
+  },
+[data-theme="light"] .info-item {
+    padding: 6px 12px;
+    border-radius: 6px;
+    background: rgba(0,0,0,0.06);
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    font-family: 'JetBrains Mono', monospace;
+  },
+[data-theme="light"] .35s; }
+
+  /* Size comparison */
+  .size-compare {
+    display: flex;
+    gap: 4px;
+    align-items: flex-end;
+    margin-top: 12px;
+    padding: 12px;
+    background: rgba(0,0,0,0.06);
+    border-radius: 8px;
+  }
+
 </style>
 </head>
 <body>
