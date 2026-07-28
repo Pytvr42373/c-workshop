@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><span class="term" data-term="boolean">布尔值</span>与比较运算 — C 语言交互实验室</title>
+<title>布尔值与比较运算 — C 语言交互实验室</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -55,19 +55,22 @@
   .compare-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.78rem; }
   .compare-table th { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--text-dim); font-weight: 600; }
   .compare-table td { padding: 8px 12px; border-bottom: 1px solid rgba(42,45,90,0.5); font-family: 'JetBrains Mono', monospace; }
-[data-theme="light"] {
-  --bg: #f0f4ff; --surface: #ffffff; --surface2: #e8edf5; --border: #d0d8e8;
-  --accent: #5b4bd4; --accent2: #7c6df0; --green: #00b86b; --cyan: #0099cc;
-  --orange: #e67e00; --pink: #d6336c; --red: #d93025; --yellow: #e6a800;
-  --text: #1a1d3a; --text-dim: #3a3d5a;
-}
 
-
-[data-theme="light"] .topic-btn.active { border-color: var(--accent); background: rgba(91,75,212,0.10); },
-[data-theme="light"] .tip-box { padding: 14px 18px; background: rgba(0,153,204,0.05); border: 1px solid rgba(0,153,204,0.10); border-radius: 8px; margin-top: 16px; },
-[data-theme="light"] .term:hover { background: rgba(91,75,212,0.08); border-radius: 3px; },
-[data-theme="light"] .term-card { position: fixed; z-index: 9999; width: 340px; max-width: 90vw; background: var(--surface2); border: 1px solid var(--accent); border-radius: 12px; padding: 14px 18px; box-shadow: 0 8px 32px rgba(91,75,212,0.17); display: none; pointer-events: none; },
-[data-theme="light"] .term-card .tc-body code { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--orange); background: rgba(230,126,0,0.06); padding: 1px 5px; border-radius: 3px; }
+  /* ===== Light theme ===== */
+  [data-theme="light"] {
+    --bg: #f0f4ff; --surface: #ffffff; --surface2: #e8edf5; --border: #d0d8e8;
+    --accent: #5b4bd4; --accent2: #7c6df0; --green: #00b86b; --cyan: #0099cc;
+    --orange: #e67e00; --pink: #d6336c; --red: #d93025; --yellow: #c49000;
+    --text: #1a1d3a; --text-dim: #3a3d5a; --py: #b8860b; --cpp: #00599c;
+    --cell-bg: #eef2fa; --cell-border: #cdd6e6;
+  }
+  [data-theme="light"] .tip-box { background: rgba(0,153,204,0.06); border-color: rgba(0,153,204,0.16); }
+  [data-theme="light"] .danger-box { background: rgba(217,48,37,0.05); border-color: rgba(217,48,37,0.16); }
+  [data-theme="light"] .term:hover { background: rgba(91,75,212,0.08); }
+  [data-theme="light"] .term-card { box-shadow: 0 8px 32px rgba(91,75,212,0.17); }
+  [data-theme="light"] .hw-diagram, [data-theme="light"] .mem-vis,
+  [data-theme="light"] .memory-grid, [data-theme="light"] .mem-strip { background: rgba(0,0,0,0.04); }
+  [data-theme="light"] .topic-btn.active { background: rgba(91,75,212,0.10); }
 
 </style>
 </head>
@@ -155,7 +158,7 @@ done = <span class="kw">False</span>    <span class="comment"># 大写！</span>
     `
   },
   {
-    name: '<span class="term" data-term="logic-op">逻辑运算</span>符',
+    name: '逻辑运算符',
     content: `
       <table class="compare-table">
         <tr><th>含义</th><th style="color:var(--py);">Python</th><th style="color:var(--cyan);">C++</th></tr>
@@ -213,7 +216,6 @@ function renderTopic(idx) {
   const topic = TOPICS[idx];
   document.querySelectorAll('.topic-btn').forEach((btn, i) => btn.classList.toggle('active', i === idx));
   document.getElementById('content-area').innerHTML = topic.content;
-  initTerms();
 }
 
 function init() {
@@ -253,68 +255,6 @@ function toggleTheme() {
     localStorage.setItem('c-workshop-theme', 'light');
     document.getElementById('theme-toggle').textContent = '☀️';
   }
-}
-</script>
-<script>
-const TERM_DEFS = {
-  'boolean': {
-    icon: '✅',
-    title: '布尔值（Boolean）',
-    body: '只有两种取值：<code>true</code>（真）和 <code>false</code>（假）。<br><br>C++ 用 <code>bool</code> 类型，Python 用 <code>True</code>/<code>False</code>。<br><br>在条件判断中，非 0 值被视为 <code>true</code>，0 被视为 <code>false</code>。',
-  },
-  'logic-op': {
-    icon: '🧩',
-    title: '逻辑运算（Logical Operation）',
-    body: '对布尔值做运算：<code>&&</code>（与）、<code>||</code>（或）、<code>!</code>（非）。<br><br>Python 用 <code>and</code>、<code>or</code>、<code>not</code>，C++ 用符号。<br><br><code>a > 0 && a < 10</code> 表示 "a 在 0 到 10 之间"。',
-  },
-  'short-circuit': {
-    icon: '⚡',
-    title: '<span class="term" data-term="short-circuit">短路求值</span>（Short-circuit Evaluation）',
-    body: '逻辑运算中，如果左边已经能确定结果，右边就不执行了。<br><br><code>a != 0 && b / a > 1</code> → 如果 a 是 0，左边为 false，右边 <code>b / a</code> 不会执行，避免了除以 0。<br><br>Python 也一样。',
-  },
-  'relational': {
-    icon: '⚖️',
-    title: '<span class="term" data-term="relational">关系运算符</span>（Relational Operator）',
-    body: '比较两个值：<code>></code>、<code><</code>、<code>>=</code>、<code><=</code>、<code>==</code>、<code>!=</code>。<br><br>结果都是布尔值（true/false）。<br><br>注意：<code>=</code> 是赋值，<code>==</code> 才是相等比较——这是初学者最常见的 bug。',
-  },
-};
-
-let TERMS_INITED = false;
-function initTerms() {
-  if (TERMS_INITED) return;
-  TERMS_INITED = true;
-  let currentTerm = null, currentCard = null;
-  function showCard(term) {
-    if (term === currentTerm && currentCard) return;
-    hideCard();
-    currentTerm = term;
-    const key = term.dataset.term;
-    const def = TERM_DEFS[key];
-    if (!def) return;
-    const card = document.createElement('div');
-    card.className = 'term-card show';
-    card.innerHTML = '<div class="tc-icon">' + def.icon + '</div><div class="tc-title">' + def.title + '</div><div class="tc-body">' + def.body + '</div>';
-    document.body.appendChild(card);
-    const rect = term.getBoundingClientRect();
-    let left = rect.left + rect.width / 2 - 170;
-    let top = rect.bottom + 8;
-    if (left + 340 > window.innerWidth) left = window.innerWidth - 350;
-    if (top + 200 > window.innerHeight) top = rect.top - 208;
-    if (left < 10) left = 10;
-    card.style.left = left + 'px';
-    card.style.top = top + 'px';
-    currentCard = card;
-  }
-  function hideCard() {
-    if (currentCard) { currentCard.remove(); currentCard = null; }
-    currentTerm = null;
-  }
-  document.addEventListener('mouseover', function(e) {
-    var term = e.target.closest('.term');
-    if (term) { showCard(term); return; }
-    var card = e.target.closest('.term-card');
-    if (!card) hideCard();
-  });
 }
 </script>
 </body>
