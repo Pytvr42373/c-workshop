@@ -104,7 +104,7 @@
   .bar-rect .bar-val { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 700; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.5); }
   .bar-rect.checking { background: linear-gradient(180deg, var(--yellow), #ffa000); box-shadow: 0 0 18px rgba(255,215,64,0.5); transform: scaleY(1.05); transform-origin: bottom; }
   .bar-rect.found { background: linear-gradient(180deg, var(--green), #00c853); box-shadow: 0 0 20px rgba(0,230,118,0.5); transform: scaleY(1.08); transform-origin: bottom; }
-  .bar-rect.eliminated { background: linear-gradient(180deg, var(--text-dim), var(--text-dim)); opacity: 0.35; }
+  .bar-rect.eliminated { background: linear-gradient(180deg, #3a3a5a, #2a2a4a); opacity: 0.35; }
   .bar-rect.mid { background: linear-gradient(180deg, var(--pink), #c51162); box-shadow: 0 0 18px rgba(255,64,129,0.5); }
   .bar-rect.bound-l { background: linear-gradient(180deg, var(--green), #00c853); box-shadow: 0 0 12px rgba(0,230,118,0.3); }
   .bar-rect.bound-r { background: linear-gradient(180deg, var(--red), #d50000); box-shadow: 0 0 12px rgba(255,82,82,0.3); }
@@ -168,48 +168,6 @@
   --accent: #5b4bd4; --accent2: #7c6df0; --green: #00b86b; --cyan: #0099cc;
   --orange: #e67e00; --pink: #d6336c; --red: #d93025; --yellow: #e6a800;
   --text: #1a1d3a; --text-dim: #6b6f8a;
-
-
-  .bar-rect.comparing { background: linear-gradient(180deg, var(--yellow), #ffc107); }
-  .bar-rect.swapping { background: linear-gradient(180deg, var(--red), #ffc107); }
-  .bar-rect.sorted { background: linear-gradient(180deg, var(--green), #ffc107); }
-  .bar-rect.pivot { background: linear-gradient(180deg, var(--pink), #ffc107); }
-  .bar-rect.key { background: linear-gradient(180deg, var(--orange), #ffc107); }
-
-  .bar-rect.bound-l { background: linear-gradient(180deg, var(--green), #69f0ae); }
-  .bar-rect.bound-r { background: linear-gradient(180deg, var(--red), #ff5252); }
-  .bar-rect.bound-lr { background: linear-gradient(180deg, var(--yellow), #ffc107); }
-  .bar-rect.checking { background: linear-gradient(180deg, var(--yellow), #ffc107); }
-  .bar-rect.found { background: linear-gradient(180deg, var(--green), #69f0ae); }
-  .bar-rect.mid { background: linear-gradient(180deg, var(--pink), #ff4081); }
-
-.72rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
-  .panel-header .action { font-size: 0.72rem; color: var(--accent2); cursor: pointer; padding: 4px 10px; border-radius: 6px; background: rgba(91,75,212,0.07); border: none; font-family: inherit; transition: background 0.2s; }
-.panel-header .action:hover { background: rgba(91,75,212,0.14); }
-.code-block .hl { background: rgba(91,75,212,0.17); border-radius: 3px; display: block; }
-.code-block .hl-found { background: rgba(0,184,107,0.17); border-radius: 3px; display: block; }
-.code-block .hl-mid { background: rgba(230,168,0,0.14); border-radius: 3px; display: block; }
-.code-block .hl-compare { background: rgba(214,51,108,0.14); border-radius: 3px; display: block; }
-.algo-btn.active { border-color: var(--accent); background: rgba(91,75,212,0.10); color: var(--accent2); }
-.78rem; cursor: pointer; transition: all 0.2s; }
-  .ctrl-btn:hover { border-color: var(--accent); background: rgba(91,75,212,0.06); }
-.ctrl-btn.primary { border-color: var(--accent); background: rgba(91,75,212,0.10); color: var(--accent2); }
-.ctrl-btn.primary:hover { background: rgba(91,75,212,0.17); }
-.ctrl-btn.green:hover { background: rgba(0,184,107,0.07); }
-.3s; min-height: 24px; display: flex; align-items: center; justify-content: center; position: relative; }
-  .bar-rect .bar-val { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 700; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.15); }
-.35; }
-.8rem; cursor: pointer; transition: all 0.2s; }
-  .flow-btn:hover { border-color: var(--accent); background: rgba(91,75,212,0.07); }
-.flow-btn.primary { border-color: var(--accent); background: rgba(91,75,212,0.10); color: var(--accent2); }
-.flow-btn.primary:hover { background: rgba(91,75,212,0.17); }
-.state-item { padding: 5px 10px; border-radius: 6px; background: rgba(0,0,0,0.06); font-size: 0.7rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
-.step-desc { padding: 10px 16px; background: rgba(0,0,0,0.06); border-radius: 8px; margin-top: 10px; font-size: 0.85rem; color: var(--text); line-height: 1.6; }
-.8rem; font-weight: 700; margin-top: 6px; }
-  .result-badge.found { background: rgba(0,184,107,0.10); color: var(--green); border: 1px solid rgba(0,184,107,0.21); }
-.result-badge.not-found { background: rgba(217,48,37,0.10); color: var(--red); border: 1px solid rgba(217,48,37,0.21); }
-.72rem; font-weight: 600; color: var(--cyan); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-  .explain-text { font-size: 0.85rem; color: var(--text); line-height: 1.7; padding: 10px 14px; background: rgba(0,0,0,0.06); border-radius: 8px; border-left: 3px solid var(--accent); }
 }
   .next-link { display: flex; justify-content: space-between; margin-top: 24px; }
   .next-link a { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }
@@ -312,7 +270,7 @@
           <div class="legend-item"><div class="legend-color" style="background:linear-gradient(180deg,var(--pink),#c51162)"></div> 中间值</div>
           <div class="legend-item"><div class="legend-color" style="background:linear-gradient(180deg,var(--green),#00c853);opacity:0.7"></div> 左边界 L</div>
           <div class="legend-item"><div class="legend-color" style="background:linear-gradient(180deg,var(--red),#d50000);opacity:0.7"></div> 右边界 R</div>
-          <div class="legend-item"><div class="legend-color" style="background:var(--text-dim);opacity:0.35"></div> 已排除</div>
+          <div class="legend-item"><div class="legend-color" style="background:#3a3a5a;opacity:0.35"></div> 已排除</div>
         </div>
       </div>
     </div>

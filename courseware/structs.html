@@ -40,7 +40,7 @@
   .code-block .comment { color: var(--text-dim); font-style: italic; }
   .code-block .hl-struct { color: #ff6b6b; font-weight: 700; }
   .code-block .hl-member { color: #ffd93d; }
-  .code-block .line-num { color: var(--text-dim); user-select: none; margin-right: 12px; }
+  .code-block .line-num { color: #3a3a6a; user-select: none; margin-right: 12px; }
 
   .example-selector { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
   .example-btn { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; cursor: pointer; transition: all 0.2s; }
@@ -51,7 +51,7 @@
   .memory-viz { padding: 16px; background: rgba(0,0,0,0.3); border-radius: 8px; margin-top: 12px; }
   .mem-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
   .mem-label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-dim); min-width: 60px; }
-  .mem-addr { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--text-dim); min-width: 70px; }
+  .mem-addr { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: #4a4a7a; min-width: 70px; }
   .mem-cell { display: flex; align-items: center; justify-content: center; width: 42px; height: 36px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text); border: 1px solid var(--border); background: var(--surface2); }
   .mem-cell.highlight { border-color: var(--accent2); box-shadow: 0 0 8px rgba(108,92,231,0.3); }
   .mem-cell.field-name { font-size: 0.6rem; color: var(--text-dim); border: none; background: transparent; width: auto; }
@@ -59,7 +59,7 @@
   .mem-cell.field-char { background: rgba(0,230,118,0.15); border-color: var(--green); }
   .mem-cell.field-float { background: rgba(0,229,255,0.15); border-color: var(--cyan); }
   .mem-cell.field-double { background: rgba(255,145,0,0.15); border-color: var(--orange); }
-  .mem-cell.field-padding { background: rgba(255,255,255,0.03); border-color: transparent; color: var(--text-dim); }
+  .mem-cell.field-padding { background: rgba(255,255,255,0.03); border-color: transparent; color: #3a3a3a; }
 
   .mem-legend { display: flex; gap: 16px; margin-top: 12px; flex-wrap: wrap; }
   .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.68rem; color: var(--text-dim); }
@@ -78,61 +78,6 @@
   --accent: #5b4bd4; --accent2: #7c6df0; --green: #00b86b; --cyan: #0099cc;
   --orange: #e67e00; --pink: #d6336c; --red: #d93025; --yellow: #e6a800;
   --text: #1a1d3a; --text-dim: #6b6f8a;
-
-
-.72rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
-  .panel-header .action { font-size: 0.72rem; color: var(--accent2); cursor: pointer; padding: 4px 10px; border-radius: 6px; background: rgba(91,75,212,0.07); border: none; font-family: inherit; transition: background 0.2s; }
-.panel-header .action:hover { background: rgba(91,75,212,0.14); }
-.example-btn.active { border-color: var(--accent); background: rgba(91,75,212,0.10); }
-.memory-viz { padding: 16px; background: rgba(0,0,0,0.09); border-radius: 8px; margin-top: 12px; }
-.7rem; color: var(--text); border: 1px solid var(--border); background: var(--surface2); }
-  .mem-cell.highlight { border-color: var(--accent2); box-shadow: 0 0 8px rgba(91,75,212,0.21); }
-.6rem; color: var(--text-dim); border: none; background: transparent; width: auto; }
-  .mem-cell.field-int { background: rgba(91,75,212,0.10); border-color: var(--accent); }
-.mem-cell.field-char { background: rgba(0,184,107,0.10); border-color: var(--green); }
-.mem-cell.field-float { background: rgba(0,153,204,0.10); border-color: var(--cyan); }
-.mem-cell.field-double { background: rgba(230,126,0,0.10); border-color: var(--orange); }
-.mem-cell.field-padding { background: rgba(255,255,255,0.01); border-color: transparent; color: var(--text-dim); }
-.state-item { padding: 6px 12px; border-radius: 6px; background: rgba(0,0,0,0.06); font-size: 0.72rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
-.info-item { padding: 8px 12px; background: rgba(0,0,0,0.06); border-radius: 6px; }
-.85rem; color: var(--text); margin-top: 2px; }
-[data-theme="light"] {
-  --bg: #f0f4ff; --surface: #ffffff; --surface2: #e8edf5; --border: #d0d8e8;
-  --accent: #5b4bd4; --accent2: #7c6df0; --green: #00b86b; --cyan: #0099cc;
-  --orange: #e67e00; --pink: #d6336c; --red: #d93025; --yellow: #e6a800;
-  --text: #1a1d3a; --text-dim: #6b6f8a;
-
-  rgba(91,75,212,0.21)
-  rgba(91,75,212,0.10)
-  rgba(91,75,212,0.14)
-  rgba(91,75,212,0.07)
-  rgba(0,0,0,0.06)
-  rgba(0,0,0,0.09)
-  rgba(255,255,255,0.01)
-}
-.join('');
-}
-
-function renderMemory(ex) {
-  const viz = document.getElementById('memory-viz');
-  let html = '<div class="mem-legend">';
-  html += '<div class="legend-item"><div class="legend-dot" style="background:rgba(91,75,212,0.10);border-color:var(--accent)"></div>int</div>';
-  html += '<div class="legend-item"><div class="legend-dot" style="background:rgba(0,184,107,0.10);border-color:var(--green)"></div>char</div>';
-  html += '<div class="legend-item"><div class="legend-dot" style="background:rgba(0,153,204,0.10);border-color:var(--cyan)"></div>float</div>';
-  html += '<div class="legend-item"><div class="legend-dot" style="background:rgba(230,126,0,0.10);border-color:var(--orange)"></div>double</div>';
-  html += '<div class="legend-item"><div class="legend-dot" style="background:rgba(255,255,255,0.01);border-color:transparent"></div>填充</div>';
-  html += '</div>';
-
-  let addr = 0x1000;
-  let byteIdx = 0;
-  
-  ex.fields.forEach((field, fi) => {
-    const fieldSize = field.size;
-    let displayBytes = field.bytes || '';
-    
-    // Row for field name
-    html += `<div class="mem-row">`;
-    html += `<span class="mem-label">${field.name}
 }
   .next-link { display: flex; justify-content: space-between; margin-top: 24px; }
   .next-link a { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }
