@@ -78,7 +78,7 @@
 <div class="top-bar">
   <a href="../index.html" class="back-btn"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>返回</a>
   <h1>布尔值与比较运算</h1>
-  <span class="sub">true/false · && || ! · == != &lt; &gt; · Python vs C++</span>
+  <span class="sub">true/false · && || ! · == != < > · Python vs C++</span>
 
   <button id="theme-toggle" style="margin-left:auto;background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1rem;color:var(--text-dim);transition:all 0.2s;" onclick="toggleTheme()" title="切换主题">🌙</button>
 </div>
@@ -111,7 +111,7 @@ done = <span class="kw">False</span>    <span class="comment"># 大写！</span>
             <div class="code-block"><span class="type">bool</span> flag = <span class="kw">true</span>;   <span class="comment">// 全小写！</span>
 <span class="type">bool</span> done = <span class="kw">false</span>;  <span class="comment">// 全小写！</span>
 <span class="kw">if</span> (flag) {
-    <span class="kw">cout</span> &lt;&lt; <span class="str">"开着"</span>;
+    <span class="kw">cout</span> << <span class="str">"开着"</span>;
 }</div>
           </div>
         </div>
@@ -142,15 +142,15 @@ done = <span class="kw">False</span>    <span class="comment"># 大写！</span>
         <tr><th>含义</th><th style="color:var(--py);">Python</th><th style="color:var(--cyan);">C++</th></tr>
         <tr><td>等于</td><td>==</td><td>==</td></tr>
         <tr><td>不等于</td><td>!=</td><td>!=</td></tr>
-        <tr><td>大于</td><td>&gt;</td><td>&gt;</td></tr>
-        <tr><td>小于</td><td>&lt;</td><td>&lt;</td></tr>
-        <tr><td>大于等于</td><td>&gt;=</td><td>&gt;=</td></tr>
-        <tr><td>小于等于</td><td>&lt;=</td><td>&lt;=</td></tr>
+        <tr><td>大于</td><td>></td><td>></td></tr>
+        <tr><td>小于</td><td><</td><td><</td></tr>
+        <tr><td>大于等于</td><td>>=</td><td>>=</td></tr>
+        <tr><td>小于等于</td><td><=</td><td><=</td></tr>
       </table>
       <div class="tip-box">
         <div class="tip-label">📌 比较运算符完全一样</div>
         <div class="tip-text">
-          <code>==</code>、<code>!=</code>、<code>&gt;</code>、<code>&lt;</code>、<code>&gt;=</code>、<code>&lt;=</code> 在 Python 和 C++ 中<strong>完全相同</strong>。<br><br>
+          <code>==</code>、<code>!=</code>、<code>></code>、<code><</code>、<code>>=</code>、<code><=</code> 在 Python 和 C++ 中<strong>完全相同</strong>。<br><br>
           注意：<code>=</code> 是赋值，<code>==</code> 是比较。初学者常写错。<br>
           <code>if (x = 5)</code> ← 这是赋值，不是比较！应该是 <code>if (x == 5)</code>
         </div>
@@ -162,7 +162,7 @@ done = <span class="kw">False</span>    <span class="comment"># 大写！</span>
     content: `
       <table class="compare-table">
         <tr><th>含义</th><th style="color:var(--py);">Python</th><th style="color:var(--cyan);">C++</th></tr>
-        <tr><td>与（AND）</td><td>and</td><td>&amp;&amp;</td></tr>
+        <tr><td>与（AND）</td><td>and</td><td>&&</td></tr>
         <tr><td>或（OR）</td><td>or</td><td>||</td></tr>
         <tr><td>非（NOT）</td><td>not</td><td>!</td></tr>
       </table>
@@ -170,7 +170,7 @@ done = <span class="kw">False</span>    <span class="comment"># 大写！</span>
         <div class="panel">
           <div class="panel-header"><span class="lang-label py-label">🐍 Python</span></div>
           <div class="panel-body">
-            <div class="code-block"><span class="kw">if</span> age &gt;= <span class="num">18</span> <span class="kw">and</span> age &lt;= <span class="num">65</span>:
+            <div class="code-block"><span class="kw">if</span> age >= <span class="num">18</span> <span class="kw">and</span> age <= <span class="num">65</span>:
     <span class="kw">print</span>(<span class="str">"适龄"</span>)
 
 <span class="kw">if</span> <span class="kw">not</span> done:
@@ -180,12 +180,12 @@ done = <span class="kw">False</span>    <span class="comment"># 大写！</span>
         <div class="panel">
           <div class="panel-header"><span class="lang-label cpp-label">⚡ C++</span></div>
           <div class="panel-body">
-            <div class="code-block"><span class="kw">if</span> (age &gt;= <span class="num">18</span> &amp;&amp; age &lt;= <span class="num">65</span>) {
-    <span class="kw">cout</span> &lt;&lt; <span class="str">"适龄"</span>;
+            <div class="code-block"><span class="kw">if</span> (age >= <span class="num">18</span> && age <= <span class="num">65</span>) {
+    <span class="kw">cout</span> << <span class="str">"适龄"</span>;
 }
 
 <span class="kw">if</span> (!done) {
-    <span class="kw">cout</span> &lt;&lt; <span class="str">"还没完成"</span>;
+    <span class="kw">cout</span> << <span class="str">"还没完成"</span>;
 }</div>
           </div>
         </div>
@@ -194,14 +194,14 @@ done = <span class="kw">False</span>    <span class="comment"># 大写！</span>
         <div class="danger-label">⚠️ and/or/not 不能用在 C++</div>
         <div class="danger-text">
           Python 用单词 <code>and</code>、<code>or</code>、<code>not</code>。<br>
-          C++ 用符号 <code>&amp;&amp;</code>、<code>||</code>、<code>!</code>。<br><br>
-          在 C++ 里写 <code>if (a and b)</code> 虽然某些编译器支持，但<strong>不是标准写法</strong>，务必用 <code>&amp;&amp;</code>。
+          C++ 用符号 <code>&&</code>、<code>||</code>、<code>!</code>。<br><br>
+          在 C++ 里写 <code>if (a and b)</code> 虽然某些编译器支持，但<strong>不是标准写法</strong>，务必用 <code>&&</code>。
         </div>
       </div>
       <div class="tip-box">
         <div class="tip-label">💡 记忆方法</div>
         <div class="tip-text">
-          <code>&amp;&amp;</code> 像两个"A"叠在一起 → <strong>AND</strong>（与）<br>
+          <code>&&</code> 像两个"A"叠在一起 → <strong>AND</strong>（与）<br>
           <code>||</code> 像两条竖线 → <strong>OR</strong>（或）<br>
           <code>!</code> 像一个感叹号 → <strong>NOT</strong>（非）
         </div>

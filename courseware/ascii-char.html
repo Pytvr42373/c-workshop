@@ -122,9 +122,9 @@ const TOPICS = [
 <span class="type">char</span> c2 = <span class="num">65</span>;      <span class="comment">// 数字65，等价于'A'</span>
 <span class="type">int</span> x = <span class="str">'A'</span>;      <span class="comment">// x = 65，char转int</span>
 
-<span class="kw">cout</span> &lt;&lt; c1;       <span class="comment">// 输出: A</span>
-<span class="kw">cout</span> &lt;&lt; (<span class="type">int</span>)c1;  <span class="comment">// 输出: 65</span>
-<span class="kw">cout</span> &lt;&lt; c1 + <span class="num">1</span>;    <span class="comment">// 输出: 66 (B)</span></div>
+<span class="kw">cout</span> << c1;       <span class="comment">// 输出: A</span>
+<span class="kw">cout</span> << (<span class="type">int</span>)c1;  <span class="comment">// 输出: 65</span>
+<span class="kw">cout</span> << c1 + <span class="num">1</span>;    <span class="comment">// 输出: 66 (B)</span></div>
           </div>
         </div>
       </div>
@@ -162,7 +162,7 @@ const TOPICS = [
           <div class="code-block"><span class="comment">// 大写转小写</span>
 <span class="type">char</span> upper = <span class="str">'A'</span>;
 <span class="type">char</span> lower = upper + <span class="num">32</span>;  <span class="comment">// 'A'(65) + 32 = 97 = 'a'</span>
-<span class="kw">cout</span> &lt;&lt; lower;  <span class="comment">// 输出: a</span>
+<span class="kw">cout</span> << lower;  <span class="comment">// 输出: a</span>
 
 <span class="comment">// 小写转大写</span>
 <span class="type">char</span> c = <span class="str">'z'</span>;
@@ -173,8 +173,8 @@ const TOPICS = [
 <span class="type">int</span> val = digit - <span class="str">'0'</span>;  <span class="comment">// '7'(55) - '0'(48) = 7</span>
 
 <span class="comment">// 遍历字母</span>
-<span class="kw">for</span> (<span class="type">char</span> c = <span class="str">'A'</span>; c &lt;= <span class="str">'Z'</span>; c++) {
-    <span class="kw">cout</span> &lt;&lt; c &lt;&lt; <span class="str">" "</span>;  <span class="comment">// A B C ... Z</span>
+<span class="kw">for</span> (<span class="type">char</span> c = <span class="str">'A'</span>; c <= <span class="str">'Z'</span>; c++) {
+    <span class="kw">cout</span> << c << <span class="str">" "</span>;  <span class="comment">// A B C ... Z</span>
 }</div>
         </div>
       </div>
@@ -184,7 +184,7 @@ const TOPICS = [
           ① 大小写转换：<code>c + 32</code> 或 <code>c - 32</code>（也可以用 <code>tolower()</code> / <code>toupper()</code>）<br>
           ② 字符转数字：<code>c - '0'</code>（把 '7' 变成 7）<br>
           ③ 数字转字符：<code>n + '0'</code>（把 7 变成 '7'）<br>
-          ④ 判断字母：<code>if (c &gt;= 'A' &amp;&amp; c &lt;= 'Z')</code>
+          ④ 判断字母：<code>if (c >= 'A' && c <= 'Z')</code>
         </div>
       </div>
     `

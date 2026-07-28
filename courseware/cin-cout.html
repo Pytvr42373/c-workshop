@@ -116,7 +116,7 @@
     返回
   </a>
   <h1>cin / cout 详解</h1>
-  <span class="sub">&gt;&gt; · &lt;&lt; · endl · 缓冲区 · 速度优化</span>
+  <span class="sub">>> · << · endl · 缓冲区 · 速度优化</span>
 
   <button id="theme-toggle" style="margin-left:auto;background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1rem;color:var(--text-dim);transition:all 0.2s;" onclick="toggleTheme()" title="切换主题">🌙</button>
 </div>
@@ -139,7 +139,7 @@
       <div class="explain-body" id="explain-display">
         <div class="placeholder">
           👈 点击左侧代码的任意一行，这里会显示该行的详细解释。<br><br>
-          cin 和 cout 是 C++ 标准输入输出流。<strong>&gt;&gt;</strong> 是"提取"（读入），<strong>&lt;&lt;</strong> 是"插入"（输出）。
+          cin 和 cout 是 C++ 标准输入输出流。<strong>>></strong> 是"提取"（读入），<strong><<</strong> 是"插入"（输出）。
         </div>
       </div>
     </div>
@@ -149,19 +149,19 @@
     <div class="ktitle">💡 cin / cout 核心知识</div>
     <div class="knowledge-grid">
       <div class="kcard">
-        <div class="kcard-title">&lt;&lt; 和 &gt;&gt; 的方向</div>
+        <div class="kcard-title"><< 和 >> 的方向</div>
         <div class="kcard-text">
           数据流动方向就是箭头方向：<br>
-          <code>cout &lt;&lt; x</code> — 数据流向 cout（输出到屏幕）<br>
-          <code>cin</code> &gt;&gt; <code>x</code> — 数据从 cin 流入 x（从键盘读入）<br><br>
+          <code>cout << x</code> — 数据流向 cout（输出到屏幕）<br>
+          <code>cin</code> >> <code>x</code> — 数据从 cin 流入 x（从键盘读入）<br><br>
           <strong>口诀：箭头指向谁，数据就流向谁。</strong>
         </div>
       </div>
       <div class="kcard">
         <div class="kcard-title">cin 的自动分隔</div>
         <div class="kcard-text">
-          <code>cin</code> &gt;&gt; <code>a</code> &gt;&gt; <code>b</code> 输入 <strong>10 20</strong> 时，cin 遇到空格/换行自动分隔。<br>
-          连续读多个：输入 <strong>1 2 3</strong>，<code>cin</code> &gt;&gt; <code>a</code> &gt;&gt; <code>b</code> &gt;&gt; <code>c</code> 分别得到 1、2、3。<br>
+          <code>cin</code> >> <code>a</code> >> <code>b</code> 输入 <strong>10 20</strong> 时，cin 遇到空格/换行自动分隔。<br>
+          连续读多个：输入 <strong>1 2 3</strong>，<code>cin</code> >> <code>a</code> >> <code>b</code> >> <code>c</code> 分别得到 1、2、3。<br>
           要读整行（含空格）用 <span class="term" data-term="getline">getline(cin, str)</span>。
         </div>
       </div>
@@ -233,24 +233,24 @@ const CODE = [
 ];
 
 const EXPLAINS = [
-    '<strong>#<code>include</code> &lt;<code>iostream</code>&gt;</strong><br>引入 C++ 输入输出流库。<code>cin</code>、<code>cout</code>、<code>endl</code> 都在这个库里。<br>没有这一行，编译器不认识这些名字。',
+    '<strong>#<code>include</code> <<code>iostream</code>></strong><br>引入 C++ 输入输出流库。<code>cin</code>、<code>cout</code>、<code>endl</code> 都在这个库里。<br>没有这一行，编译器不认识这些名字。',
     '<strong><code>using</code> <code>namespace</code> <code>std</code>;</strong><br>打开 <code>std</code> 命名空间，<code>cin</code>/<code>cout</code>/<code>endl</code> 可以直接用，不用写 <code>std</code>:: 前缀。<br>上一页讲了命名空间的细节。',
     '<strong>空行</strong><br>分隔"准备区"和"执行区"。',
     '<strong><code>int</code> <code>main</code>()</strong><br>程序入口。每个 C++ 程序都从这里开始。',
     '<strong><code>int</code> a, b;</strong><br>声明两个整型变量。<strong>C++ 必须先声明再使用</strong>，Python 不需要。<br>此时 a 和 b 的值是<strong>未初始化的垃圾值</strong>，等 <code>cin</code> 读入后才有意义。',
-    '<strong><code>cout</code> &lt;&lt; "请输入两个整数: ";</strong><br>用 <code>cout</code> 输出提示文字。<em>&lt;&lt;</em> 是"插入运算符"，把右边的字符串"塞进" <code>cout</code>。<br>注意这一行没有 <code>endl</code>，所以光标停在提示文字后面，等待输入。',
-    '<strong><code>cin</code> &gt;&gt; a &gt;&gt; b;</strong><br>用 <code>cin</code> 读入两个整数。<em>&gt;&gt;</em> 是"提取运算符"。<br>输入 <strong>10 20</strong>（空格分隔）时：先读 10 给 a，跳过空格，再读 20 给 b。<br>也可以分两行输入：10 回车 20，效果一样。',
-    '<strong><code>cout</code> &lt;&lt; "a + b = " &lt;&lt; a + b &lt;&lt; <code>endl</code>;</strong><br>链式输出：先把字符串塞进 <code>cout</code>，再把 a+b 的结果塞进 <code>cout</code>，最后塞一个 <code>endl</code>。<br><code>endl</code> 换行并刷新缓冲区。输出结果：<strong>a + b = 30</strong>',
-    '<strong><code>cout</code> &lt;&lt; "a = " &lt;&lt; a &lt;&lt; ", b = " &lt;&lt; b &lt;&lt; "\\n";</strong><br>用 <em>\\n</em> 代替 <code>endl</code> 换行。<br>\\n 只换行不刷新缓冲区，比 <code>endl</code> 快。输出：<strong>a = 10, b = 20</strong>',
+    '<strong><code>cout</code> << "请输入两个整数: ";</strong><br>用 <code>cout</code> 输出提示文字。<em><<</em> 是"插入运算符"，把右边的字符串"塞进" <code>cout</code>。<br>注意这一行没有 <code>endl</code>，所以光标停在提示文字后面，等待输入。',
+    '<strong><code>cin</code> >> a >> b;</strong><br>用 <code>cin</code> 读入两个整数。<em>>></em> 是"提取运算符"。<br>输入 <strong>10 20</strong>（空格分隔）时：先读 10 给 a，跳过空格，再读 20 给 b。<br>也可以分两行输入：10 回车 20，效果一样。',
+    '<strong><code>cout</code> << "a + b = " << a + b << <code>endl</code>;</strong><br>链式输出：先把字符串塞进 <code>cout</code>，再把 a+b 的结果塞进 <code>cout</code>，最后塞一个 <code>endl</code>。<br><code>endl</code> 换行并刷新缓冲区。输出结果：<strong>a + b = 30</strong>',
+    '<strong><code>cout</code> << "a = " << a << ", b = " << b << "\\n";</strong><br>用 <em>\\n</em> 代替 <code>endl</code> 换行。<br>\\n 只换行不刷新缓冲区，比 <code>endl</code> 快。输出：<strong>a = 10, b = 20</strong>',
     '<strong>空行</strong><br>分隔基本输出和数组读入演示。',
     '<strong>注释行</strong><br>演示连续读入多个数到数组。// 是单行注释，编译器忽略。',
     '<strong><code>int</code> <code>arr</code>[5];</strong><br>声明一个大小为 5 的整型数组。C++ 数组大小在声明时确定，Python 的 list 可以动态增长。',
-  '<strong><code>for</code> (<code>int</code> i = 0; i &lt; 5; i++)</strong><br><code>for</code> 循环遍历数组。循环变量 i 从 0 到 4。',
-  '<strong><code>cin</code> &gt;&gt; <code>arr</code>[i];</strong><br>每次循环读入一个数到 <code>arr</code>[i]。<br>输入 <strong>1 2 3 4 5</strong>，<code>cin</code> 自动按空格/换行分隔，<code>arr</code> = {1, 2, 3, 4, 5}。',
+  '<strong><code>for</code> (<code>int</code> i = 0; i < 5; i++)</strong><br><code>for</code> 循环遍历数组。循环变量 i 从 0 到 4。',
+  '<strong><code>cin</code> >> <code>arr</code>[i];</strong><br>每次循环读入一个数到 <code>arr</code>[i]。<br>输入 <strong>1 2 3 4 5</strong>，<code>cin</code> 自动按空格/换行分隔，<code>arr</code> = {1, 2, 3, 4, 5}。',
   '<strong>空行</strong><br>分隔读入和输出。',
-  '<strong><code>for</code> (<code>int</code> i = 0; i &lt; 5; i++)</strong><br>第二个循环：遍历数组输出每个元素。',
-  '<strong><code>cout</code> &lt;&lt; <code>arr</code>[i] &lt;&lt; " ";</strong><br>输出每个数组元素加一个空格。用空格分隔让数字不挤在一起。<br>输出：<strong>1 2 3 4 5 </strong>',
-  '<strong><code>cout</code> &lt;&lt; <code>endl</code>;</strong><br>最后换行。养成好习惯：输出末尾加换行，避免下一个输出接在同一行。',
+  '<strong><code>for</code> (<code>int</code> i = 0; i < 5; i++)</strong><br>第二个循环：遍历数组输出每个元素。',
+  '<strong><code>cout</code> << <code>arr</code>[i] << " ";</strong><br>输出每个数组元素加一个空格。用空格分隔让数字不挤在一起。<br>输出：<strong>1 2 3 4 5 </strong>',
+  '<strong><code>cout</code> << <code>endl</code>;</strong><br>最后换行。养成好习惯：输出末尾加换行，避免下一个输出接在同一行。',
   '<strong><code>return</code> 0;</strong><br>程序正常结束。',
   '<strong>}</strong><br><code>main</code> 函数结束。整个程序：读入两个数算和 → 读入5个数到数组 → 输出数组。'
 ];
@@ -315,12 +315,12 @@ const TERM_DEFS = {
   'getline': {
     icon: '📖',
     title: 'getline(cin, str)',
-    body: '读取<strong>一整行</strong>文本，包括空格。<br><br><code>cin</code> &gt;&gt; 遇到空格就停，但 <code>getline</code> 读到换行才停。<br><br>比如输入 Hello World：<br><code>cin</code> &gt;&gt; s 只读到 "Hello"<br>getline(<code>cin</code>, s) 读到 "Hello World"<br><br>竞赛中读字符串通常用 getline。'
+    body: '读取<strong>一整行</strong>文本，包括空格。<br><br><code>cin</code> >> 遇到空格就停，但 <code>getline</code> 读到换行才停。<br><br>比如输入 Hello World：<br><code>cin</code> >> s 只读到 "Hello"<br>getline(<code>cin</code>, s) 读到 "Hello World"<br><br>竞赛中读字符串通常用 getline。'
   },
   'stream': {
     icon: '🌊',
     title: '流（Stream）',
-    body: '数据像<strong>水流</strong>一样从一个地方流到另一个地方。<br><br><code>cin</code> 是"从键盘流进来"的流，<code>cout</code> 是"往屏幕流出去"的流。<code>&gt;&gt;</code> 从流中取水，<code>&lt;&lt;</code> 往流里倒水。<br><br>Python 没有这个概念，Python 用函数（pr<code>int</code>/input）而不是流。'
+    body: '数据像<strong>水流</strong>一样从一个地方流到另一个地方。<br><br><code>cin</code> 是"从键盘流进来"的流，<code>cout</code> 是"往屏幕流出去"的流。<code>>></code> 从流中取水，<code><<</code> 往流里倒水。<br><br>Python 没有这个概念，Python 用函数（pr<code>int</code>/input）而不是流。'
   }
 };
 
