@@ -382,20 +382,20 @@ function drawArrow(svg, from, to) {
   const fRect = fromEl.getBoundingClientRect();
   const tRect = toEl.getBoundingClientRect();
 
-  const x1 = fRect.left - cRect.left;
-  const y1 = fRect.top + fRect.height / 2 - cRect.top;
-  const x2 = tRect.right - cRect.left;
-  const y2 = tRect.top + tRect.height / 2 - cRect.top;
+  // 起点：指针方框底部中心
+  const x1 = fRect.left + fRect.width / 2 - cRect.left;
+  const y1 = fRect.bottom - cRect.top;
+  // 终点：目标方框顶部中心
+  const x2 = tRect.left + tRect.width / 2 - cRect.left;
+  const y2 = tRect.top - cRect.top;
 
-  // Check if there are elements between from and to (pointer on right, target on left)
-  // If so, route the arrow above all elements to avoid overlapping
+  // 检查中间是否有其他元素
   const allCells = container.querySelectorAll('[data-addr]');
   let hasMiddle = false;
   allCells.forEach(el => {
     const addr = parseInt(el.getAttribute('data-addr'));
     if (addr !== from.addr && addr !== to.addr) {
       const r = el.getBoundingClientRect();
-      // Check if this element is horizontally between from and to
       if (r.left > Math.min(fRect.left, tRect.left) && r.right < Math.max(fRect.right, tRect.right)) {
         hasMiddle = true;
       }
@@ -404,23 +404,24 @@ function drawArrow(svg, from, to) {
 
   let path, label;
   if (hasMiddle) {
-    // Route above: go up, across, then down
-    const topY = Math.min(fRect.top, tRect.top) - cRect.top - 24;
-    const d = `M ${x1} ${y1} L ${x1} ${topY} L ${x2} ${topY} L ${x2} ${y2}`;
+    // 有中间变量：从底部出发，向右绕行，再向上到目标
+    const rightX = Math.max(fRect.right, tRect.right) - cRect.left + 24;
+    const d = `M ${x1} ${y1} L ${x1} ${y1 + 12} L ${rightX} ${y1 + 12} L ${rightX} ${y2 - 12} L ${x2} ${y2 - 12} L ${x2} ${y2}`;
     path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path.setAttribute('d', d);
     label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    label.setAttribute('x', (x1 + x2) / 2);
-    label.setAttribute('y', topY - 4);
+    label.setAttribute('x', rightX + 4);
+    label.setAttribute('y', (y1 + y2) / 2);
+    label.setAttribute('text-anchor', 'start');
   } else {
-    // Original: right-angle connector
-    const midX = (x1 + x2) / 2;
-    const d = `M ${x1} ${y1} L ${midX} ${y1} L ${midX} ${y2} L ${x2} ${y2}`;
+    // 无中间变量：直接从底部到顶部，垂直向上
+    const d = `M ${x1} ${y1} L ${x1} ${y2}`;
     path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     path.setAttribute('d', d);
     label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    label.setAttribute('x', (midX + x2) / 2);
-    label.setAttribute('y', y2 - 6);
+    label.setAttribute('x', x1 + 10);
+    label.setAttribute('y', (y1 + y2) / 2 + 3);
+    label.setAttribute('text-anchor', 'start');
   }
 
   path.setAttribute('stroke', 'var(--green)');
@@ -432,23 +433,22 @@ function drawArrow(svg, from, to) {
   path.setAttribute('stroke-linejoin', 'round');
   svg.appendChild(path);
 
-  // Arrowhead (pointing left)
+  // 箭头（指向目标顶部）
   const arrowHead = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-  const headSize = 8;
+  const headSize = 7;
   const hx = x2;
   const hy = y2;
   arrowHead.setAttribute('points',
-    `${hx},${hy} ${hx + headSize * 1.2},${hy - headSize * 0.5} ${hx + headSize * 1.2},${hy + headSize * 0.5}`
+    `${hx},${hy} ${hx - headSize * 0.5},${hy - headSize} ${hx + headSize * 0.5},${hy - headSize}`
   );
   arrowHead.setAttribute('fill', 'var(--green)');
   arrowHead.setAttribute('opacity', '0.9');
   svg.appendChild(arrowHead);
 
-  // Label
+  // 标签
   label.setAttribute('fill', 'var(--green)');
   label.setAttribute('font-size', '10');
   label.setAttribute('font-family', 'JetBrains Mono, monospace');
-  label.setAttribute('text-anchor', 'middle');
   label.setAttribute('opacity', '0.6');
   label.textContent = '地址';
   svg.appendChild(label);
