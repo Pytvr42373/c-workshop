@@ -55,11 +55,11 @@
   .error-box { padding: 12px 16px; background: rgba(255,71,87,0.08); border: 1px solid rgba(255,71,87,0.2); border-radius: 8px; margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--red); }
   .ok-box { padding: 12px 16px; background: rgba(0,230,118,0.08); border: 1px solid rgba(0,230,118,0.2); border-radius: 8px; margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--green); }
   .scope-vis { padding: 12px 0; margin-top: 12px; }
-  .scope-block { border-left: 2px solid rgba(255,255,255,0.06); padding: 6px 0 6px 16px; margin-bottom: 4px; }
-  .scope-global { border-left-color: rgba(255,255,255,0.1); }
+  .scope-block { border-left: 2px solid rgba(255,255,255,0.15); padding: 6px 0 6px 16px; margin-bottom: 4px; }
+  .scope-global { border-left-color: rgba(255,255,255,0.25); }
   .scope-local { margin-left: 20px; }
   .scope-for { margin-left: 40px; }
-  .scope-label { font-size: 0.68rem; font-weight: 500; margin-bottom: 4px; font-family: 'JetBrains Mono', monospace; color: var(--text-dim); opacity: 0.5; }
+  .scope-label { font-size: 0.68rem; font-weight: 600; margin-bottom: 4px; font-family: 'JetBrains Mono', monospace; color: var(--text-dim); opacity: 0.8; }
 
   /* ===== Light theme ===== */
   [data-theme="light"] {
@@ -76,6 +76,9 @@
   [data-theme="light"] .hw-diagram, [data-theme="light"] .mem-vis,
   [data-theme="light"] .memory-grid, [data-theme="light"] .mem-strip { background: rgba(0,0,0,0.04); }
   [data-theme="light"] .topic-btn.active { background: rgba(91,75,212,0.10); }
+  [data-theme="light"] .scope-block { border-left-color: rgba(0,0,0,0.12); }
+  [data-theme="light"] .scope-global { border-left-color: rgba(0,0,0,0.2); }
+  [data-theme="light"] .scope-label { opacity: 1; }
 
 </style>
 </head>
