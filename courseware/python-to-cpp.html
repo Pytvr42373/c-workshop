@@ -61,6 +61,7 @@
   .tip-box .tip-label { font-size: 0.68rem; font-weight: 700; color: var(--cyan); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
   .tip-box .tip-text { font-size: 0.85rem; color: var(--text-dim); line-height: 1.7; }
 
+  code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; color: var(--orange); background: rgba(255,145,0,0.08); padding: 1px 6px; border-radius: 4px; }
   /* ===== Light theme ===== */
   [data-theme="light"] {
     --bg: #f0f4ff; --surface: #ffffff; --surface2: #e8edf5; --border: #d0d8e8;
@@ -69,6 +70,7 @@
     --text: #1a1d3a; --text-dim: #3a3d5a; --py: #b8860b; --cpp: #00599c;
     --cell-bg: #eef2fa; --cell-border: #cdd6e6;
   }
+  [data-theme="light"] code { background: rgba(230,126,0,0.06); }
   [data-theme="light"] .tip-box { background: rgba(0,153,204,0.06); border-color: rgba(0,153,204,0.16); }
   [data-theme="light"] .danger-box { background: rgba(217,48,37,0.05); border-color: rgba(217,48,37,0.16); }
   [data-theme="light"] .term:hover { background: rgba(91,75,212,0.08); }
@@ -127,7 +129,7 @@ const TOPICS = [
       'C++ 用 <strong>cout <<</strong> 输出，Python 用 <strong>print()</strong>',
       'C++ 的 <strong>endl</strong> 相当于换行，Python 的 print 默认换行'
     ],
-    tip: 'using namespace std; 可以省略 std:: 前缀，竞赛中几乎都用。相当于 Python 的 from ... import *'
+    tip: '<code>using namespace std;</code> 可以省略 <code>std::</code> 前缀，竞赛中几乎都用。相当于 Python 的 from ... import *'
   },
   {
     name: '输入输出',
@@ -159,7 +161,7 @@ const TOPICS = [
       'C++ 的字符串用 <strong>string</strong> 类型，需包含头文件',
       'C++ 没有 f-string，用 <strong><<</strong> 拼接输出'
     ],
-    tip: 'cin >> 遇到空格/换行会自动分隔。要读一行用 getline(cin, str)。竞赛中 scanf/printf 比 cin/cout 快'
+    tip: '<code>cin &gt;&gt;</code> 遇到空格/换行会自动分隔。要读一行用 <code>getline(cin, str)</code>。竞赛中 <code>scanf</code>/<code>printf</code> 比 <code>cin</code>/<code>cout</code> 快'
   },
   {
     name: '变量与类型',
@@ -231,7 +233,7 @@ const TOPICS = [
       'C++ 的逻辑运算符：<strong>&&</strong>(与) <strong>||</strong>(或) <strong>!</strong>(非)；Python 用 and/or/not',
       'C++ 的 <strong>==</strong> 比较是否相等，Python 也是 =='
     ],
-    tip: 'Python 的 and/or/not 不能用在 C++ 中！必须用 && / || / !'
+    tip: 'Python 的 <code>and</code>/<code>or</code>/<code>not</code> 不能用在 C++ 中！必须用 <code>&amp;&amp;</code> / <code>||</code> / <code>!</code>'
   }
 ];
 

@@ -109,6 +109,7 @@
   .term-card .tc-body code { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--orange); background: rgba(255,145,0,0.08); padding: 1px 5px; border-radius: 3px; }
   .term-card .tc-icon { font-size: 1.1rem; margin-bottom: 4px; }
 
+  code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; color: var(--orange); background: rgba(255,145,0,0.08); padding: 1px 6px; border-radius: 4px; }
   /* ===== Light theme ===== */
   [data-theme="light"] {
     --bg: #f0f4ff; --surface: #ffffff; --surface2: #e8edf5; --border: #d0d8e8;
@@ -117,6 +118,7 @@
     --text: #1a1d3a; --text-dim: #3a3d5a; --py: #b8860b; --cpp: #00599c;
     --cell-bg: #eef2fa; --cell-border: #cdd6e6;
   }
+  [data-theme="light"] code { background: rgba(230,126,0,0.06); }
   [data-theme="light"] .tip-box { background: rgba(0,153,204,0.06); border-color: rgba(0,153,204,0.16); }
   [data-theme="light"] .danger-box { background: rgba(217,48,37,0.05); border-color: rgba(217,48,37,0.16); }
   [data-theme="light"] .term:hover { background: rgba(91,75,212,0.08); }
@@ -135,7 +137,7 @@
     返回
   </a>
   <h1>头文件详解</h1>
-  <span class="sub">#include · iostream · cstdio · .h vs 无.h</span>
+  <span class="sub"><code>#include</code> · <code>iostream</code> · <code>cstdio</code> · <code>.h</code> vs 无<code>.h</code></span>
 
   <button id="theme-toggle" style="margin-left:auto;background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1rem;color:var(--text-dim);transition:all 0.2s;" onclick="toggleTheme()" title="切换主题">🌙</button>
 </div>

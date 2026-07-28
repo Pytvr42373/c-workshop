@@ -61,6 +61,7 @@
   .scope-for { margin-left: 40px; }
   .scope-label { font-size: 0.68rem; font-weight: 600; margin-bottom: 4px; font-family: 'JetBrains Mono', monospace; color: var(--text-dim); opacity: 0.8; }
 
+  code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; color: var(--orange); background: rgba(255,145,0,0.08); padding: 1px 6px; border-radius: 4px; }
   /* ===== Light theme ===== */
   [data-theme="light"] {
     --bg: #f0f4ff; --surface: #ffffff; --surface2: #e8edf5; --border: #d0d8e8;
@@ -69,6 +70,7 @@
     --text: #1a1d3a; --text-dim: #3a3d5a; --py: #b8860b; --cpp: #00599c;
     --cell-bg: #eef2fa; --cell-border: #cdd6e6;
   }
+  [data-theme="light"] code { background: rgba(230,126,0,0.06); }
   [data-theme="light"] .tip-box { background: rgba(0,153,204,0.06); border-color: rgba(0,153,204,0.16); }
   [data-theme="light"] .danger-box { background: rgba(217,48,37,0.05); border-color: rgba(217,48,37,0.16); }
   [data-theme="light"] .term:hover { background: rgba(91,75,212,0.08); }
@@ -86,7 +88,7 @@
 <div class="top-bar">
   <a href="../index.html" class="back-btn"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>返回</a>
   <h1>作用域</h1>
-  <span class="sub">{} 内可见 · for 里的 i 外面用不了 · 全局 vs 局部</span>
+  <span class="sub"><code>{}</code> 内可见 · <code>for</code> 里的 <code>i</code> 外面用不了 · 全局 vs 局部</span>
 
   <button id="theme-toggle" style="margin-left:auto;background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1rem;color:var(--text-dim);transition:all 0.2s;" onclick="toggleTheme()" title="切换主题">🌙</button>
 </div>

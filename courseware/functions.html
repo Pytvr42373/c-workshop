@@ -186,6 +186,7 @@
   }
   .mem-cell { animation: fadeIn 0.3s ease both; }
 
+  code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; color: var(--orange); background: rgba(255,145,0,0.08); padding: 1px 6px; border-radius: 4px; }
   /* ===== Light theme ===== */
   [data-theme="light"] {
     --bg: #f0f4ff; --surface: #ffffff; --surface2: #e8edf5; --border: #d0d8e8;
@@ -194,6 +195,7 @@
     --text: #1a1d3a; --text-dim: #3a3d5a; --py: #b8860b; --cpp: #00599c;
     --cell-bg: #eef2fa; --cell-border: #cdd6e6;
   }
+  [data-theme="light"] code { background: rgba(230,126,0,0.06); }
   [data-theme="light"] .tip-box { background: rgba(0,153,204,0.06); border-color: rgba(0,153,204,0.16); }
   [data-theme="light"] .danger-box { background: rgba(217,48,37,0.05); border-color: rgba(217,48,37,0.16); }
   [data-theme="light"] .term:hover { background: rgba(91,75,212,0.08); }
@@ -257,37 +259,37 @@ const EXAMPLES = [
     name: '值传递',
     code: `void swap(int x, int y) {\n    int t = x;\n    x = y;\n    y = t;\n}\n\nint main() {\n    int a = 3, b = 5;\n    swap(a, b);\n    // a=3, b=5 (没变！)\n    return 0;\n}`,
     steps: [
-      { desc: 'main: a=3, b=5', main: { a: 3, b: 5 }, params: null, local: null },
-      { desc: '调用 swap(a,b)，复制参数', main: { a: 3, b: 5 }, params: { x: 3, y: 5 }, local: null },
-      { desc: 'swap: t=x → t=3', main: { a: 3, b: 5 }, params: { x: 3, y: 5 }, local: { t: 3 } },
-      { desc: 'swap: x=y → x=5', main: { a: 3, b: 5 }, params: { x: 5, y: 5 }, local: { t: 3 } },
-      { desc: 'swap: y=t → y=3', main: { a: 3, b: 5 }, params: { x: 5, y: 3 }, local: { t: 3 } },
-      { desc: 'swap 结束，a,b 不变！', main: { a: 3, b: 5 }, params: null, local: null }
+      { desc: '<code>main</code>: <code>a=3</code>, <code>b=5</code>', main: { a: 3, b: 5 }, params: null, local: null },
+      { desc: '调用 <code>swap(a,b)</code>，复制参数', main: { a: 3, b: 5 }, params: { x: 3, y: 5 }, local: null },
+      { desc: '<code>swap</code>: <code>t=x</code> → <code>t=3</code>', main: { a: 3, b: 5 }, params: { x: 3, y: 5 }, local: { t: 3 } },
+      { desc: '<code>swap</code>: <code>x=y</code> → <code>x=5</code>', main: { a: 3, b: 5 }, params: { x: 5, y: 5 }, local: { t: 3 } },
+      { desc: '<code>swap</code>: <code>y=t</code> → <code>y=3</code>', main: { a: 3, b: 5 }, params: { x: 5, y: 3 }, local: { t: 3 } },
+      { desc: '<code>swap</code> 结束，a,b 不变！', main: { a: 3, b: 5 }, params: null, local: null }
     ]
   },
   {
     name: '指针传递',
     code: `void swap(int *x, int *y) {\n    int t = *x;\n    *x = *y;\n    *y = t;\n}\n\nint main() {\n    int a = 3, b = 5;\n    swap(&a, &b);\n    // a=5, b=3 (变了！)\n    return 0;\n}`,
     steps: [
-      { desc: 'main: a=3, b=5', main: { a: 3, b: 5 }, params: null, local: null, ptrs: null },
-      { desc: '调用 swap(&a,&b)，传入地址', main: { a: 3, b: 5 }, params: { x: '&a', y: '&b' }, local: null, ptrs: { x: 'a', y: 'b' } },
-      { desc: 'swap: t=*x → t=3', main: { a: 3, b: 5 }, params: { x: '&a', y: '&b' }, local: { t: 3 }, ptrs: { x: 'a', y: 'b' } },
-      { desc: 'swap: *x=*y → a=5', main: { a: 5, b: 5 }, params: { x: '&a', y: '&b' }, local: { t: 3 }, ptrs: { x: 'a', y: 'b' } },
-      { desc: 'swap: *y=t → b=3', main: { a: 5, b: 3 }, params: { x: '&a', y: '&b' }, local: { t: 3 }, ptrs: { x: 'a', y: 'b' } },
-      { desc: 'swap 结束，a,b 交换了！', main: { a: 5, b: 3 }, params: null, local: null, ptrs: null }
+      { desc: '<code>main</code>: <code>a=3</code>, <code>b=5</code>', main: { a: 3, b: 5 }, params: null, local: null, ptrs: null },
+      { desc: '调用 <code>swap(&amp;a,&amp;b)</code>，传入地址', main: { a: 3, b: 5 }, params: { x: '&a', y: '&b' }, local: null, ptrs: { x: 'a', y: 'b' } },
+      { desc: '<code>swap</code>: <code>t=*x</code> → <code>t=3</code>', main: { a: 3, b: 5 }, params: { x: '&a', y: '&b' }, local: { t: 3 }, ptrs: { x: 'a', y: 'b' } },
+      { desc: '<code>swap</code>: <code>*x=*y</code> → <code>a=5</code>', main: { a: 5, b: 5 }, params: { x: '&a', y: '&b' }, local: { t: 3 }, ptrs: { x: 'a', y: 'b' } },
+      { desc: '<code>swap</code>: <code>*y=t</code> → <code>b=3</code>', main: { a: 5, b: 3 }, params: { x: '&a', y: '&b' }, local: { t: 3 }, ptrs: { x: 'a', y: 'b' } },
+      { desc: '<code>swap</code> 结束，a,b 交换了！', main: { a: 5, b: 3 }, params: null, local: null, ptrs: null }
     ]
   },
   {
     name: '对比：值 vs 指针',
     code: `void add10(int x) { x += 10; }\nvoid add10p(int *x) { *x += 10; }\n\nint main() {\n    int v = 5;\n    add10(v);    // v 不变\n    add10p(&v);  // v 变了\n    return 0;\n}`,
     steps: [
-      { desc: 'main: v=5', main: { v: 5 }, params: null, local: null, ptrs: null },
-      { desc: 'add10(v): 复制 v=5 给参数', main: { v: 5 }, params: { x: 5 }, local: null },
-      { desc: 'add10: x+=10 → x=15', main: { v: 5 }, params: { x: 15 }, local: null },
-      { desc: 'add10 结束，v 还是 5', main: { v: 5 }, params: null, local: null },
-      { desc: 'add10p(&v): 传入 v 的地址', main: { v: 5 }, params: { x: '&v' }, local: null, ptrs: { x: 'v' } },
-      { desc: 'add10p: *x+=10 → v=15', main: { v: 15 }, params: { x: '&v' }, local: null, ptrs: { x: 'v' } },
-      { desc: 'add10p 结束，v 变成 15！', main: { v: 15 }, params: null, local: null, ptrs: null }
+      { desc: '<code>main</code>: <code>v=5</code>', main: { v: 5 }, params: null, local: null, ptrs: null },
+      { desc: '<code>add10(v)</code>: 复制 <code>v=5</code> 给参数', main: { v: 5 }, params: { x: 5 }, local: null },
+      { desc: '<code>add10</code>: <code>x+=10</code> → <code>x=15</code>', main: { v: 5 }, params: { x: 15 }, local: null },
+      { desc: '<code>add10</code> 结束，v 还是 5', main: { v: 5 }, params: null, local: null },
+      { desc: '<code>add10p(&amp;v)</code>: 传入 v 的地址', main: { v: 5 }, params: { x: '&v' }, local: null, ptrs: { x: 'v' } },
+      { desc: '<code>add10p</code>: <code>*x+=10</code> → <code>v=15</code>', main: { v: 15 }, params: { x: '&v' }, local: null, ptrs: { x: 'v' } },
+      { desc: '<code>add10p</code> 结束，v 变成 15！', main: { v: 15 }, params: null, local: null, ptrs: null }
     ]
   }
 ];
