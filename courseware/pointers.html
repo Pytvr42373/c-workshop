@@ -377,17 +377,21 @@ function drawArrow(svg, from, to) {
   const toEl = svg.parentElement.querySelector(`[data-addr="${to.addr}"]`);
   if (!fromEl || !toEl) return;
 
+  // 清除旧箭头
+  svg.innerHTML = '';
+
   const container = svg.parentElement;
   const cRect = container.getBoundingClientRect();
   const fRect = fromEl.getBoundingClientRect();
   const tRect = toEl.getBoundingClientRect();
 
-  // 起点：指针方框底部中心
+  // 指针在下方，目标在上方
+  // 起点：指针方框的顶部中心
   const x1 = fRect.left + fRect.width / 2 - cRect.left;
-  const y1 = fRect.bottom - cRect.top;
-  // 终点：目标方框顶部中心
+  const y1 = fRect.top - cRect.top;
+  // 终点：目标方框的底部中心
   const x2 = tRect.left + tRect.width / 2 - cRect.left;
-  const y2 = tRect.top - cRect.top;
+  const y2 = tRect.bottom - cRect.top;
 
   // 检查中间是否有其他元素
   const allCells = container.querySelectorAll('[data-addr]');
@@ -396,60 +400,60 @@ function drawArrow(svg, from, to) {
     const addr = parseInt(el.getAttribute('data-addr'));
     if (addr !== from.addr && addr !== to.addr) {
       const r = el.getBoundingClientRect();
-      if (r.left > Math.min(fRect.left, tRect.left) && r.right < Math.max(fRect.right, tRect.right)) {
+      const midLeft = Math.min(fRect.left, tRect.left);
+      const midRight = Math.max(fRect.right, tRect.right);
+      if (r.left >= midLeft && r.right <= midRight) {
         hasMiddle = true;
       }
     }
   });
 
-  let path, label;
+  const greenColor = '#00e676';
+  let pathD, labelX, labelY;
+
   if (hasMiddle) {
-    // 有中间变量：从底部出发，向右绕行，再向上到目标
-    const rightX = Math.max(fRect.right, tRect.right) - cRect.left + 24;
-    const d = `M ${x1} ${y1} L ${x1} ${y1 + 12} L ${rightX} ${y1 + 12} L ${rightX} ${y2 - 12} L ${x2} ${y2 - 12} L ${x2} ${y2}`;
-    path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    path.setAttribute('d', d);
-    label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    label.setAttribute('x', rightX + 4);
-    label.setAttribute('y', (y1 + y2) / 2);
-    label.setAttribute('text-anchor', 'start');
+    // 有中间变量：从指针顶部出发，向左绕行，再向上到目标底部
+    const leftX = Math.min(fRect.left, tRect.left) - cRect.left - 24;
+    pathD = `M ${x1} ${y1} L ${x1} ${y1 - 12} L ${leftX} ${y1 - 12} L ${leftX} ${y2 + 12} L ${x2} ${y2 + 12} L ${x2} ${y2}`;
+    labelX = leftX - 4;
+    labelY = (y1 + y2) / 2;
   } else {
-    // 无中间变量：直接从底部到顶部，垂直向上
-    const d = `M ${x1} ${y1} L ${x1} ${y2}`;
-    path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    path.setAttribute('d', d);
-    label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    label.setAttribute('x', x1 + 10);
-    label.setAttribute('y', (y1 + y2) / 2 + 3);
-    label.setAttribute('text-anchor', 'start');
+    // 无中间变量：直接从指针顶部垂直向上到目标底部
+    pathD = `M ${x1} ${y1} L ${x2} ${y2}`;
+    labelX = x1 + 10;
+    labelY = (y1 + y2) / 2 + 3;
   }
 
-  path.setAttribute('stroke', 'var(--green)');
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  path.setAttribute('d', pathD);
+  path.setAttribute('stroke', greenColor);
   path.setAttribute('stroke-width', '2.5');
   path.setAttribute('fill', 'none');
-  path.setAttribute('stroke-dasharray', '');
   path.setAttribute('opacity', '0.9');
   path.setAttribute('stroke-linecap', 'round');
   path.setAttribute('stroke-linejoin', 'round');
   svg.appendChild(path);
 
-  // 箭头（指向目标顶部）
+  // 箭头头：在终点(y2)处，朝上指向目标（线从下往上，箭头朝上）
   const arrowHead = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-  const headSize = 7;
-  const hx = x2;
-  const hy = y2;
+  const headSize = 8;
+  // 箭头朝上：顶点在y2（上方），底边在y2+headSize（下方）
   arrowHead.setAttribute('points',
-    `${hx},${hy} ${hx - headSize * 0.5},${hy - headSize} ${hx + headSize * 0.5},${hy - headSize}`
+    `${x2},${y2} ${x2 - headSize * 0.5},${y2 + headSize} ${x2 + headSize * 0.5},${y2 + headSize}`
   );
-  arrowHead.setAttribute('fill', 'var(--green)');
+  arrowHead.setAttribute('fill', greenColor);
   arrowHead.setAttribute('opacity', '0.9');
   svg.appendChild(arrowHead);
 
   // 标签
-  label.setAttribute('fill', 'var(--green)');
+  const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  label.setAttribute('x', labelX);
+  label.setAttribute('y', labelY);
+  label.setAttribute('fill', greenColor);
   label.setAttribute('font-size', '10');
   label.setAttribute('font-family', 'JetBrains Mono, monospace');
-  label.setAttribute('opacity', '0.6');
+  label.setAttribute('opacity', '0.7');
+  label.setAttribute('text-anchor', 'start');
   label.textContent = '地址';
   svg.appendChild(label);
 }
