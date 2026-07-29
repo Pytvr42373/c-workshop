@@ -108,7 +108,7 @@ const TOPICS = [
             <div class="tip-box" style="margin-top:0">
               <div class="tip-label">📌 char 本质是数字</div>
               <div class="tip-text">
-                C++ 的 <code>char</code> 类型存的是一个<strong>整数</strong>（0~127），只是显示时被"翻译"成字符。<br><br>
+                C++ 的 <span class="term" data-term="char"><code>char</code></span> 类型存的是一个<strong>整数</strong>（0~127），只是显示时被"翻译"成字符。<br><br>
                 <code>char c = 65;</code> 和 <code>char c = 'A';</code> <strong>完全等价</strong>。<br>
                 因为 'A' 的 <span class="term" data-term="ascii">ASCII 码</span> 就是 65。
               </div>
@@ -153,7 +153,7 @@ const TOPICS = [
           <strong>'0' = 48</strong>（数字零）<br>
           <strong>'A' = 65</strong>（大写A）<br>
           <strong>'a' = 97</strong>（小写a）<br>
-          <strong>'\0' = 0</strong>（空字符，字符串结尾）<br><br>
+          <strong><span class="term" data-term="nullchar">'\0' = 0</span></strong>（空字符，字符串结尾）<br><br>
           大写字母 65~90，小写字母 97~122。<br>
           大小写差 32：<code>'a' - 'A' = 32</code>
         </div>
@@ -246,7 +246,9 @@ function init() {
 }
 
 const TERM_DEFS = {
-  'ascii': { icon: '🔤', title: 'ASCII 码', body: '计算机只认数字，那字母怎么办？答案是<strong>编号</strong>！<br><br>ASCII 就是一份<strong>"字符编号对照表"</strong>：给 128 个常用字符（字母、数字、标点）每个发一个号码，比如 <code>\'A\'</code> 是 65 号，<code>\'a\'</code> 是 97 号，<code>\'0\'</code> 是 48 号。<br><br>看到字符，查表就知道它的号码；看到号码，查表就知道是哪个字符，就像查字典一样。' }
+  'ascii': { icon: '🔤', title: 'ASCII 码', body: '计算机只认数字，那字母怎么办？答案是<strong>编号</strong>！<br><br>ASCII 就是一份<strong>"字符编号对照表"</strong>：给 128 个常用字符（字母、数字、标点）每个发一个号码，比如 <code>\'A\'</code> 是 65 号，<code>\'a\'</code> 是 97 号，<code>\'0\'</code> 是 48 号。<br><br>看到字符，查表就知道它的号码；看到号码，查表就知道是哪个字符，就像查字典一样。' },
+  'char': { icon: '🅰️', title: 'char（字符类型）', body: '<code>char</code> 是 C++ 里存<strong>一个字符</strong>的类型，比如 <code>\'A\'</code>、<code>\'7\'</code>、<code>\'?\'</code>。<br><br>有趣的是：char 本质上存的是<strong>一个数字</strong>（ASCII 码）！<code>char c = \'A\';</code> 和 <code>char c = 65;</code> 完全一样。<br><br>它只占 <strong>1 个字节</strong>，是最小的数据类型。Python 没有 char，它的 \'A\' 是字符串。' },
+  'nullchar': { icon: '🔚', title: '空字符 \\0', body: '<code>\'\\0\'</code> 是一个<strong>看不见的特殊字符</strong>，ASCII 码是 0。<br><br>它的作用是<strong>"字符串的结尾标记"</strong>：C++ 的字符串靠它知道"到哪里结束"。<br><br>比如存 <code>"Hi"</code>，内存里其实是 <code>\'H\'</code>、<code>\'i\'</code>、<code>\'\\0\'</code> 三个字符。<br><br>别把它和数字 <code>0</code>、字符 <code>\'0\'</code> 搞混——它什么都不显示，只是个"到此为止"的记号。' }
 };
 
 function initTerms() {

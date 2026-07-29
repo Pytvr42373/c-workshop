@@ -140,7 +140,7 @@ const TOPICS = [
         <div class="tip-label">📌 什么是二进制</div>
         <div class="tip-text">
           计算机底层是<span class="term" data-term="circuit">电子电路</span>，只有两种状态：<strong>通电(1)</strong> 和 <strong>断电(0)</strong>。<br><br>
-          所以计算机用的数字系统是<strong>二进制</strong>（只有 0 和 1），不是我们日常用的十进制（0-9）。<br><br>
+          所以计算机用的数字系统是<span class="term" data-term="binary">二进制</span>（只有 0 和 1），不是我们日常用的十进制（0-9）。<br><br>
           一个 0 或 1 叫一个<span class="term" data-term="bit">位（bit）</span>。
         </div>
       </div>
@@ -184,7 +184,7 @@ const TOPICS = [
         <div class="tip-label">📌 位、字节、KB、MB、GB</div>
         <div class="tip-text">
           <strong>1 位 (bit)</strong> = 一个 0 或 1<br>
-          <strong>1 字节 (Byte)</strong> = 8 位 → 能表示 0~255 共 256 种状态<br>
+          <strong>1 <span class="term" data-term="byte">字节 (Byte)</span></strong> = 8 位 → 能表示 0~255 共 256 种状态<br>
           <strong>1 KB</strong> = 1024 字节<br>
           <strong>1 MB</strong> = 1024 KB<br>
           <strong>1 GB</strong> = 1024 MB<br><br>
@@ -229,7 +229,7 @@ const TOPICS = [
         <div class="danger-label">⚠️ int 会溢出！</div>
         <div class="danger-text">
           <code>int</code> 最大 2147483647（约 21 亿）。<br>
-          如果你算 <code>int a = 3000000000;</code>（30 亿）→ <strong>溢出</strong>！变成负数。<br><br>
+          如果你算 <code>int a = 3000000000;</code>（30 亿）→ <span class="term" data-term="overflow">溢出</span>！变成负数。<br><br>
           竞赛中大数要用 <code>long long</code>（最大 9.2×10¹⁸）。<br>
           Python 不会溢出，C++ 会——这是最大的区别之一。
         </div>
@@ -326,7 +326,10 @@ function init() {
 
 const TERM_DEFS = {
   'bit': { icon: '🔢', title: '位（bit）', body: '位是计算机记东西用的<strong>最小格子</strong>，里面只能放一个 <strong>0 或 1</strong>。<br><br>就像一盏小灯：<strong>亮 = 1，灭 = 0</strong>，只有这两种状态。<br><br>8 个位排在一起叫 1 个<strong>字节</strong>（Byte），就像 8 盏灯排成一排。' },
-  'circuit': { icon: '🔌', title: '电子电路', body: '计算机肚子里藏着<strong>几十亿个超小的开关</strong>，每个只有<strong>开</strong>和<strong>关</strong>两种状态。<br><br>开 = 通电 = 1<br>关 = 断电 = 0<br><br>别小看开关简单——几十亿个开关飞快地开开关关，就能完成所有计算！' }
+  'circuit': { icon: '🔌', title: '电子电路', body: '计算机肚子里藏着<strong>几十亿个超小的开关</strong>，每个只有<strong>开</strong>和<strong>关</strong>两种状态。<br><br>开 = 通电 = 1<br>关 = 断电 = 0<br><br>别小看开关简单——几十亿个开关飞快地开开关关，就能完成所有计算！' },
+  'binary': { icon: '🧮', title: '二进制', body: '我们平时数数用 0~9 十个数字（十进制），计算机只用 <strong>0 和 1</strong> 两个数字，这就是<strong>二进制</strong>。<br><br>为什么？因为计算机里是电路，只有"通电"和"断电"两种状态，用 0 和 1 表示最方便。<br><br>比如数字 42，写成二进制是 <code>00101010</code>。' },
+  'byte': { icon: '📦', title: '字节（Byte）', body: '<strong>8 个位</strong>排在一起就是 1 个字节，就像 8 盏小灯排成一排。<br><br>1 个字节能表示 <strong>0~255</strong> 共 256 种状态。<br><br>再往上：<strong>1 KB</strong> = 1024 字节，<strong>1 MB</strong> = 1024 KB，<strong>1 GB</strong> = 1024 MB。你的内存条 8GB，大约有 85 亿个字节！' },
+  'overflow': { icon: '💥', title: '溢出（Overflow）', body: '每种类型能装的数有<strong>上限</strong>，比如 <code>int</code> 最大约 21 亿。<br><br>算出来的数超过上限，就像杯子里的水满了还在倒——<strong>溢出来</strong>，结果会变得莫名其妙（甚至变成负数）。<br><br>所以大数要用 <code>long long</code>（最大约 9.2×10¹⁸）。Python 不会溢出，C++ 会，要小心！' }
 };
 
 function initTerms() {

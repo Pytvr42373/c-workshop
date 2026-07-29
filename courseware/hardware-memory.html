@@ -235,9 +235,9 @@ const TOPICS = [
       <div class="tip-box" style="margin-top:0">
         <div class="tip-label">📌 计算机四大核心部件</div>
         <div class="tip-text">
-          <strong>CPU</strong>（中央处理器）：计算机的"大脑"，负责执行指令、做运算。<br><br>
+          <span class="term" data-term="cpu">CPU</span>（中央处理器）：计算机的"大脑"，负责执行指令、做运算。<br><br>
           <strong>内存</strong>（<span class="term" data-term="ram">RAM</span>）：临时存储正在运行的程序和数据。断电即消失。<br><br>
-          <strong>硬盘</strong>（SSD/HDD）：永久存储文件、操作系统、程序代码。断电不消失。<br><br>
+          <span class="term" data-term="disk">硬盘</span>（SSD/HDD）：永久存储文件、操作系统、程序代码。断电不消失。<br><br>
           <strong>输入/输出设备</strong>：键盘（输入）、显示器（输出）、鼠标等。
         </div>
       </div>
@@ -341,7 +341,7 @@ const TOPICS = [
         <div class="tip-label">📌 从代码到运行的完整流程</div>
         <div class="tip-text">
           <strong>① 写代码</strong>：在硬盘上创建 <code>hello.cpp</code> 文件<br>
-          <strong>② 编译</strong>：编译器（g++）把 <code>.cpp</code> 翻译成机器码，生成 <code>hello.exe</code><br>
+          <strong>② 编译</strong>：<span class="term" data-term="compiler">编译器</span>（g++）把 <code>.cpp</code> 翻译成<span class="term" data-term="machinecode">机器码</span>，生成 <code>hello.exe</code><br>
           <strong>③ 运行</strong>：操作系统把 <code>.exe</code> 从硬盘加载到<strong>内存</strong><br>
           <strong>④ 执行</strong>：<strong>CPU</strong> 从内存读取指令，逐条执行<br>
           <strong>⑤ 输出</strong>：<code>cout</code> 把结果送到显示器<br><br>
@@ -389,7 +389,7 @@ const TOPICS = [
         <div class="tip-label">📌 为什么竞赛用 C++ 不用 Python</div>
         <div class="tip-text">
           <strong>Python</strong> 是<span class="term" data-term="interpreted">解释型语言</span>：运行时逐行翻译，每行都要"现场翻译"。<br><br>
-          <strong>C++</strong> 是<span class="term" data-term="compiled">编译型语言</span>：提前把整个程序翻译成机器码，运行时 CPU 直接执行。<br><br>
+          <strong>C++</strong> 是<span class="term" data-term="compiled">编译型语言</span>：提前把整个程序翻译成<span class="term" data-term="machinecode">机器码</span>，运行时 CPU 直接执行。<br><br>
           竞赛题目数据量大（百万级），Python 容易<strong>超时</strong>（TLE），C++ 几乎不会。
         </div>
       </div>
@@ -540,7 +540,11 @@ const TERM_DEFS = {
   'hexaddr': { icon: '🔢', title: '为什么地址写成 0x00？', body: '你有时会看到地址写成 <code>0x00</code>、<code>0x7fff</code> 这种样子。<br><br>其实它就是格子的编号，只是用了<strong>十六进制</strong>来写（逢 16 进 1）。<br><br><code>0x</code> 只是"接下来是十六进制"的标记，就像人民币符号 ¥ 表示"接下来是钱"。<br><br>换算：<code>0x00</code> = 第 0 号，<code>0x04</code> = 第 4 号，<code>0x0A</code> = 第 10 号。<br><br>为什么用十六进制？因为内存地址经常很大（几十亿），用十六进制写更短、更整齐。对你来说，<strong>知道它就是个编号就行</strong>，初学不用纠结换算。' },
   'pointer': { icon: '🎯', title: '指针（Pointer）', body: '指针是一种<strong>专门记地址</strong>的变量。<br><br>普通变量记的是<strong>东西</strong>（比如 <code>int a = 42</code> 记了 42）；指针记的是<strong>门牌号</strong>（比如 <code>int *p = &a</code>，p 记的是 a 住在哪）。<br><br>就像纸条上写的不是礼物本身，而是"礼物在 3 号柜"。<br><br>（代码看不懂没关系，后面会专门讲指针。）' },
   'interpreted': { icon: '🐍', title: '解释型语言', body: '像请了位<strong>现场翻译</strong>：程序一边运行，翻译官一边逐行把代码翻给计算机听。Python、JavaScript 都这样。<br><br>好处：写完马上能跑，出错好发现。<br>小缺点：每次运行都要现场翻译，所以慢一点。' },
-  'compiled': { icon: '⚡', title: '编译型语言', body: '像<strong>先把整本书翻译好</strong>再出版：运行前，编译器把整个程序一次性翻译成计算机能直接懂的话。C、C++、Rust 都这样。<br><br>好处：运行时不用翻译，速度飞快。<br>小缺点：改一个字，整本书要重新翻译一遍（重新编译）。' }
+  'compiled': { icon: '⚡', title: '编译型语言', body: '像<strong>先把整本书翻译好</strong>再出版：运行前，编译器把整个程序一次性翻译成计算机能直接懂的话。C、C++、Rust 都这样。<br><br>好处：运行时不用翻译，速度飞快。<br>小缺点：改一个字，整本书要重新翻译一遍（重新编译）。' },
+  'cpu': { icon: '🧠', title: 'CPU（中央处理器）', body: 'CPU 是计算机的<strong>"大脑"</strong>，负责思考和计算。<br><br>你写的每一行代码，最终都变成 CPU 一条条执行的<strong>指令</strong>。<br><br>它速度极快（每秒几十亿次运算），但只能处理<strong>内存里</strong>的数据——所以程序运行前要先"搬"进内存。' },
+  'disk': { icon: '💾', title: '硬盘（SSD/HDD）', body: '硬盘是<strong>永久仓库</strong>：你的文件、照片、程序代码都存在这里，<strong>断电也不会消失</strong>。<br><br>它和内存（草稿纸）正好相反：内存一断电就清空，硬盘不会。<br><br>但硬盘比内存<strong>慢得多</strong>，所以程序运行时，要先从硬盘"搬"到内存里。' },
+  'machinecode': { icon: '🤖', title: '机器码', body: '机器码是<strong>CPU 唯一能直接听懂的语言</strong>，全是一串串 0 和 1。<br><br>你写的 C++ 代码（<code>cout << "Hello";</code>）CPU 看不懂，必须先<strong>翻译</strong>成机器码才能执行。<br><br>这个"翻译"工作就是<strong>编译</strong>。' },
+  'compiler': { icon: '⚙️', title: '编译器（g++）', body: '编译器是<strong>翻译官</strong>：把你写的 C++ 源代码，一次性翻译成 CPU 能懂的<strong>机器码</strong>，生成可执行文件（<code>.exe</code>）。<br><br>我们用的编译器叫 <code>g++</code>。<br><br>翻译好之后，运行时就再也不需要它了——CPU 直接执行机器码，所以 C++ 快。' }
 };
 
 let TERMS_INITED = false;
