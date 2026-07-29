@@ -332,7 +332,10 @@ const TERM_DEFS = {
   'overflow': { icon: '💥', title: '溢出（Overflow）', body: '每种类型能装的数有<strong>上限</strong>，比如 <code>int</code> 最大约 21 亿。<br><br>算出来的数超过上限，就像杯子里的水满了还在倒——<strong>溢出来</strong>，结果会变得莫名其妙（甚至变成负数）。<br><br>所以大数要用 <code>long long</code>（最大约 9.2×10¹⁸）。Python 不会溢出，C++ 会，要小心！' }
 };
 
+let TERMS_INITED = false;
 function initTerms() {
+  if (TERMS_INITED) return;
+  TERMS_INITED = true;
   let ct = null, cc = null;
   function show(t) { if (t===ct&&cc) return; hide(); ct=t; const d=TERM_DEFS[t.dataset.term]; if(!d) return; cc=document.createElement('div'); cc.className='term-card show'; cc.innerHTML='<div class="tc-icon">'+d.icon+'</div><div class="tc-title">'+d.title+'</div><div class="tc-body">'+d.body+'</div>'; document.body.appendChild(cc); const r=t.getBoundingClientRect(); let l=r.left+r.width/2-170, p=r.bottom+8; if(l+340>innerWidth)l=innerWidth-350; if(p+200>innerHeight)p=r.top-208; if(l<10)l=10; cc.style.left=l+'px'; cc.style.top=p+'px'; }
   function hide() { if(cc){cc.remove();cc=null;} ct=null; }

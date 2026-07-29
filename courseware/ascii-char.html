@@ -251,7 +251,10 @@ const TERM_DEFS = {
   'nullchar': { icon: '🔚', title: '空字符 \\0', body: '<code>\'\\0\'</code> 是一个<strong>看不见的特殊字符</strong>，ASCII 码是 0。<br><br>它的作用是<strong>"字符串的结尾标记"</strong>：C++ 的字符串靠它知道"到哪里结束"。<br><br>比如存 <code>"Hi"</code>，内存里其实是 <code>\'H\'</code>、<code>\'i\'</code>、<code>\'\\0\'</code> 三个字符。<br><br>别把它和数字 <code>0</code>、字符 <code>\'0\'</code> 搞混——它什么都不显示，只是个"到此为止"的记号。' }
 };
 
+let TERMS_INITED = false;
 function initTerms() {
+  if (TERMS_INITED) return;
+  TERMS_INITED = true;
   let ct = null, cc = null;
   function show(t) { if (t===ct&&cc) return; hide(); ct=t; const d=TERM_DEFS[t.dataset.term]; if(!d) return; cc=document.createElement('div'); cc.className='term-card show'; cc.innerHTML='<div class="tc-icon">'+d.icon+'</div><div class="tc-title">'+d.title+'</div><div class="tc-body">'+d.body+'</div>'; document.body.appendChild(cc); const r=t.getBoundingClientRect(); let l=r.left+r.width/2-170, p=r.bottom+8; if(l+340>innerWidth)l=innerWidth-350; if(p+200>innerHeight)p=r.top-208; if(l<10)l=10; cc.style.left=l+'px'; cc.style.top=p+'px'; }
   function hide() { if(cc){cc.remove();cc=null;} ct=null; }
