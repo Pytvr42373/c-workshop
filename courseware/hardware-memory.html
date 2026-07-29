@@ -535,12 +535,12 @@ function init() {
 
 // === 专有名词 tooltip ===
 const TERM_DEFS = {
-  'ram': { icon: '⚡', title: 'RAM（随机存取存储器）', body: '就是"内存"。RAM = Random Access Memory。<br><br>特点是<strong>断电即消失</strong>（易失性），所以你程序运行结束后，变量就没了。<br><br>速度比硬盘快 100~1000 倍，但容量小（通常 8~32 GB）。' },
-  'address': { icon: '🏠', title: '地址（Address）', body: '内存里每个格子（字节）都有一个编号，叫<strong>地址</strong>，就像门牌号。<br><br>第一个格子是 0 号，第二个是 1 号…… 从 0 开始数，和数组下标一样。<br><br>变量存在内存里，就是占用了几个连续的格子。CPU 凭地址找到变量、读或改它的值。' },
+  'ram': { icon: '⚡', title: 'RAM（内存）', body: 'RAM 就是我们常说的<strong>"内存"</strong>。<br><br>它像一张<strong>草稿纸</strong>：程序运行时把数据写在上面，<strong>一断电，纸上的内容就全没了</strong>，所以关机后变量就消失了。<br><br>它读写飞快（比硬盘快成百上千倍），但空间有限，装不下太多东西。' },
+  'address': { icon: '🏠', title: '地址（Address）', body: '内存里的每个小格子都有一个<strong>编号</strong>，这个编号就叫<strong>地址</strong>，就像每家门口的<strong>门牌号</strong>。<br><br>编号从 <strong>0</strong> 开始：第一个格子是 0 号，第二个是 1 号……（和数组下标一样从 0 数）。<br><br>变量住进内存，就是占了几个连续的格子。想找它？报出地址就行！' },
   'hexaddr': { icon: '🔢', title: '为什么地址写成 0x00？', body: '你有时会看到地址写成 <code>0x00</code>、<code>0x7fff</code> 这种样子。<br><br>其实它就是格子的编号，只是用了<strong>十六进制</strong>来写（逢 16 进 1）。<br><br><code>0x</code> 只是"接下来是十六进制"的标记，就像人民币符号 ¥ 表示"接下来是钱"。<br><br>换算：<code>0x00</code> = 第 0 号，<code>0x04</code> = 第 4 号，<code>0x0A</code> = 第 10 号。<br><br>为什么用十六进制？因为内存地址经常很大（几十亿），用十六进制写更短、更整齐。对你来说，<strong>知道它就是个编号就行</strong>，初学不用纠结换算。' },
-  'pointer': { icon: '🎯', title: '指针（Pointer）', body: '存地址的变量。<br><br>普通变量存<strong>值</strong>（如 <code>int a = 42</code>），指针存<strong>地址</strong>（如 <code>int *p = &a</code>，p 存的是 a 的地址）。<br><br>Python 没有指针，因为 Python 帮你管理了所有地址。' },
-  'interpreted': { icon: '🐍', title: '解释型语言', body: '运行时逐行翻译代码。Python、JavaScript 都是解释型。<br><br>优点：写完直接跑，方便调试。<br>缺点：每次运行都要翻译，速度慢。' },
-  'compiled': { icon: '⚡', title: '编译型语言', body: '运行前先把整个程序翻译成机器码。C、C++、Rust 都是编译型。<br><br>优点：运行速度快（CPU 直接执行）。<br>缺点：每次改代码都要重新编译。' }
+  'pointer': { icon: '🎯', title: '指针（Pointer）', body: '指针是一种<strong>专门记地址</strong>的变量。<br><br>普通变量记的是<strong>东西</strong>（比如 <code>int a = 42</code> 记了 42）；指针记的是<strong>门牌号</strong>（比如 <code>int *p = &a</code>，p 记的是 a 住在哪）。<br><br>就像纸条上写的不是礼物本身，而是"礼物在 3 号柜"。<br><br>（代码看不懂没关系，后面会专门讲指针。）' },
+  'interpreted': { icon: '🐍', title: '解释型语言', body: '像请了位<strong>现场翻译</strong>：程序一边运行，翻译官一边逐行把代码翻给计算机听。Python、JavaScript 都这样。<br><br>好处：写完马上能跑，出错好发现。<br>小缺点：每次运行都要现场翻译，所以慢一点。' },
+  'compiled': { icon: '⚡', title: '编译型语言', body: '像<strong>先把整本书翻译好</strong>再出版：运行前，编译器把整个程序一次性翻译成计算机能直接懂的话。C、C++、Rust 都这样。<br><br>好处：运行时不用翻译，速度飞快。<br>小缺点：改一个字，整本书要重新翻译一遍（重新编译）。' }
 };
 
 let TERMS_INITED = false;
