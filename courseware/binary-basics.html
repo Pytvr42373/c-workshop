@@ -337,7 +337,7 @@ function initTerms() {
   if (TERMS_INITED) return;
   TERMS_INITED = true;
   let ct = null, cc = null;
-  function show(t) { if (t===ct&&cc) return; hide(); ct=t; const d=TERM_DEFS[t.dataset.term]; if(!d) return; cc=document.createElement('div'); cc.className='term-card show'; cc.innerHTML='<div class="tc-icon">'+d.icon+'</div><div class="tc-title">'+d.title+'</div><div class="tc-body">'+d.body+'</div>'; document.body.appendChild(cc); const r=t.getBoundingClientRect(); let l=r.left+r.width/2-170, p=r.bottom+8; if(l+340>innerWidth)l=innerWidth-350; if(p+200>innerHeight)p=r.top-208; if(l<10)l=10; cc.style.left=l+'px'; cc.style.top=p+'px'; }
+  function show(t) { if (t===ct&&cc) return; hide(); ct=t; const d=TERM_DEFS[t.dataset.term]; if(!d) return; cc=document.createElement('div'); cc.className='term-card show'; cc.innerHTML='<div class="tc-icon">'+d.icon+'</div><div class="tc-title">'+d.title+'</div><div class="tc-body">'+d.body+'</div>'; document.body.appendChild(cc); const r=t.getBoundingClientRect(), cw=cc.offsetWidth, ch=cc.offsetHeight, gap=8, m=10; let l=r.left+r.width/2-cw/2, p=r.bottom+gap; if(p+ch>innerHeight-m)p=r.top-ch-gap; if(p<m)p=m; if(l+cw>innerWidth-m)l=innerWidth-cw-m; if(l<m)l=m; cc.style.left=l+'px'; cc.style.top=p+'px'; }
   function hide() { if(cc){cc.remove();cc=null;} ct=null; }
   document.addEventListener('mouseover', e => { const t=e.target.closest('.term'); if(t) show(t); else if(!e.target.closest('.term-card')) hide(); });
 }

@@ -565,11 +565,13 @@ function initTerms() {
     card.innerHTML = '<div class="tc-icon">' + def.icon + '</div><div class="tc-title">' + def.title + '</div><div class="tc-body">' + def.body + '</div>';
     document.body.appendChild(card);
     const rect = term.getBoundingClientRect();
-    let left = rect.left + rect.width / 2 - 170;
-    let top = rect.bottom + 8;
-    if (left + 340 > window.innerWidth) left = window.innerWidth - 350;
-    if (top + 200 > window.innerHeight) top = rect.top - 208;
-    if (left < 10) left = 10;
+    const cw = card.offsetWidth, ch = card.offsetHeight, gap = 8, m = 10;
+    let left = rect.left + rect.width / 2 - cw / 2;
+    let top = rect.bottom + gap;
+    if (top + ch > window.innerHeight - m) top = rect.top - ch - gap;
+    if (top < m) top = m;
+    if (left + cw > window.innerWidth - m) left = window.innerWidth - cw - m;
+    if (left < m) left = m;
     card.style.left = left + 'px';
     card.style.top = top + 'px';
     currentCard = card;
