@@ -158,6 +158,10 @@
     --cell-bg: #eef2fa; --cell-border: #cdd6e6;
   }
   [data-theme="light"] .grid-2d, [data-theme="light"] .mem-strip, [data-theme="light"] .info-item { background: rgba(0,0,0,0.04); }
+  [data-theme="light"] .ctrl-btn.active { background: rgba(0,184,107,0.06); }
+  [data-theme="light"] .code-block .highlight { background: rgba(91,75,212,0.10); }
+  [data-theme="light"] .panel-header .action:hover { background: rgba(91,75,212,0.10); }
+  [data-theme="light"] .cell-2d.active { box-shadow: 0 0 10px rgba(91,75,212,0.12); }
 </style>
 </head>
 <body>
@@ -274,11 +278,10 @@ function renderMem() {
 
 function renderCode() {
   const ex = EXAMPLES[currentEx];
-  let code = ex.code;
-  code = code.replace(/\b(int|for)\b/g, '<span class="type">$1</span>')
+  let code = ex.code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  code = code.replace(/\b(int)\b/g, '<span class="type">$1</span>')
     .replace(/\b(for|return|if)\b/g, '<span class="kw">$1</span>')
-    .replace(/\/\/[^\n]*/g, m => '<span class="comment">' + m + '</span>')
-    .replace(/\d+/g, m => '<span class="num">' + m + '</span>');
+    .replace(/\/\/[^\n]*/g, m => '<span class="comment">' + m + '</span>');
   document.getElementById('code-display').innerHTML = code;
 }
 

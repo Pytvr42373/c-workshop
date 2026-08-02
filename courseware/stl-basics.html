@@ -166,6 +166,9 @@
     --cell-bg: #eef2fa; --cell-border: #cdd6e6;
   }
   [data-theme="light"] .container-view, [data-theme="light"] .info-item { background: rgba(0,0,0,0.04); }
+  [data-theme="light"] .ctrl-btn.active { background: rgba(0,184,107,0.06); }
+  [data-theme="light"] .code-block .highlight { background: rgba(91,75,212,0.10); }
+  [data-theme="light"] .panel-header .action:hover { background: rgba(91,75,212,0.10); }
 </style>
 </head>
 <body>
@@ -260,7 +263,9 @@ function renderContainer() {
       view.appendChild(e);
     });
   }
-  document.getElementById('code-display').innerHTML = CODES[currentContainer].replace(/\/\/[^\n]*/g, m => '<span class="comment">' + m + '</span>')
+  const rawCode = CODES[currentContainer];
+  const escCode = rawCode.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  document.getElementById('code-display').innerHTML = escCode.replace(/\/\/[^\n]*/g, m => '<span class="comment">' + m + '</span>')
     .replace(/\b(include|vector|stack|queue|int|void)\b/g, '<span class="type">$1</span>')
     .replace(/\b(push_back|pop_back|push|pop|top|front|sort)\b/g, '<span class="kw">$1</span>');
 

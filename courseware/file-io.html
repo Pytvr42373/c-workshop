@@ -158,6 +158,9 @@
   }
   [data-theme="light"] .io-row, [data-theme="light"] .speed-compare,
   [data-theme="light"] .info-item, [data-theme="light"] .bar-track { background: rgba(0,0,0,0.04); }
+  [data-theme="light"] .ctrl-btn.active { background: rgba(0,184,107,0.06); }
+  [data-theme="light"] .code-block .highlight { background: rgba(91,75,212,0.10); }
+  [data-theme="light"] .panel-header .action:hover { background: rgba(91,75,212,0.10); }
 </style>
 </head>
 <body>
@@ -236,7 +239,8 @@ let codeIdx = 0;
 
 function renderCode() {
   const code = CODES[codeIdx];
-  document.getElementById('code-display').innerHTML = code
+  const esc = code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  document.getElementById('code-display').innerHTML = esc
     .replace(/\/\/[^\n]*/g, m => '<span class="comment">' + m + '</span>')
     .replace(/\/\*.*?\*\//gs, m => '<span class="comment">' + m + '</span>')
     .replace(/\b(include|int|char|void|return)\b/g, '<span class="type">$1</span>')
@@ -276,7 +280,8 @@ function toggleRedirect() {
 
 function init() {
   renderCode();
-  toggleRedirect(); // 默认关闭状态
+  redirectOn = true;
+  toggleRedirect(); // 切换到关闭状态，初始化 UI
   // 效率对比条
   document.getElementById('bar-cin').style.width = '35%';
   document.getElementById('bar-scanf').style.width = '90%';

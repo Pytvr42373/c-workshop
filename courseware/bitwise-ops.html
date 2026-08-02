@@ -176,6 +176,10 @@
   [data-theme="light"] .bit-grid, [data-theme="light"] .result-box,
   [data-theme="light"] .concept-box, [data-theme="light"] .info-bar .info-item { background: rgba(0,0,0,0.04); }
   [data-theme="light"] .bit-cell.on { background: rgba(0,184,107,0.10); }
+  [data-theme="light"] .ctrl-btn.active { background: rgba(0,184,107,0.06); }
+  [data-theme="light"] .op-badge.active { background: rgba(0,184,107,0.06); }
+  [data-theme="light"] .code-block .highlight { background: rgba(91,75,212,0.10); }
+  [data-theme="light"] .panel-header .action:hover { background: rgba(91,75,212,0.10); }
 </style>
 </head>
 <body>
@@ -264,10 +268,8 @@ function compute(a, b, op) {
   return r;
 }
 
-function renderBits(el, val, label) {
+function renderBits(el, val, label, which) {
   const bits = pad8(val).split('');
-  let html = '<div class="bv">' + label + '</div>';
-  // 重新生成，但这里我们把 label 单独显示，位用内联
   el.style.flexDirection = 'row';
   el.style.gap = '4px';
   el.style.width = 'auto';
@@ -275,9 +277,12 @@ function renderBits(el, val, label) {
   el.style.height = 'auto';
   let inner = '';
   bits.forEach((b, i) => {
-    inner += '<span class="bit-bit" style="display:inline-flex;flex-direction:column;align-items:center;width:26px;">'
+    const bitPos = 7 - i;
+    const clickAttr = which ? ' onclick="flipBit(\'' + which + '\',' + bitPos + ')"' : '';
+    const cursorStyle = which ? 'cursor:pointer;' : '';
+    inner += '<span class="bit-bit" style="display:inline-flex;flex-direction:column;align-items:center;width:26px;' + cursorStyle + '"' + clickAttr + '>'
       + '<span style="font-size:1rem;font-weight:700;color:' + (b==='1' ? 'var(--green)' : 'var(--text-dim)') + '">' + b + '</span>'
-      + '<span style="font-size:0.5rem;color:var(--text-dim)">' + (7-i) + '</span>'
+      + '<span style="font-size:0.5rem;color:var(--text-dim)">' + bitPos + '</span>'
       + '</span>';
   });
   el.innerHTML = '<div style="font-size:0.65rem;color:var(--text-dim);margin-bottom:4px;font-family:JetBrains Mono">' + label + '</div>' + inner;
@@ -286,17 +291,22 @@ function renderBits(el, val, label) {
 function renderResult(a, b, op) {
   const r = compute(a, b, op);
   const el = document.getElementById('result');
+  var opEsc = op === '&' ? '&amp;' : (op === '<<' ? '&lt;&lt;' : (op === '>>' ? '&gt;&gt;' : op));
+  var codeExpr;
+  if (op === '~') codeExpr = '~a';
+  else if (op === '<<') codeExpr = 'a &lt;&lt; 1';
+  else if (op === '>>') codeExpr = 'a &gt;&gt; 1';
+  else codeExpr = 'a ' + opEsc + ' b';
   el.innerHTML = 'a = ' + a + ' (0b' + pad8(a) + ')<br>'
     + 'b = ' + b + ' (0b' + pad8(b) + ')<br>'
-    + '<span class="op-badge">' + op + '</span> 结果 = <span class="val">' + r + '</span> (0b' + pad8(r) + ')';
+    + '<span class="op-badge">' + opEsc + '</span> 结果 = <span class="val">' + r + '</span> (0b' + pad8(r) + ')';
   document.getElementById('info-bar').innerHTML = ''
     + '<div class="info-item">a: <strong>' + a + '</strong></div>'
     + '<div class="info-item">b: <strong>' + b + '</strong></div>'
     + '<div class="info-item">结果: <strong>' + r + '</strong></div>';
-  const info = OP_INFO[op];
   document.getElementById('code-display').innerHTML = '<span class="comment">// 位运算 · GESP 2级</span><br>'
     + '<span class="type">int</span> a = <span class="num">' + a + '</span>, b = <span class="num">' + b + '</span>;<br>'
-    + '<span class="type">int</span> r = a ' + op + ' b;  <span class="comment">// r = ' + r + '</span><br><br>'
+    + '<span class="type">int</span> r = ' + codeExpr + ';  <span class="comment">// r = ' + r + '</span><br><br>'
     + '<span class="comment">/* ' + OP_INFO[op].desc + ' */</span>';
   document.getElementById('concept').innerHTML = '<strong>技巧：</strong>' + TIPS.join('  ·  ');
 }
@@ -307,10 +317,16 @@ function setOp(o) {
   renderAll();
 }
 
+function flipBit(which, bitPos) {
+  if (which === 'a') a ^= (1 << bitPos);
+  else if (which === 'b') b ^= (1 << bitPos);
+  renderAll();
+}
+
 function renderAll() {
-  renderBits(document.getElementById('a-bits'), a, 'a = ' + a);
-  renderBits(document.getElementById('b-bits'), b, 'b = ' + b);
-  renderBits(document.getElementById('r-bits'), compute(a, b, op), '结果');
+  renderBits(document.getElementById('a-bits'), a, 'a = ' + a, 'a');
+  renderBits(document.getElementById('b-bits'), b, 'b = ' + b, 'b');
+  renderBits(document.getElementById('r-bits'), compute(a, b, op), '结果', null);
   renderResult(a, b, op);
 }
 
