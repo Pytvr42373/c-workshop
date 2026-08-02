@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>递归函数 — C 语言交互实验室</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0b0d1a; --surface: #12142a; --surface2: #1a1d3a;
+    --border: #2a2d5a; --accent: #6c5ce7; --accent2: #a29bfe;
+    --green: #00e676; --cyan: #00e5ff; --orange: #ff9100;
+    --pink: #ff4081; --text: #e0e0ff; --text-dim: #7878aa;
+    --cell-bg: #1a1d3a; --cell-border: #2a2d5a;
+  }
+
+  body {
+    font-size: 18px;
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  .top-bar {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 32px; flex-wrap: wrap;
+  }
+
+  .back-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 8px;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text-dim); text-decoration: none;
+    font-size: 0.82rem; font-weight: 600; transition: all 0.2s;
+  }
+  .back-btn:hover { border-color: var(--accent); color: var(--text); }
+  .back-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+  .top-bar h1 {
+    font-size: 1.3rem; font-weight: 700;
+    background: linear-gradient(135deg, var(--green), var(--cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .top-bar .sub { font-size: 0.78rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
+
+  .workspace {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 24px; max-width: 1100px; margin: 0 auto;
+  }
+  @media (max-width: 800px) { .workspace { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden;
+  }
+
+  .panel-header {
+    padding: 12px 16px; background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .panel-header .label { font-size: 0.72rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+  .panel-header .action {
+    font-size: 0.72rem; color: var(--accent2); cursor: pointer;
+    padding: 4px 10px; border-radius: 6px;
+    background: rgba(108,92,231,0.1); border: none; font-family: inherit;
+  }
+  .panel-header .action:hover { background: rgba(108,92,231,0.2); }
+
+  .panel-body { padding: 20px; }
+
+  .code-block {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;
+    line-height: 1.8; color: var(--text); white-space: pre; overflow-x: auto; letter-spacing: 0.5px;
+  }
+  .code-block .kw { color: var(--accent2); }
+  .code-block .type { color: var(--cyan); }
+  .code-block .num { color: var(--orange); }
+  .code-block .comment { color: var(--text-dim); font-style: italic; }
+  .code-block .highlight { background: rgba(108,92,231,0.2); border-radius: 3px; padding: 0 2px; }
+
+  .stack {
+    display: flex; flex-direction: column-reverse; gap: 6px;
+    padding: 12px; background: rgba(0,0,0,0.2); border-radius: 8px; min-height: 60px;
+    margin-bottom: 12px;
+  }
+  .stack-frame {
+    background: var(--cell-bg); border: 1px solid var(--cell-border); border-radius: 6px;
+    padding: 8px 14px; display: flex; align-items: center; gap: 10px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; transition: all 0.3s;
+  }
+  .stack-frame.active { border-color: var(--green); box-shadow: 0 0 10px rgba(0,230,118,0.15); }
+  .stack-frame.returning { border-color: var(--orange); }
+  .stack-frame .fname { color: var(--accent2); font-weight: 600; }
+  .stack-frame .parm { color: var(--orange); }
+  .stack-frame .retv { color: var(--green); font-weight: 600; }
+
+  .trace-line {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; line-height: 1.8;
+    color: var(--text-dim);
+  }
+  .trace-line .call { color: var(--cyan); }
+  .trace-line .ret { color: var(--green); }
+  .trace-line .arrow { color: var(--accent2); }
+
+  .ctrl-btn {
+    padding: 8px 16px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--surface);
+    color: var(--text); font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem; cursor: pointer; transition: all 0.2s;
+  }
+  .ctrl-btn:hover { border-color: var(--accent); }
+  .ctrl-btn.active { border-color: var(--green); background: rgba(0,230,118,0.1); }
+  .ctrl-btn.primary { border-color: var(--green); color: var(--green); }
+
+  .legend {
+    display: flex; gap: 16px; margin-top: 12px; flex-wrap: wrap;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; color: var(--text-dim); }
+  .legend-color { width: 14px; height: 14px; border-radius: 4px; border: 1px solid var(--cell-border); }
+
+  .info-bar {
+    display: flex; gap: 12px; margin-top: 10px; flex-wrap: wrap;
+  }
+  .info-item {
+    padding: 6px 12px; border-radius: 6px; background: rgba(0,0,0,0.2);
+    font-size: 0.72rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;
+  }
+  .info-item strong { color: var(--accent2); font-weight: 600; }
+
+  .next-link {
+    max-width: 1100px; margin: 40px auto 0; display: flex;
+    justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  }
+  .next-link a {
+    display: flex; align-items: center; gap: 6px;
+    color: var(--text-dim); text-decoration: none; font-size: 0.8rem;
+    padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--surface); transition: all 0.2s;
+  }
+  .next-link a:hover { border-color: var(--accent); color: var(--text); }
+  .next-link svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+  /* ===== Light theme ===== */
+  [data-theme="light"] {
+    --bg: #f0f4ff; --surface: #ffffff; --surface2: #e8edf5; --border: #d0d8e8;
+    --accent: #5b4bd4; --accent2: #7c6df0; --green: #00b86b; --cyan: #0099cc;
+    --orange: #e67e00; --pink: #d6336c; --red: #d93025; --yellow: #c49000;
+    --text: #1a1d3a; --text-dim: #3a3d5a; --py: #b8860b; --cpp: #00599c;
+    --cell-bg: #eef2fa; --cell-border: #cdd6e6;
+  }
+  [data-theme="light"] .stack, [data-theme="light"] .info-item { background: rgba(0,0,0,0.04); }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="../index.html" class="back-btn">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    返回
+  </a>
+  <h1>递归函数</h1>
+  <span class="sub">自己调用自己 · 栈帧的展开与回收</span>
+
+  <button id="theme-toggle" style="margin-left:auto;background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1rem;color:var(--text-dim);transition:all 0.2s;" onclick="toggleTheme()" title="切换主题">🌙</button>
+</div>
+
+<div class="workspace">
+  <div class="panel">
+    <div class="panel-header">
+      <span class="label">栈帧模拟</span>
+      <span class="action" style="cursor:default;background:transparent;color:var(--text-dim)" id="step-info"></span>
+    </div>
+    <div class="panel-body">
+      <div id="example-buttons" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px"></div>
+      <div class="stack" id="stack"></div>
+      <div class="trace-line" id="trace"></div>
+      <div class="info-bar" id="info-bar"></div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-color" style="border-color:var(--green);background:rgba(0,230,118,0.2)"></div> 正在执行</div>
+        <div class="legend-item"><div class="legend-color" style="border-color:var(--orange);background:rgba(255,145,0,0.2)"></div> 返回中</div>
+        <div class="legend-item"><div class="legend-color" style="border-color:var(--cell-border);background:var(--cell-bg)"></div> 等待结果</div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+        <button class="ctrl-btn primary" onclick="stepForward()">下一步 ▸</button>
+        <button class="ctrl-btn" onclick="resetExample()">重置 ↺</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <span class="label">C 代码</span>
+      <span class="action" style="cursor:default;background:transparent;color:var(--text-dim)">GESP 2-3级</span>
+    </div>
+    <div class="panel-body">
+      <div class="code-block" id="code-display"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const EXAMPLES = {
+  factorial: {
+    name: '阶乘 n!',
+    code: 'int fact(int n) {\n  if (n <= 1) return 1;   // 边界条件\n  return n * fact(n - 1); // 递归调用\n}',
+    calls: [5, 4, 3, 2, 1],
+    rets:  [1, 2, 6, 24, 120]
+  },
+  fib: {
+    name: '斐波那契 F(n)',
+    code: 'int fib(int n) {\n  if (n <= 1) return n;\n  return fib(n-1) + fib(n-2);\n}',
+    calls: [6, 5, 4, 3],
+    rets:  [0, 1, 1, 2, 3, 5, 8]
+  },
+  hanoi: {
+    name: '汉诺塔',
+    code: 'void hanoi(int n, char a, char b, char c) {\n  if (n == 1) { cout << a << "->" << c; return; }\n  hanoi(n-1, a, c, b); // 先把n-1个从a移到b\n  cout << a << "->" << c;\n  hanoi(n-1, b, a, c); // 再把n-1个从b移到c\n}',
+    calls: [3, 2, 1],
+    rets:  []
+  }
+};
+const ORDER = ['factorial', 'fib', 'hanoi'];
+let currentEx = 'factorial';
+let phase = 0; // 当前调用栈深度索引
+
+function currentSteps() {
+  const ex = EXAMPLES[currentEx];
+  return ex.calls;
+}
+
+function renderCode() {
+  const ex = EXAMPLES[currentEx];
+  let code = ex.code;
+  if (currentEx === 'hanoi') {
+    code = code.replace(/cout <</g, '<span class="kw">cout</span> &lt;&lt;');
+  }
+  code = code.replace(/\b(int|void|char)\b/g, '<span class="type">$1</span>')
+    .replace(/\b(if|return|for)\b/g, '<span class="kw">$1</span>')
+    .replace(/\/\/[^\n]*/g, m => '<span class="comment">' + m + '</span>');
+  document.getElementById('code-display').innerHTML = code;
+}
+
+function renderStack() {
+  const ex = EXAMPLES[currentEx];
+  const calls = ex.calls;
+  const stack = document.getElementById('stack');
+  stack.innerHTML = '';
+  // 显示从栈底(最深已调用)到栈顶
+  // phase 表示已经压入的调用层数
+  for (let i = 0; i < phase; i++) {
+    const n = calls[i];
+    const frame = document.createElement('div');
+    frame.className = 'stack-frame' + (i === phase - 1 ? ' active' : '');
+    frame.innerHTML = '<span class="fname">' + ex.name + '</span>( n=' + '<span class="parm">' + n + '</span> )'
+      + (i === phase - 1 && phase === calls.length ? ' → 到底了，开始返回' : '');
+    stack.appendChild(frame);
+  }
+  if (phase === 0) {
+    stack.innerHTML = '<div style="font-size:0.72rem;color:var(--text-dim);padding:8px">栈是空的 · 点击"下一步"开始调用</div>';
+  }
+  const trace = document.getElementById('trace');
+  if (phase === 0) {
+    trace.innerHTML = '点击"下一步"，从 <span class="call">main</span> 调用 ' + ex.name + '<span class="parm">(n=' + calls[0] + ')</span>';
+  } else if (phase < calls.length) {
+    trace.innerHTML = '调用 ' + '<span class="call">' + ex.name + '</span>(<span class="parm">' + calls[phase-1] + '</span>) → 压入栈帧，继续调用 n=' + '<span class="parm">' + calls[phase] + '</span>';
+  } else {
+    const ret = (currentEx === 'fib') ? 'fib(0)=0, fib(1)=1, fib(2)=1, ... fib(6)=8' : (currentEx === 'factorial' ? '5! = 120' : '移动步骤完成');
+    trace.innerHTML = '到达边界条件，开始 <span class="ret">逐层返回</span>，结果向上传递 → 最终：<span class="ret">' + ret + '</span>';
+  }
+  // info bar
+  const info = document.getElementById('info-bar');
+  const depth = Math.min(phase, calls.length);
+  info.innerHTML = '<div class="info-item">调用深度: <strong>' + depth + '</strong></div>'
+    + '<div class="info-item">已压栈帧: <strong>' + depth + '</strong></div>';
+  const stepInfo = document.getElementById('step-info');
+  stepInfo.textContent = (phase >= calls.length ? '返回阶段' : (phase === 0 ? '未开始' : '调用中'));
+}
+
+function stepForward() {
+  const calls = currentSteps();
+  if (phase < calls.length) {
+    phase++;
+  } else {
+    // 已经返回完，重新从0开始
+    phase = 0;
+  }
+  renderStack();
+}
+
+function resetExample() {
+  phase = 0;
+  renderStack();
+}
+
+function selectExample(name) {
+  currentEx = name;
+  phase = 0;
+  document.querySelectorAll('#example-buttons .ctrl-btn').forEach((b, i) => b.classList.toggle('active', ORDER[i] === name));
+  renderCode();
+  renderStack();
+}
+
+function init() {
+  const btnBox = document.getElementById('example-buttons');
+  ORDER.forEach(name => {
+    const b = document.createElement('button');
+    b.className = 'ctrl-btn' + (name === 'factorial' ? ' active' : '');
+    b.textContent = EXAMPLES[name].name;
+    b.onclick = () => selectExample(name);
+    btnBox.appendChild(b);
+  });
+  renderCode();
+  renderStack();
+}
+
+init();
+</script>
+
+  <div class="next-link">
+    <a href="functions.html"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>上一页：函数传参</a>
+    <a href="structs.html">下一页：结构体<svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </div>
+
+<script>
+(function() {
+  const key = 'c-workshop-theme';
+  const saved = localStorage.getItem(key);
+  if (saved === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    const btn = document.getElementById('theme-toggle');
+    if (btn) btn.textContent = '☀️';
+  }
+})();
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  if (isLight) {
+    html.removeAttribute('data-theme');
+    localStorage.setItem('c-workshop-theme', 'dark');
+    document.getElementById('theme-toggle').textContent = '🌙';
+  } else {
+    html.setAttribute('data-theme', 'light');
+    localStorage.setItem('c-workshop-theme', 'light');
+    document.getElementById('theme-toggle').textContent = '☀️';
+  }
+}
+</script>
+</body>
+</html>

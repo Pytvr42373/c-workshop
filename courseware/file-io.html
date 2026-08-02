@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文件读写 — C 语言交互实验室</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0b0d1a; --surface: #12142a; --surface2: #1a1d3a;
+    --border: #2a2d5a; --accent: #6c5ce7; --accent2: #a29bfe;
+    --green: #00e676; --cyan: #00e5ff; --orange: #ff9100;
+    --pink: #ff4081; --text: #e0e0ff; --text-dim: #7878aa;
+    --cell-bg: #1a1d3a; --cell-border: #2a2d5a;
+  }
+
+  body {
+    font-size: 18px;
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  .top-bar {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 32px; flex-wrap: wrap;
+  }
+
+  .back-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 8px;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text-dim); text-decoration: none;
+    font-size: 0.82rem; font-weight: 600; transition: all 0.2s;
+  }
+  .back-btn:hover { border-color: var(--accent); color: var(--text); }
+  .back-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+  .top-bar h1 {
+    font-size: 1.3rem; font-weight: 700;
+    background: linear-gradient(135deg, var(--green), var(--cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .top-bar .sub { font-size: 0.78rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
+
+  .workspace {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 24px; max-width: 1100px; margin: 0 auto;
+  }
+  @media (max-width: 800px) { .workspace { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden;
+  }
+
+  .panel-header {
+    padding: 12px 16px; background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .panel-header .label { font-size: 0.72rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+  .panel-header .action {
+    font-size: 0.72rem; color: var(--accent2); cursor: pointer;
+    padding: 4px 10px; border-radius: 6px;
+    background: rgba(108,92,231,0.1); border: none; font-family: inherit;
+  }
+  .panel-header .action:hover { background: rgba(108,92,231,0.2); }
+
+  .panel-body { padding: 20px; }
+
+  .code-block {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;
+    line-height: 1.8; color: var(--text); white-space: pre; overflow-x: auto; letter-spacing: 0.5px;
+  }
+  .code-block .kw { color: var(--accent2); }
+  .code-block .type { color: var(--cyan); }
+  .code-block .num { color: var(--orange); }
+  .code-block .comment { color: var(--text-dim); font-style: italic; }
+  .code-block .highlight { background: rgba(108,92,231,0.2); border-radius: 3px; padding: 0 2px; }
+
+  .io-flow {
+    display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;
+  }
+  .io-row {
+    display: flex; align-items: center; gap: 12px; padding: 10px 14px;
+    background: rgba(0,0,0,0.2); border-radius: 8px; border: 1px solid var(--border);
+  }
+  .io-row .role { font-size: 0.68rem; color: var(--text-dim); width: 90px; font-weight: 600; }
+  .io-row .file-box {
+    flex: 1; padding: 8px 12px; border-radius: 6px; border: 1px dashed var(--accent);
+    font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--cyan);
+  }
+  .io-row .arrow { color: var(--accent2); font-size: 1rem; }
+
+  .ctrl-btn {
+    padding: 8px 16px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--surface);
+    color: var(--text); font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem; cursor: pointer; transition: all 0.2s;
+  }
+  .ctrl-btn:hover { border-color: var(--accent); }
+  .ctrl-btn.active { border-color: var(--green); background: rgba(0,230,118,0.1); }
+  .ctrl-btn.primary { border-color: var(--green); color: var(--green); }
+
+  .speed-compare {
+    margin-top: 14px; padding: 14px 16px; background: rgba(0,0,0,0.2); border-radius: 8px;
+  }
+  .speed-bar {
+    display: flex; align-items: center; gap: 10px; margin: 6px 0;
+  }
+  .speed-label { width: 100px; font-size: 0.7rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
+  .bar-track { flex: 1; height: 20px; background: rgba(0,0,0,0.2); border-radius: 4px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 4px; width: 0%; transition: width 0.4s; }
+  .bar-fill.cin { background: linear-gradient(90deg, var(--orange), var(--pink)); }
+  .bar-fill.scanf { background: linear-gradient(90deg, var(--green), var(--cyan)); }
+
+  .info-bar {
+    display: flex; gap: 12px; margin-top: 10px; flex-wrap: wrap;
+  }
+  .info-item {
+    padding: 6px 12px; border-radius: 6px; background: rgba(0,0,0,0.2);
+    font-size: 0.72rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;
+  }
+  .info-item strong { color: var(--accent2); font-weight: 600; }
+
+  .legend {
+    display: flex; gap: 16px; margin-top: 12px; flex-wrap: wrap;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; color: var(--text-dim); }
+  .legend-color { width: 14px; height: 14px; border-radius: 4px; border: 1px solid var(--cell-border); }
+
+  .next-link {
+    max-width: 1100px; margin: 40px auto 0; display: flex;
+    justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  }
+  .next-link a {
+    display: flex; align-items: center; gap: 6px;
+    color: var(--text-dim); text-decoration: none; font-size: 0.8rem;
+    padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--surface); transition: all 0.2s;
+  }
+  .next-link a:hover { border-color: var(--accent); color: var(--text); }
+  .next-link svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+  /* ===== Light theme ===== */
+  [data-theme="light"] {
+    --bg: #f0f4ff; --surface: #ffffff; --surface2: #e8edf5; --border: #d0d8e8;
+    --accent: #5b4bd4; --accent2: #7c6df0; --green: #00b86b; --cyan: #0099cc;
+    --orange: #e67e00; --pink: #d6336c; --red: #d93025; --yellow: #c49000;
+    --text: #1a1d3a; --text-dim: #3a3d5a; --py: #b8860b; --cpp: #00599c;
+    --cell-bg: #eef2fa; --cell-border: #cdd6e6;
+  }
+  [data-theme="light"] .io-row, [data-theme="light"] .speed-compare,
+  [data-theme="light"] .info-item, [data-theme="light"] .bar-track { background: rgba(0,0,0,0.04); }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="../index.html" class="back-btn">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    返回
+  </a>
+  <h1>文件读写</h1>
+  <span class="sub">freopen 重定向 · OJ 输入输出约定</span>
+
+  <button id="theme-toggle" style="margin-left:auto;background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1rem;color:var(--text-dim);transition:all 0.2s;" onclick="toggleTheme()" title="切换主题">🌙</button>
+</div>
+
+<div class="workspace">
+  <div class="panel">
+    <div class="panel-header">
+      <span class="label">重定向流程</span>
+      <span class="action" style="cursor:default;background:transparent;color:var(--text-dim)">竞赛必学</span>
+    </div>
+    <div class="panel-body">
+      <div class="io-flow">
+        <div class="io-row">
+          <span class="role">标准输入</span>
+          <span class="arrow">←</span>
+          <div class="file-box" id="in-box">cin / scanf 从键盘读</div>
+        </div>
+        <div class="io-row" style="border-style:dashed">
+          <span class="role">freopen</span>
+          <span class="arrow">⇄</span>
+          <div class="file-box" id="redirect-box">把 stdin / stdout 重定向到文件</div>
+        </div>
+        <div class="io-row">
+          <span class="role">标准输出</span>
+          <span class="arrow">→</span>
+          <div class="file-box" id="out-box">cout / printf 写到屏幕</div>
+        </div>
+      </div>
+      <div class="ctrl-btn" style="display:inline-block" onclick="toggleRedirect()" id="toggle-redirect">开启 freopen 重定向 ▶</div>
+      <div class="info-bar" id="info-bar"></div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-color" style="border-color:var(--cyan);background:rgba(0,229,255,0.2)"></div> 输入流</div>
+        <div class="legend-item"><div class="legend-color" style="border-color:var(--green);background:rgba(0,230,118,0.2)"></div> 输出流</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <span class="label">C++ 代码与效率</span>
+      <span class="action" style="cursor:default;background:transparent;color:var(--text-dim)">GESP 2级 · 竞赛必考</span>
+    </div>
+    <div class="panel-body">
+      <div class="code-block" id="code-display"></div>
+      <div class="speed-compare">
+        <div class="speed-label">cin/cout</div>
+        <div class="bar-track"><div class="bar-fill cin" id="bar-cin"></div></div>
+        <div class="speed-label">scanf/printf</div>
+        <div class="bar-track"><div class="bar-fill scanf" id="bar-scanf"></div></div>
+        <div style="font-size:0.68rem;color:var(--text-dim);margin-top:8px;line-height:1.6">大数据量输入时 scanf/printf 明显更快。<br>freopen 后 cin/cout 自动从文件读、写到文件。</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+let redirectOn = false;
+
+const CODES = [
+  '// 竞赛标准模板\n#include <cstdio>\n#include <iostream>\nusing namespace std;\n\nint main() {\n  // 重定向：从 a.in 读，写到 a.out\n  freopen("a.in", "r", stdin);\n  freopen("a.out", "w", stdout);\n  int a, b;\n  cin >> a >> b;      // 从 a.in 读\n  cout << a + b;      // 写到 a.out\n  return 0;\n}',
+  '// 使用 scanf / printf（更快）\n#include <cstdio>\nint main() {\n  freopen("a.in", "r", stdin);\n  freopen("a.out", "w", stdout);\n  int a, b;\n  scanf("%d %d", &a, &b);\n  printf("%d\\n", a + b);\n  return 0;\n}',
+  '// OJ 约定：读一行数字，求个数和总和\n#include <cstdio>\nint main() {\n  freopen("data.in", "r", stdin);\n  freopen("data.out", "w", stdout);\n  int n, x, sum = 0;\n  scanf("%d", &n);\n  for (int i = 0; i < n; i++) {\n    scanf("%d", &x);\n    sum += x;\n  }\n  printf("%d\\n", sum);\n  return 0;\n}'
+];
+let codeIdx = 0;
+
+function renderCode() {
+  const code = CODES[codeIdx];
+  document.getElementById('code-display').innerHTML = code
+    .replace(/\/\/[^\n]*/g, m => '<span class="comment">' + m + '</span>')
+    .replace(/\/\*.*?\*\//gs, m => '<span class="comment">' + m + '</span>')
+    .replace(/\b(include|int|char|void|return)\b/g, '<span class="type">$1</span>')
+    .replace(/\b(freopen|scanf|printf|cin|cout|for|using|namespace|main)\b/g, '<span class="kw">$1</span>')
+    .replace(/"[^"]*"/g, m => '<span class="num">' + m + '</span>');
+}
+
+function toggleRedirect() {
+  redirectOn = !redirectOn;
+  const btn = document.getElementById('toggle-redirect');
+  const inBox = document.getElementById('in-box');
+  const outBox = document.getElementById('out-box');
+  const redirectBox = document.getElementById('redirect-box');
+  const info = document.getElementById('info-bar');
+  if (redirectOn) {
+    btn.textContent = '关闭 freopen 重定向 ■';
+    btn.classList.add('active');
+    inBox.textContent = 'a.in 文件内容：10 20（从文件读入）';
+    inBox.style.borderColor = 'var(--cyan)';
+    outBox.textContent = 'a.out 文件内容：30（写入文件）';
+    outBox.style.borderColor = 'var(--green)';
+    redirectBox.textContent = 'stdin ← a.in · stdout → a.out';
+    redirectBox.style.borderStyle = 'solid';
+    info.innerHTML = '<div class="info-item">输入: <strong>a.in</strong></div><div class="info-item">输出: <strong>a.out</strong></div><div class="info-item">状态: <strong>已重定向</strong></div>';
+  } else {
+    btn.textContent = '开启 freopen 重定向 ▶';
+    btn.classList.remove('active');
+    inBox.textContent = 'cin / scanf 从键盘读';
+    inBox.style.borderColor = 'var(--accent)';
+    outBox.textContent = 'cout / printf 写到屏幕';
+    outBox.style.borderColor = 'var(--accent)';
+    redirectBox.textContent = '把 stdin / stdout 重定向到文件';
+    redirectBox.style.borderStyle = 'dashed';
+    info.innerHTML = '<div class="info-item">输入: <strong>键盘</strong></div><div class="info-item">输出: <strong>屏幕</strong></div><div class="info-item">状态: <strong>默认</strong></div>';
+  }
+}
+
+function init() {
+  renderCode();
+  toggleRedirect(); // 默认关闭状态
+  // 效率对比条
+  document.getElementById('bar-cin').style.width = '35%';
+  document.getElementById('bar-scanf').style.width = '90%';
+}
+
+init();
+</script>
+
+  <div class="next-link">
+    <a href="stdio.html"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>上一页：输入输出</a>
+    <a href="arrays.html">下一页：数组<svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </div>
+
+<script>
+(function() {
+  const key = 'c-workshop-theme';
+  const saved = localStorage.getItem(key);
+  if (saved === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    const btn = document.getElementById('theme-toggle');
+    if (btn) btn.textContent = '☀️';
+  }
+})();
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  if (isLight) {
+    html.removeAttribute('data-theme');
+    localStorage.setItem('c-workshop-theme', 'dark');
+    document.getElementById('theme-toggle').textContent = '🌙';
+  } else {
+    html.setAttribute('data-theme', 'light');
+    localStorage.setItem('c-workshop-theme', 'light');
+    document.getElementById('theme-toggle').textContent = '☀️';
+  }
+}
+</script>
+</body>
+</html>

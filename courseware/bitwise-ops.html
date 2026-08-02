@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>位运算 — C 语言交互实验室</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0b0d1a; --surface: #12142a; --surface2: #1a1d3a;
+    --border: #2a2d5a; --accent: #6c5ce7; --accent2: #a29bfe;
+    --green: #00e676; --cyan: #00e5ff; --orange: #ff9100;
+    --pink: #ff4081; --text: #e0e0ff; --text-dim: #7878aa;
+    --cell-bg: #1a1d3a; --cell-border: #2a2d5a;
+  }
+
+  body {
+    font-size: 18px;
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  .top-bar {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 32px; flex-wrap: wrap;
+  }
+
+  .back-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 8px;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text-dim); text-decoration: none;
+    font-size: 0.82rem; font-weight: 600; transition: all 0.2s;
+  }
+  .back-btn:hover { border-color: var(--accent); color: var(--text); }
+  .back-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+  .top-bar h1 {
+    font-size: 1.3rem; font-weight: 700;
+    background: linear-gradient(135deg, var(--green), var(--cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .top-bar .sub { font-size: 0.78rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
+
+  .workspace {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 24px; max-width: 1100px; margin: 0 auto;
+  }
+  @media (max-width: 800px) { .workspace { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden;
+  }
+
+  .panel-header {
+    padding: 12px 16px; background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .panel-header .label { font-size: 0.72rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+  .panel-header .action {
+    font-size: 0.72rem; color: var(--accent2); cursor: pointer;
+    padding: 4px 10px; border-radius: 6px;
+    background: rgba(108,92,231,0.1); border: none; font-family: inherit;
+  }
+  .panel-header .action:hover { background: rgba(108,92,231,0.2); }
+
+  .panel-body { padding: 20px; }
+
+  .code-block {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;
+    line-height: 1.8; color: var(--text); white-space: pre; overflow-x: auto; letter-spacing: 0.5px;
+  }
+  .code-block .kw { color: var(--accent2); }
+  .code-block .type { color: var(--cyan); }
+  .code-block .num { color: var(--orange); }
+  .code-block .comment { color: var(--text-dim); font-style: italic; }
+  .code-block .highlight { background: rgba(108,92,231,0.2); border-radius: 3px; padding: 0 2px; }
+
+  .bit-grid {
+    display: flex; gap: 6px; margin: 12px 0; flex-wrap: wrap;
+    justify-content: center;
+  }
+  .bit-cell {
+    width: 42px; height: 52px;
+    background: var(--cell-bg); border: 1px solid var(--cell-border);
+    border-radius: 8px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    cursor: pointer; transition: all 0.2s; font-family: 'JetBrains Mono', monospace;
+  }
+  .bit-cell .bv { font-size: 1.1rem; font-weight: 700; color: var(--text); }
+  .bit-cell .bp { font-size: 0.55rem; color: var(--text-dim); margin-top: 3px; }
+  .bit-cell.on { border-color: var(--green); background: rgba(0,230,118,0.12); box-shadow: 0 0 10px rgba(0,230,118,0.15); }
+  .bit-cell.on .bv { color: var(--green); }
+  .bit-cell.off { border-color: var(--cell-border); }
+  .bit-cell.off .bv { color: var(--text-dim); }
+  .bit-cell:hover { border-color: var(--accent); }
+
+  .op-row {
+    display: flex; align-items: center; gap: 10px; margin: 8px 0; flex-wrap: wrap;
+  }
+  .op-badge {
+    padding: 6px 14px; border-radius: 8px; background: rgba(108,92,231,0.12);
+    border: 1px solid var(--border); font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem; color: var(--accent2); font-weight: 600;
+  }
+  .op-badge.active { border-color: var(--green); background: rgba(0,230,118,0.1); color: var(--green); }
+
+  .ctrl-btn {
+    padding: 8px 16px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--surface);
+    color: var(--text); font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem; cursor: pointer; transition: all 0.2s;
+  }
+  .ctrl-btn:hover { border-color: var(--accent); }
+  .ctrl-btn.active { border-color: var(--green); background: rgba(0,230,118,0.1); }
+
+  .result-box {
+    margin-top: 12px; padding: 12px 16px;
+    background: rgba(0,0,0,0.2); border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; line-height: 1.8;
+    color: var(--text);
+  }
+  .result-box .val { color: var(--green); font-weight: 600; }
+
+  .info-bar {
+    display: flex; gap: 16px; margin-top: 12px; flex-wrap: wrap;
+  }
+  .info-item {
+    padding: 6px 12px; border-radius: 6px;
+    background: rgba(0,0,0,0.2);
+    font-size: 0.72rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;
+  }
+  .info-item strong { color: var(--accent2); font-weight: 600; }
+
+  .legend {
+    display: flex; gap: 16px; margin-top: 16px; flex-wrap: wrap;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; color: var(--text-dim); }
+  .legend-color { width: 14px; height: 14px; border-radius: 4px; border: 1px solid var(--cell-border); }
+
+  .concept-box {
+    margin-top: 16px; padding: 14px 16px; border-radius: 8px;
+    background: rgba(0,0,0,0.2); font-size: 0.78rem; line-height: 1.7; color: var(--text-dim);
+  }
+  .concept-box strong { color: var(--accent2); }
+
+  .next-link {
+    max-width: 1100px; margin: 40px auto 0; display: flex;
+    justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  }
+  .next-link a {
+    display: flex; align-items: center; gap: 6px;
+    color: var(--text-dim); text-decoration: none; font-size: 0.8rem;
+    padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--surface); transition: all 0.2s;
+  }
+  .next-link a:hover { border-color: var(--accent); color: var(--text); }
+  .next-link svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+  /* ===== Light theme ===== */
+  [data-theme="light"] {
+    --bg: #f0f4ff; --surface: #ffffff; --surface2: #e8edf5; --border: #d0d8e8;
+    --accent: #5b4bd4; --accent2: #7c6df0; --green: #00b86b; --cyan: #0099cc;
+    --orange: #e67e00; --pink: #d6336c; --red: #d93025; --yellow: #c49000;
+    --text: #1a1d3a; --text-dim: #3a3d5a; --py: #b8860b; --cpp: #00599c;
+    --cell-bg: #eef2fa; --cell-border: #cdd6e6;
+  }
+  [data-theme="light"] .bit-grid, [data-theme="light"] .result-box,
+  [data-theme="light"] .concept-box, [data-theme="light"] .info-bar .info-item { background: rgba(0,0,0,0.04); }
+  [data-theme="light"] .bit-cell.on { background: rgba(0,184,107,0.10); }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="../index.html" class="back-btn">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    返回
+  </a>
+  <h1>位运算</h1>
+  <span class="sub">& | ~ ^ &lt;&lt; &gt;&gt; · 内存里的二进制</span>
+
+  <button id="theme-toggle" style="margin-left:auto;background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1rem;color:var(--text-dim);transition:all 0.2s;" onclick="toggleTheme()" title="切换主题">🌙</button>
+</div>
+
+<div class="workspace">
+  <div class="panel">
+    <div class="panel-header">
+      <span class="label">位运算演示</span>
+      <span class="action" style="cursor:default;background:transparent;color:var(--text-dim)">点击位可翻转</span>
+    </div>
+    <div class="panel-body">
+      <div class="op-row" id="op-buttons"></div>
+      <div class="bit-grid">
+        <div class="bit-cell" id="a-bits"></div>
+        <div class="bit-cell" id="b-bits"></div>
+        <div class="bit-cell" id="r-bits"></div>
+      </div>
+      <div class="result-box" id="result"></div>
+      <div class="info-bar" id="info-bar"></div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-color" style="border-color:var(--green);background:rgba(0,230,118,0.2)"></div> 1（该位为真）</div>
+        <div class="legend-item"><div class="legend-color" style="border-color:var(--cell-border);background:var(--cell-bg)"></div> 0（该位为假）</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <span class="label">C 代码与技巧</span>
+      <span class="action" style="cursor:default;background:transparent;color:var(--text-dim)">GESP 2级 · 重点</span>
+    </div>
+    <div class="panel-body">
+      <div class="code-block" id="code-display"></div>
+      <div class="concept-box" id="concept"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const OPS = ['&', '|', '^', '~', '<<', '>>'];
+const OP_INFO = {
+  '&':  { code: 'a & b   // 按位与：两位都是1才得1', desc: '按位与：对应位都是 1 才为 1，否则为 0。常用于"取某几位"（mask）和判断奇偶。' },
+  '|':  { code: 'a | b   // 按位或：有一位是1就得1', desc: '按位或：对应位只要有一个是 1 就为 1。常用于"把某些位设为 1"。' },
+  '^':  { code: 'a ^ b   // 按位异或：相同为0，不同为1', desc: '按位异或：对应位相同为 0，不同为 1。可用于交换两个数、找唯一出现奇数次的数。' },
+  '~':  { code: '~a      // 按位取反：0变1，1变0', desc: '按位取反：把所有位 0↔1 翻转。注意 ~a = -a - 1（补码表示）。' },
+  '<<': { code: 'a << n  // 左移n位：右边补0，等价乘 2^n', desc: '左移 n 位：低位补 0，数值等价于 a × 2^n（左移 1 位即 ×2）。' },
+  '>>': { code: 'a >> n  // 右移n位：等价整除 2^n', desc: '右移 n 位：等价于 a ÷ 2^n（整除）。负数右移在高位补 1（算术右移）。' }
+};
+const TIPS = [
+  '奇偶判断: if (x & 1)  比 x % 2 更快',
+  '取第 k 位: (x >> k) & 1',
+  '乘 2: x << 1  ·  除以 2: x >> 1',
+  '交换两个数: a ^= b; b ^= a; a ^= b;',
+  'mask 掩码: x & 0xFF 只取低 8 位'
+];
+
+let a = 13;  // 0b1101
+let b = 5;   // 0b0101
+let op = '&';
+const BITS = 8;
+
+function pad8(n) {
+  let s = (n & 0xFF).toString(2).padStart(8, '0');
+  return s;
+}
+
+function compute(a, b, op) {
+  let r;
+  if (op === '&') r = a & b;
+  else if (op === '|') r = a | b;
+  else if (op === '^') r = a ^ b;
+  else if (op === '~') r = ~a & 0xFF;
+  else if (op === '<<') r = (a << 1) & 0xFF;
+  else r = (a >> 1) & 0xFF;
+  return r;
+}
+
+function renderBits(el, val, label) {
+  const bits = pad8(val).split('');
+  let html = '<div class="bv">' + label + '</div>';
+  // 重新生成，但这里我们把 label 单独显示，位用内联
+  el.style.flexDirection = 'row';
+  el.style.gap = '4px';
+  el.style.width = 'auto';
+  el.style.padding = '8px 10px';
+  el.style.height = 'auto';
+  let inner = '';
+  bits.forEach((b, i) => {
+    inner += '<span class="bit-bit" style="display:inline-flex;flex-direction:column;align-items:center;width:26px;">'
+      + '<span style="font-size:1rem;font-weight:700;color:' + (b==='1' ? 'var(--green)' : 'var(--text-dim)') + '">' + b + '</span>'
+      + '<span style="font-size:0.5rem;color:var(--text-dim)">' + (7-i) + '</span>'
+      + '</span>';
+  });
+  el.innerHTML = '<div style="font-size:0.65rem;color:var(--text-dim);margin-bottom:4px;font-family:JetBrains Mono">' + label + '</div>' + inner;
+}
+
+function renderResult(a, b, op) {
+  const r = compute(a, b, op);
+  const el = document.getElementById('result');
+  el.innerHTML = 'a = ' + a + ' (0b' + pad8(a) + ')<br>'
+    + 'b = ' + b + ' (0b' + pad8(b) + ')<br>'
+    + '<span class="op-badge">' + op + '</span> 结果 = <span class="val">' + r + '</span> (0b' + pad8(r) + ')';
+  document.getElementById('info-bar').innerHTML = ''
+    + '<div class="info-item">a: <strong>' + a + '</strong></div>'
+    + '<div class="info-item">b: <strong>' + b + '</strong></div>'
+    + '<div class="info-item">结果: <strong>' + r + '</strong></div>';
+  const info = OP_INFO[op];
+  document.getElementById('code-display').innerHTML = '<span class="comment">// 位运算 · GESP 2级</span><br>'
+    + '<span class="type">int</span> a = <span class="num">' + a + '</span>, b = <span class="num">' + b + '</span>;<br>'
+    + '<span class="type">int</span> r = a ' + op + ' b;  <span class="comment">// r = ' + r + '</span><br><br>'
+    + '<span class="comment">/* ' + OP_INFO[op].desc + ' */</span>';
+  document.getElementById('concept').innerHTML = '<strong>技巧：</strong>' + TIPS.join('  ·  ');
+}
+
+function setOp(o) {
+  op = o;
+  document.querySelectorAll('#op-buttons .op-badge').forEach((b, i) => b.classList.toggle('active', OPS[i] === o));
+  renderAll();
+}
+
+function renderAll() {
+  renderBits(document.getElementById('a-bits'), a, 'a = ' + a);
+  renderBits(document.getElementById('b-bits'), b, 'b = ' + b);
+  renderBits(document.getElementById('r-bits'), compute(a, b, op), '结果');
+  renderResult(a, b, op);
+}
+
+function init() {
+  const btnBox = document.getElementById('op-buttons');
+  OPS.forEach(o => {
+    const b = document.createElement('button');
+    b.className = 'op-badge' + (o === '&' ? ' active' : '');
+    b.textContent = o;
+    b.onclick = () => setOp(o);
+    btnBox.appendChild(b);
+  });
+  renderAll();
+}
+
+init();
+</script>
+
+  <div class="next-link">
+    <a href="strings.html"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>上一页：字符串</a>
+    <a href="functions.html">下一页：函数传参<svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </div>
+
+<script>
+(function() {
+  const key = 'c-workshop-theme';
+  const saved = localStorage.getItem(key);
+  if (saved === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    const btn = document.getElementById('theme-toggle');
+    if (btn) btn.textContent = '☀️';
+  }
+})();
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  if (isLight) {
+    html.removeAttribute('data-theme');
+    localStorage.setItem('c-workshop-theme', 'dark');
+    document.getElementById('theme-toggle').textContent = '🌙';
+  } else {
+    html.setAttribute('data-theme', 'light');
+    localStorage.setItem('c-workshop-theme', 'light');
+    document.getElementById('theme-toggle').textContent = '☀️';
+  }
+}
+</script>
+</body>
+</html>

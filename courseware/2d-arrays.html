@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>二维数组 — C 语言交互实验室</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0b0d1a; --surface: #12142a; --surface2: #1a1d3a;
+    --border: #2a2d5a; --accent: #6c5ce7; --accent2: #a29bfe;
+    --green: #00e676; --cyan: #00e5ff; --orange: #ff9100;
+    --pink: #ff4081; --text: #e0e0ff; --text-dim: #7878aa;
+    --cell-bg: #1a1d3a; --cell-border: #2a2d5a;
+  }
+
+  body {
+    font-size: 18px;
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  .top-bar {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 32px; flex-wrap: wrap;
+  }
+
+  .back-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 8px;
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text-dim); text-decoration: none;
+    font-size: 0.82rem; font-weight: 600; transition: all 0.2s;
+  }
+  .back-btn:hover { border-color: var(--accent); color: var(--text); }
+  .back-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+  .top-bar h1 {
+    font-size: 1.3rem; font-weight: 700;
+    background: linear-gradient(135deg, var(--green), var(--cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .top-bar .sub { font-size: 0.78rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
+
+  .workspace {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 24px; max-width: 1100px; margin: 0 auto;
+  }
+  @media (max-width: 800px) { .workspace { grid-template-columns: 1fr; } }
+
+  .panel {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden;
+  }
+
+  .panel-header {
+    padding: 12px 16px; background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .panel-header .label { font-size: 0.72rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; }
+  .panel-header .action {
+    font-size: 0.72rem; color: var(--accent2); cursor: pointer;
+    padding: 4px 10px; border-radius: 6px;
+    background: rgba(108,92,231,0.1); border: none; font-family: inherit;
+  }
+  .panel-header .action:hover { background: rgba(108,92,231,0.2); }
+
+  .panel-body { padding: 20px; }
+
+  .code-block {
+    font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;
+    line-height: 1.8; color: var(--text); white-space: pre; overflow-x: auto; letter-spacing: 0.5px;
+  }
+  .code-block .kw { color: var(--accent2); }
+  .code-block .type { color: var(--cyan); }
+  .code-block .num { color: var(--orange); }
+  .code-block .comment { color: var(--text-dim); font-style: italic; }
+  .code-block .highlight { background: rgba(108,92,231,0.2); border-radius: 3px; padding: 0 2px; }
+
+  .grid-2d {
+    display: grid; gap: 4px; padding: 10px; background: rgba(0,0,0,0.2);
+    border-radius: 8px; margin-bottom: 12px; justify-content: center;
+  }
+  .cell-2d {
+    width: 52px; height: 52px; background: var(--cell-bg); border: 1px solid var(--cell-border);
+    border-radius: 6px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace; cursor: pointer; transition: all 0.2s; position: relative;
+  }
+  .cell-2d .val { font-size: 0.9rem; font-weight: 600; color: var(--text); }
+  .cell-2d .ij { font-size: 0.5rem; color: var(--text-dim); margin-top: 2px; }
+  .cell-2d.active { border-color: var(--accent); box-shadow: 0 0 10px rgba(108,92,231,0.3); }
+  .cell-2d.highlight { border-color: var(--green); box-shadow: 0 0 8px rgba(0,230,118,0.2); }
+  .cell-2d:hover { border-color: var(--accent); }
+
+  .mem-strip {
+    display: flex; gap: 3px; flex-wrap: wrap; padding: 10px; background: rgba(0,0,0,0.2);
+    border-radius: 8px; margin-bottom: 12px; min-height: 50px; align-content: flex-start;
+  }
+  .strip-cell {
+    width: 40px; height: 40px; background: var(--cell-bg); border: 1px solid var(--cell-border);
+    border-radius: 5px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace; transition: all 0.2s;
+  }
+  .strip-cell .sv { font-size: 0.75rem; font-weight: 600; color: var(--text); }
+  .strip-cell .sa { font-size: 0.5rem; color: var(--text-dim); }
+  .strip-cell.flat-active { border-color: var(--green); box-shadow: 0 0 6px rgba(0,230,118,0.2); }
+
+  .info-bar {
+    display: flex; gap: 12px; margin-top: 10px; flex-wrap: wrap;
+  }
+  .info-item {
+    padding: 6px 12px; border-radius: 6px; background: rgba(0,0,0,0.2);
+    font-size: 0.72rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;
+  }
+  .info-item strong { color: var(--accent2); font-weight: 600; }
+
+  .legend {
+    display: flex; gap: 16px; margin-top: 12px; flex-wrap: wrap;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.72rem; color: var(--text-dim); }
+  .legend-color { width: 14px; height: 14px; border-radius: 4px; border: 1px solid var(--cell-border); }
+
+  .ctrl-btn {
+    padding: 8px 16px; border-radius: 8px;
+    border: 1px solid var(--border); background: var(--surface);
+    color: var(--text); font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem; cursor: pointer; transition: all 0.2s;
+  }
+  .ctrl-btn:hover { border-color: var(--accent); }
+  .ctrl-btn.active { border-color: var(--green); background: rgba(0,230,118,0.1); }
+
+  .next-link {
+    max-width: 1100px; margin: 40px auto 0; display: flex;
+    justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  }
+  .next-link a {
+    display: flex; align-items: center; gap: 6px;
+    color: var(--text-dim); text-decoration: none; font-size: 0.8rem;
+    padding: 8px 14px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--surface); transition: all 0.2s;
+  }
+  .next-link a:hover { border-color: var(--accent); color: var(--text); }
+  .next-link svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+  /* ===== Light theme ===== */
+  [data-theme="light"] {
+    --bg: #f0f4ff; --surface: #ffffff; --surface2: #e8edf5; --border: #d0d8e8;
+    --accent: #5b4bd4; --accent2: #7c6df0; --green: #00b86b; --cyan: #0099cc;
+    --orange: #e67e00; --pink: #d6336c; --red: #d93025; --yellow: #c49000;
+    --text: #1a1d3a; --text-dim: #3a3d5a; --py: #b8860b; --cpp: #00599c;
+    --cell-bg: #eef2fa; --cell-border: #cdd6e6;
+  }
+  [data-theme="light"] .grid-2d, [data-theme="light"] .mem-strip, [data-theme="light"] .info-item { background: rgba(0,0,0,0.04); }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="../index.html" class="back-btn">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+    返回
+  </a>
+  <h1>二维数组</h1>
+  <span class="sub">行优先存储 · arr[i][j] 的内存偏移</span>
+
+  <button id="theme-toggle" style="margin-left:auto;background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1rem;color:var(--text-dim);transition:all 0.2s;" onclick="toggleTheme()" title="切换主题">🌙</button>
+</div>
+
+<div class="workspace">
+  <div class="panel">
+    <div class="panel-header">
+      <span class="label">二维网格视图</span>
+      <span class="action" style="cursor:default;background:transparent;color:var(--text-dim)" id="summary"></span>
+    </div>
+    <div class="panel-body">
+      <div id="example-buttons" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px"></div>
+      <div class="grid-2d" id="grid-2d"></div>
+      <div class="info-bar" id="info-bar"></div>
+      <div class="legend">
+        <div class="legend-item"><div class="legend-color" style="border-color:var(--accent);background:rgba(108,92,231,0.2)"></div> 选中 arr[i][j]</div>
+        <div class="legend-item"><div class="legend-color" style="border-color:var(--cell-border);background:var(--cell-bg)"></div> 其他元素</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header">
+      <span class="label">内存布局（行优先）</span>
+      <span class="action" style="cursor:default;background:transparent;color:var(--text-dim)">地址 = 基址 + (i×列数 + j)×元素大小</span>
+    </div>
+    <div class="panel-body">
+      <div class="mem-strip" id="mem-strip"></div>
+      <div class="code-block" id="code-display"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const EXAMPLES = [
+  {
+    name: '3×3 矩阵',
+    rows: 3, cols: 3,
+    data: [[1, 2, 3], [4, 5, 6], [7, 8, 9]],
+    code: 'int a[3][3] = {{1,2,3},{4,5,6},{7,8,9}};\n// a[i][j] 地址 = 基址 + (i*3 + j) * 4'
+  },
+  {
+    name: '2×4 迷宫',
+    rows: 2, cols: 4,
+    data: [[0, 1, 0, 0], [1, 0, 1, 1]],
+    code: 'int maze[2][4] = {{0,1,0,0},{1,0,1,1}};\n// 0 可走，1 障碍'
+  },
+  {
+    name: '4×4 棋盘',
+    rows: 4, cols: 4,
+    data: [[1, 0, 1, 0], [0, 1, 0, 1], [1, 0, 1, 0], [0, 1, 0, 1]],
+    code: 'int board[4][4];\n// 循环赋值：行优先\nfor (int i=0;i<4;i++)\n  for (int j=0;j<4;j++)\n    board[i][j] = (i+j)%2;'
+  }
+];
+let currentEx = 0;
+let selectedI = 0, selectedJ = 0;
+const baseAddr = 0x3000;
+const elemSize = 4;
+
+function renderGrid() {
+  const ex = EXAMPLES[currentEx];
+  const grid = document.getElementById('grid-2d');
+  const summary = document.getElementById('summary');
+  grid.innerHTML = '';
+  grid.style.gridTemplateColumns = 'repeat(' + ex.cols + ', 52px)';
+  summary.textContent = ex.rows + '×' + ex.cols + ' · ' + (ex.rows * ex.cols * elemSize) + ' 字节';
+
+  for (let i = 0; i < ex.rows; i++) {
+    for (let j = 0; j < ex.cols; j++) {
+      const cell = document.createElement('div');
+      cell.className = 'cell-2d' + ((i === selectedI && j === selectedJ) ? ' active' : '');
+      cell.innerHTML = '<div class="val">' + ex.data[i][j] + '</div><div class="ij">[' + i + '][' + j + ']</div>';
+      cell.onclick = () => selectCell(i, j);
+      grid.appendChild(cell);
+    }
+  }
+
+  document.getElementById('info-bar').innerHTML = ''
+    + '<div class="info-item">行: <strong>' + ex.rows + '</strong></div>'
+    + '<div class="info-item">列: <strong>' + ex.cols + '</strong></div>'
+    + '<div class="info-item">元素: <strong>' + (ex.rows * ex.cols) + '</strong></div>'
+    + '<div class="info-item">偏移: <strong>+' + (selectedI * ex.cols + selectedJ) * elemSize + ' 字节</strong></div>';
+  renderMem();
+  renderCode();
+}
+
+function renderMem() {
+  const ex = EXAMPLES[currentEx];
+  const strip = document.getElementById('mem-strip');
+  strip.innerHTML = '';
+  for (let i = 0; i < ex.rows; i++) {
+    for (let j = 0; j < ex.cols; j++) {
+      const idx = i * ex.cols + j;
+      const cell = document.createElement('div');
+      cell.className = 'strip-cell' + ((i === selectedI && j === selectedJ) ? ' flat-active' : '');
+      const addr = baseAddr + idx * elemSize;
+      cell.innerHTML = '<div class="sv">' + ex.data[i][j] + '</div><div class="sa">' + idx + '</div>';
+      cell.title = 'a[' + i + '][' + j + '] · 偏移 +' + (idx * elemSize) + ' 字节';
+      strip.appendChild(cell);
+    }
+  }
+}
+
+function renderCode() {
+  const ex = EXAMPLES[currentEx];
+  let code = ex.code;
+  code = code.replace(/\b(int|for)\b/g, '<span class="type">$1</span>')
+    .replace(/\b(for|return|if)\b/g, '<span class="kw">$1</span>')
+    .replace(/\/\/[^\n]*/g, m => '<span class="comment">' + m + '</span>')
+    .replace(/\d+/g, m => '<span class="num">' + m + '</span>');
+  document.getElementById('code-display').innerHTML = code;
+}
+
+function selectCell(i, j) {
+  selectedI = i; selectedJ = j;
+  renderGrid();
+}
+
+function selectExample(idx) {
+  currentEx = idx;
+  selectedI = 0; selectedJ = 0;
+  document.querySelectorAll('#example-buttons .ctrl-btn').forEach((b, k) => b.classList.toggle('active', k === idx));
+  renderGrid();
+}
+
+function init() {
+  const btnBox = document.getElementById('example-buttons');
+  EXAMPLES.forEach((ex, i) => {
+    const b = document.createElement('button');
+    b.className = 'ctrl-btn' + (i === 0 ? ' active' : '');
+    b.textContent = ex.name;
+    b.onclick = () => selectExample(i);
+    btnBox.appendChild(b);
+  });
+  renderGrid();
+}
+
+init();
+</script>
+
+  <div class="next-link">
+    <a href="arrays.html"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>上一页：数组</a>
+    <a href="ascii-char.html">下一页：ASCII 码与字符<svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </div>
+
+<script>
+(function() {
+  const key = 'c-workshop-theme';
+  const saved = localStorage.getItem(key);
+  if (saved === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    const btn = document.getElementById('theme-toggle');
+    if (btn) btn.textContent = '☀️';
+  }
+})();
+function toggleTheme() {
+  const html = document.documentElement;
+  const isLight = html.getAttribute('data-theme') === 'light';
+  if (isLight) {
+    html.removeAttribute('data-theme');
+    localStorage.setItem('c-workshop-theme', 'dark');
+    document.getElementById('theme-toggle').textContent = '🌙';
+  } else {
+    html.setAttribute('data-theme', 'light');
+    localStorage.setItem('c-workshop-theme', 'light');
+    document.getElementById('theme-toggle').textContent = '☀️';
+  }
+}
+</script>
+</body>
+</html>
