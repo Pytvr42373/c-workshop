@@ -15,6 +15,10 @@
   .back-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
   .top-bar h1 { font-size: 1.3rem; font-weight: 700; background: linear-gradient(135deg, var(--cyan), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
   .top-bar .sub { font-size: 0.78rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
+  .next-link { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; }
+  .next-link a { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }
+  .next-link a:hover { border-color: var(--accent); color: var(--text); }
+  .next-link a svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
   .workspace { max-width: 1100px; margin: 0 auto; }
   .topic-nav { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
   .topic-btn { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.82rem; cursor: pointer; transition: all 0.2s; }
@@ -43,10 +47,6 @@
   .term-card .tc-body strong { color: var(--text); }
   .term-card .tc-body code { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--orange); background: rgba(255,145,0,0.08); padding: 1px 5px; border-radius: 3px; }
   .term-card .tc-icon { font-size: 1.1rem; margin-bottom: 4px; }
-  .next-link { display: flex; justify-content: space-between; margin-top: 24px; }
-  .next-link a { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }
-  .next-link a:hover { border-color: var(--accent); color: var(--text); }
-  .next-link a svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
   .bit-vis { display: flex; gap: 4px; justify-content: center; margin: 16px 0; }
   .bit { width: 36px; height: 36px; border-radius: 6px; border: 2px solid var(--border); background: var(--surface2); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; font-weight: 700; color: var(--text-dim); transition: all 0.3s; cursor: pointer; }
   .bit.on { background: rgba(0,230,118,0.2); border-color: var(--green); color: var(--green); }
@@ -60,6 +60,7 @@
   .type-card .tc-bar { height: 6px; border-radius: 3px; background: var(--accent); min-width: 20px; }
   .result-box { padding: 12px 16px; background: rgba(0,230,118,0.08); border-radius: 8px; margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--green); text-align: center; }
 
+  code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; color: var(--orange); background: rgba(255,145,0,0.08); padding: 1px 6px; border-radius: 4px; }
   /* ===== Light theme ===== */
   [data-theme="light"] {
     --bg: #f0f4ff; --surface: #ffffff; --surface2: #e8edf5; --border: #d0d8e8;
@@ -68,6 +69,7 @@
     --text: #1a1d3a; --text-dim: #3a3d5a; --py: #b8860b; --cpp: #00599c;
     --cell-bg: #eef2fa; --cell-border: #cdd6e6;
   }
+  [data-theme="light"] code { background: rgba(230,126,0,0.06); }
   [data-theme="light"] .tip-box { background: rgba(0,153,204,0.06); border-color: rgba(0,153,204,0.16); }
   [data-theme="light"] .danger-box { background: rgba(217,48,37,0.05); border-color: rgba(217,48,37,0.16); }
   [data-theme="light"] .term:hover { background: rgba(91,75,212,0.08); }
@@ -76,6 +78,10 @@
   [data-theme="light"] .memory-grid, [data-theme="light"] .mem-strip { background: rgba(0,0,0,0.04); }
   [data-theme="light"] .topic-btn.active { background: rgba(91,75,212,0.10); }
 
+
+[data-theme="light"] .type-card { background: rgba(0,0,0,0.04); }
+[data-theme="light"] .result-box { background: rgba(0,184,107,0.06); }
+[data-theme="light"] .bit.on { background: rgba(0,184,107,0.10); border-color: rgba(0,184,107,0.3); }
 </style>
 </head>
 <body>
@@ -134,7 +140,7 @@ const TOPICS = [
         <div class="tip-label">📌 什么是二进制</div>
         <div class="tip-text">
           计算机底层是<span class="term" data-term="circuit">电子电路</span>，只有两种状态：<strong>通电(1)</strong> 和 <strong>断电(0)</strong>。<br><br>
-          所以计算机用的数字系统是<strong>二进制</strong>（只有 0 和 1），不是我们日常用的十进制（0-9）。<br><br>
+          所以计算机用的数字系统是<span class="term" data-term="binary">二进制</span>（只有 0 和 1），不是我们日常用的十进制（0-9）。<br><br>
           一个 0 或 1 叫一个<span class="term" data-term="bit">位（bit）</span>。
         </div>
       </div>
@@ -178,7 +184,7 @@ const TOPICS = [
         <div class="tip-label">📌 位、字节、KB、MB、GB</div>
         <div class="tip-text">
           <strong>1 位 (bit)</strong> = 一个 0 或 1<br>
-          <strong>1 字节 (Byte)</strong> = 8 位 → 能表示 0~255 共 256 种状态<br>
+          <strong>1 <span class="term" data-term="byte">字节 (Byte)</span></strong> = 8 位 → 能表示 0~255 共 256 种状态<br>
           <strong>1 KB</strong> = 1024 字节<br>
           <strong>1 MB</strong> = 1024 KB<br>
           <strong>1 GB</strong> = 1024 MB<br><br>
@@ -223,7 +229,7 @@ const TOPICS = [
         <div class="danger-label">⚠️ int 会溢出！</div>
         <div class="danger-text">
           <code>int</code> 最大 2147483647（约 21 亿）。<br>
-          如果你算 <code>int a = 3000000000;</code>（30 亿）→ <strong>溢出</strong>！变成负数。<br><br>
+          如果你算 <code>int a = 3000000000;</code>（30 亿）→ <span class="term" data-term="overflow">溢出</span>！变成负数。<br><br>
           竞赛中大数要用 <code>long long</code>（最大 9.2×10¹⁸）。<br>
           Python 不会溢出，C++ 会——这是最大的区别之一。
         </div>
@@ -319,13 +325,19 @@ function init() {
 }
 
 const TERM_DEFS = {
-  'bit': { icon: '🔢', title: '位（bit）', body: '计算机最小的数据单位。一个位存一个 <strong>0 或 1</strong>。<br><br>8 个位 = 1 字节（Byte）。<br><br>就像一盏灯：亮=1，灭=0。' },
-  'circuit': { icon: '🔌', title: '电子电路', body: '计算机内部是数十亿个微小开关（晶体管），每个开关只有<strong>开/关</strong>两种状态。<br><br>开 = 通电 = 1<br>关 = 断电 = 0<br><br>所有计算都是这些开关的排列组合。' }
+  'bit': { icon: '🔢', title: '位（bit）', body: '位是计算机记东西用的<strong>最小格子</strong>，里面只能放一个 <strong>0 或 1</strong>。<br><br>就像一盏小灯：<strong>亮 = 1，灭 = 0</strong>，只有这两种状态。<br><br>8 个位排在一起叫 1 个<strong>字节</strong>（Byte），就像 8 盏灯排成一排。' },
+  'circuit': { icon: '🔌', title: '电子电路', body: '计算机肚子里藏着<strong>几十亿个超小的开关</strong>，每个只有<strong>开</strong>和<strong>关</strong>两种状态。<br><br>开 = 通电 = 1<br>关 = 断电 = 0<br><br>别小看开关简单——几十亿个开关飞快地开开关关，就能完成所有计算！' },
+  'binary': { icon: '🧮', title: '二进制', body: '我们平时数数用 0~9 十个数字（十进制），计算机只用 <strong>0 和 1</strong> 两个数字，这就是<strong>二进制</strong>。<br><br>为什么？因为计算机里是电路，只有"通电"和"断电"两种状态，用 0 和 1 表示最方便。<br><br>比如数字 42，写成二进制是 <code>00101010</code>。' },
+  'byte': { icon: '📦', title: '字节（Byte）', body: '<strong>8 个位</strong>排在一起就是 1 个字节，就像 8 盏小灯排成一排。<br><br>1 个字节能表示 <strong>0~255</strong> 共 256 种状态。<br><br>再往上：<strong>1 KB</strong> = 1024 字节，<strong>1 MB</strong> = 1024 KB，<strong>1 GB</strong> = 1024 MB。你的内存条 8GB，大约有 85 亿个字节！' },
+  'overflow': { icon: '💥', title: '溢出（Overflow）', body: '每种类型能装的数有<strong>上限</strong>，比如 <code>int</code> 最大约 21 亿。<br><br>算出来的数超过上限，就像杯子里的水满了还在倒——<strong>溢出来</strong>，结果会变得莫名其妙（甚至变成负数）。<br><br>所以大数要用 <code>long long</code>（最大约 9.2×10¹⁸）。Python 不会溢出，C++ 会，要小心！' }
 };
 
+let TERMS_INITED = false;
 function initTerms() {
+  if (TERMS_INITED) return;
+  TERMS_INITED = true;
   let ct = null, cc = null;
-  function show(t) { if (t===ct&&cc) return; hide(); ct=t; const d=TERM_DEFS[t.dataset.term]; if(!d) return; cc=document.createElement('div'); cc.className='term-card show'; cc.innerHTML='<div class="tc-icon">'+d.icon+'</div><div class="tc-title">'+d.title+'</div><div class="tc-body">'+d.body+'</div>'; document.body.appendChild(cc); const r=t.getBoundingClientRect(); let l=r.left+r.width/2-170, p=r.bottom+8; if(l+340>innerWidth)l=innerWidth-350; if(p+200>innerHeight)p=r.top-208; if(l<10)l=10; cc.style.left=l+'px'; cc.style.top=p+'px'; }
+  function show(t) { if (t===ct&&cc) return; hide(); ct=t; const d=TERM_DEFS[t.dataset.term]; if(!d) return; cc=document.createElement('div'); cc.className='term-card show'; cc.innerHTML='<div class="tc-icon">'+d.icon+'</div><div class="tc-title">'+d.title+'</div><div class="tc-body">'+d.body+'</div>'; document.body.appendChild(cc); const r=t.getBoundingClientRect(), cw=cc.offsetWidth, ch=cc.offsetHeight, gap=8, m=10; let l=r.left+r.width/2-cw/2, p=r.bottom+gap; if(p+ch>innerHeight-m)p=r.top-ch-gap; if(p<m)p=m; if(l+cw>innerWidth-m)l=innerWidth-cw-m; if(l<m)l=m; cc.style.left=l+'px'; cc.style.top=p+'px'; }
   function hide() { if(cc){cc.remove();cc=null;} ct=null; }
   document.addEventListener('mouseover', e => { const t=e.target.closest('.term'); if(t) show(t); else if(!e.target.closest('.term-card')) hide(); });
 }

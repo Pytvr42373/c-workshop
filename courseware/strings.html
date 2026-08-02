@@ -47,6 +47,10 @@
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
   }
   .top-bar .sub { font-size: 0.78rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
+  .next-link { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; }
+  .next-link a { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }
+  .next-link a:hover { border-color: var(--accent); color: var(--text); }
+  .next-link a svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
 
   .workspace {
     display: grid; grid-template-columns: 1fr 1fr;
@@ -166,6 +170,7 @@
   }
   .mem-cell { animation: fadeIn 0.3s ease both; }
 
+  code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; color: var(--orange); background: rgba(255,145,0,0.08); padding: 1px 6px; border-radius: 4px; }
   /* ===== Light theme ===== */
   [data-theme="light"] {
     --bg: #f0f4ff; --surface: #ffffff; --surface2: #e8edf5; --border: #d0d8e8;
@@ -174,6 +179,7 @@
     --text: #1a1d3a; --text-dim: #3a3d5a; --py: #b8860b; --cpp: #00599c;
     --cell-bg: #eef2fa; --cell-border: #cdd6e6;
   }
+  [data-theme="light"] code { background: rgba(230,126,0,0.06); }
   [data-theme="light"] .tip-box { background: rgba(0,153,204,0.06); border-color: rgba(0,153,204,0.16); }
   [data-theme="light"] .danger-box { background: rgba(217,48,37,0.05); border-color: rgba(217,48,37,0.16); }
   [data-theme="light"] .term:hover { background: rgba(91,75,212,0.08); }
@@ -182,6 +188,12 @@
   [data-theme="light"] .memory-grid, [data-theme="light"] .mem-strip { background: rgba(0,0,0,0.04); }
   [data-theme="light"] .topic-btn.active { background: rgba(91,75,212,0.10); }
 
+
+[data-theme="light"] .info-item { background: rgba(0,0,0,0.04); }
+[data-theme="light"] .string-editor { background: rgba(0,0,0,0.04); }
+[data-theme="light"] .mem-cell.active { box-shadow: 0 0 12px rgba(91,75,212,0.15); }
+[data-theme="light"] .panel-header .action:hover { background: rgba(91,75,212,0.10); }
+[data-theme="light"] .code-block .highlight { background: rgba(91,75,212,0.10); }
 </style>
 </head>
 <body>
@@ -192,7 +204,7 @@
     返回
   </a>
   <h1>字符串</h1>
-  <span class="sub">char[] · \0 结尾</span>
+  <span class="sub"><code>char[]</code> · <code>\0</code> 结尾</span>
 
   <button id="theme-toggle" style="margin-left:auto;background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1rem;color:var(--text-dim);transition:all 0.2s;" onclick="toggleTheme()" title="切换主题">🌙</button>
 </div>
@@ -209,7 +221,7 @@
       <div class="string-editor">
         <label>输入字符串：</label>
         <input type="text" id="string-input" value="Hello" oninput="updateString(this.value)" maxlength="9">
-        <div id="str-warning" style="font-size:0.72rem;color:var(--orange);margin-top:6px;display:none;">⚠️ 已达最大长度！char s[10] 只能安全存放 9 个可见字符 + 1 个 \0 结束符</div>
+        <div id="str-warning" style="font-size:0.72rem;color:var(--orange);margin-top:6px;display:none;">⚠️ 已达最大长度！<code>char s[10]</code> 只能安全存放 9 个可见字符 + 1 个 <code>\0</code> 结束符</div>
       </div>
     </div>
   </div>

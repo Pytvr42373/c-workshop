@@ -23,6 +23,10 @@
   .back-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
   .top-bar h1 { font-size: 1.3rem; font-weight: 700; background: linear-gradient(135deg, var(--cyan), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
   .top-bar .sub { font-size: 0.78rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
+  .next-link { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; }
+  .next-link a { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }
+  .next-link a:hover { border-color: var(--accent); color: var(--text); }
+  .next-link a svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
 
   .workspace { max-width: 1100px; margin: 0 auto; }
 
@@ -72,6 +76,7 @@
   .danger-box .danger-label { font-size: 0.72rem; font-weight: 700; color: var(--red); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
   .danger-box .danger-text { font-size: 0.85rem; color: var(--text-dim); line-height: 1.7; }
 
+  code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; color: var(--orange); background: rgba(255,145,0,0.08); padding: 1px 6px; border-radius: 4px; }
   /* ===== Light theme ===== */
   [data-theme="light"] {
     --bg: #f0f4ff; --surface: #ffffff; --surface2: #e8edf5; --border: #d0d8e8;
@@ -80,6 +85,7 @@
     --text: #1a1d3a; --text-dim: #3a3d5a; --py: #b8860b; --cpp: #00599c;
     --cell-bg: #eef2fa; --cell-border: #cdd6e6;
   }
+  [data-theme="light"] code { background: rgba(230,126,0,0.06); }
   [data-theme="light"] .tip-box { background: rgba(0,153,204,0.06); border-color: rgba(0,153,204,0.16); }
   [data-theme="light"] .danger-box { background: rgba(217,48,37,0.05); border-color: rgba(217,48,37,0.16); }
   [data-theme="light"] .term:hover { background: rgba(91,75,212,0.08); }
@@ -88,6 +94,12 @@
   [data-theme="light"] .memory-grid, [data-theme="light"] .mem-strip { background: rgba(0,0,0,0.04); }
   [data-theme="light"] .topic-btn.active { background: rgba(91,75,212,0.10); }
 
+
+[data-theme="light"] .step-info { background: rgba(91,75,212,0.06); }
+[data-theme="light"] .var-table td { border-bottom-color: rgba(208,216,232,0.7); }
+[data-theme="light"] .var-table .highlight-row { background: rgba(91,75,212,0.06); }
+[data-theme="light"] .output-area { background: rgba(0,0,0,0.04); }
+[data-theme="light"] .code-block .hl-yellow { background: rgba(230,126,0,0.06); }
 </style>
 </head>
 <body>
@@ -98,7 +110,7 @@
     返回
   </a>
   <h1>C++ 循环与运算符</h1>
-  <span class="sub">i++ vs ++i · for/while/do-while · 细节决定成败</span>
+  <span class="sub"><code>i++</code> vs <code>++i</code> · <code>for</code>/<code>while</code>/<code>do-while</code> · 细节决定成败</span>
 
   <button id="theme-toggle" style="margin-left:auto;background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1rem;color:var(--text-dim);transition:all 0.2s;" onclick="toggleTheme()" title="切换主题">🌙</button>
 </div>
@@ -448,7 +460,7 @@ function renderStep() {
   if (step.info) {
     const infoEl = document.createElement('div');
     infoEl.className = 'step-info';
-    infoEl.textContent = step.info;
+    infoEl.innerHTML = fmtCode(step.info);
     outEl.after(infoEl);
   }
   
@@ -475,6 +487,7 @@ function resetStep() {
   document.getElementById('code-display').innerHTML = getCodeHTML(ex.code);
 }
 
+function fmtCode(s) { var e = String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); return e.replace(/&lt;(?:iostream|cstdio|cmath|string|iomanip|algorithm|cstring|vector|queue|stack|map|set|cctype|cstdlib)&gt;|using\s+namespace\s+std|std::\w+|#[a-zA-Z]+|%[-+0# ]*\d*(?:\.\d+)?[diufFeEgGxXoscp]|\b\w+\([^()]*\)|\b\w+\[[^\]]*\]|\((?:int|double|float|char|long|short)\)\s*\w+|\b\w+-&gt;\w+|\b\w+(?:\+\+|--)|(?:\+\+|--)\w+|\b\w+ ?(?:\+=|-=|\*=|\/=|%=|==|!=|&gt;=|&lt;=|&gt;|&lt;) ?[\w.+\-*/%]+|\b\w+=\w+|&lt;&lt;|&gt;&gt;|&amp;\w+|\*\w+|\b\d+ ?[%\/] ?\d+\b|\b(?:break|continue|return|if|else|for|while|switch|case|default|sizeof|struct|int|double|char|float|long|short|bool|void|unsigned|cout|cin|endl|printf|scanf|main|sqrt|pow|getline|swap|using|namespace|std)\b/g, m => '<code>'+m+'</code>'); }
 function escapeHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 function selectExample(idx) {

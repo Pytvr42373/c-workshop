@@ -15,6 +15,10 @@
   .back-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
   .top-bar h1 { font-size: 1.3rem; font-weight: 700; background: linear-gradient(135deg, var(--pink), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
   .top-bar .sub { font-size: 0.78rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
+  .next-link { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; }
+  .next-link a { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }
+  .next-link a:hover { border-color: var(--accent); color: var(--text); }
+  .next-link a svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
   .workspace { max-width: 1100px; margin: 0 auto; }
   .topic-nav { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
   .topic-btn { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.82rem; cursor: pointer; transition: all 0.2s; }
@@ -48,10 +52,6 @@
   .term-card .tc-body strong { color: var(--text); }
   .term-card .tc-body code { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--orange); background: rgba(255,145,0,0.08); padding: 1px 5px; border-radius: 3px; }
   .term-card .tc-icon { font-size: 1.1rem; margin-bottom: 4px; }
-  .next-link { display: flex; justify-content: space-between; margin-top: 24px; }
-  .next-link a { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }
-  .next-link a:hover { border-color: var(--accent); color: var(--text); }
-  .next-link a svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
   .error-box { padding: 12px 16px; background: rgba(255,71,87,0.08); border: 1px solid rgba(255,71,87,0.2); border-radius: 8px; margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--red); }
   .ok-box { padding: 12px 16px; background: rgba(0,230,118,0.08); border: 1px solid rgba(0,230,118,0.2); border-radius: 8px; margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--green); }
   .scope-vis { padding: 12px 0; margin-top: 12px; }
@@ -61,6 +61,7 @@
   .scope-for { margin-left: 40px; }
   .scope-label { font-size: 0.68rem; font-weight: 600; margin-bottom: 4px; font-family: 'JetBrains Mono', monospace; color: var(--text-dim); opacity: 0.8; }
 
+  code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; color: var(--orange); background: rgba(255,145,0,0.08); padding: 1px 6px; border-radius: 4px; }
   /* ===== Light theme ===== */
   [data-theme="light"] {
     --bg: #f0f4ff; --surface: #ffffff; --surface2: #e8edf5; --border: #d0d8e8;
@@ -69,6 +70,7 @@
     --text: #1a1d3a; --text-dim: #3a3d5a; --py: #b8860b; --cpp: #00599c;
     --cell-bg: #eef2fa; --cell-border: #cdd6e6;
   }
+  [data-theme="light"] code { background: rgba(230,126,0,0.06); }
   [data-theme="light"] .tip-box { background: rgba(0,153,204,0.06); border-color: rgba(0,153,204,0.16); }
   [data-theme="light"] .danger-box { background: rgba(217,48,37,0.05); border-color: rgba(217,48,37,0.16); }
   [data-theme="light"] .term:hover { background: rgba(91,75,212,0.08); }
@@ -80,13 +82,16 @@
   [data-theme="light"] .scope-global { border-left-color: var(--accent); }
   [data-theme="light"] .scope-label { opacity: 1; }
 
+
+[data-theme="light"] .ok-box { background: rgba(0,184,107,0.06); border-color: rgba(0,184,107,0.15); }
+[data-theme="light"] .error-box { background: rgba(217,48,37,0.05); border-color: rgba(217,48,37,0.15); }
 </style>
 </head>
 <body>
 <div class="top-bar">
   <a href="../index.html" class="back-btn"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>返回</a>
   <h1>作用域</h1>
-  <span class="sub">{} 内可见 · for 里的 i 外面用不了 · 全局 vs 局部</span>
+  <span class="sub"><code>{}</code> 内可见 · <code>for</code> 里的 <code>i</code> 外面用不了 · 全局 vs 局部</span>
 
   <button id="theme-toggle" style="margin-left:auto;background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1rem;color:var(--text-dim);transition:all 0.2s;" onclick="toggleTheme()" title="切换主题">🌙</button>
 </div>

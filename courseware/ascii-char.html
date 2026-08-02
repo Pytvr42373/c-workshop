@@ -15,6 +15,10 @@
   .back-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
   .top-bar h1 { font-size: 1.3rem; font-weight: 700; background: linear-gradient(135deg, var(--green), var(--orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
   .top-bar .sub { font-size: 0.78rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
+  .next-link { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; }
+  .next-link a { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }
+  .next-link a:hover { border-color: var(--accent); color: var(--text); }
+  .next-link a svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
   .workspace { max-width: 1100px; margin: 0 auto; }
   .topic-nav { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
   .topic-btn { padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-family: 'Inter', sans-serif; font-size: 0.82rem; cursor: pointer; transition: all 0.2s; }
@@ -43,10 +47,6 @@
   .term-card .tc-body strong { color: var(--text); }
   .term-card .tc-body code { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--orange); background: rgba(255,145,0,0.08); padding: 1px 5px; border-radius: 3px; }
   .term-card .tc-icon { font-size: 1.1rem; margin-bottom: 4px; }
-  .next-link { display: flex; justify-content: space-between; margin-top: 24px; }
-  .next-link a { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }
-  .next-link a:hover { border-color: var(--accent); color: var(--text); }
-  .next-link a svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
   .ascii-table { display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; padding: 12px; background: rgba(0,0,0,0.2); border-radius: 8px; }
   .ascii-cell { padding: 6px 4px; border-radius: 4px; border: 1px solid var(--border); background: var(--surface2); text-align: center; transition: all 0.3s; cursor: pointer; }
   .ascii-cell:hover { border-color: var(--accent); background: rgba(108,92,231,0.1); }
@@ -55,6 +55,7 @@
   .code-block { font-family: 'JetBrains Mono', monospace; font-size: 0.88rem; line-height: 1.8; white-space: pre; overflow-x: auto; color: var(--text); background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; }
   .code-block .kw { color: var(--accent2); } .code-block .str { color: var(--green); } .code-block .comment { color: var(--text-dim); font-style: italic; } .code-block .num { color: var(--orange); } .code-block .type { color: var(--cyan); }
 
+  code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; color: var(--orange); background: rgba(255,145,0,0.08); padding: 1px 6px; border-radius: 4px; }
   /* ===== Light theme ===== */
   [data-theme="light"] {
     --bg: #f0f4ff; --surface: #ffffff; --surface2: #e8edf5; --border: #d0d8e8;
@@ -63,6 +64,7 @@
     --text: #1a1d3a; --text-dim: #3a3d5a; --py: #b8860b; --cpp: #00599c;
     --cell-bg: #eef2fa; --cell-border: #cdd6e6;
   }
+  [data-theme="light"] code { background: rgba(230,126,0,0.06); }
   [data-theme="light"] .tip-box { background: rgba(0,153,204,0.06); border-color: rgba(0,153,204,0.16); }
   [data-theme="light"] .danger-box { background: rgba(217,48,37,0.05); border-color: rgba(217,48,37,0.16); }
   [data-theme="light"] .term:hover { background: rgba(91,75,212,0.08); }
@@ -71,13 +73,18 @@
   [data-theme="light"] .memory-grid, [data-theme="light"] .mem-strip { background: rgba(0,0,0,0.04); }
   [data-theme="light"] .topic-btn.active { background: rgba(91,75,212,0.10); }
 
+
+[data-theme="light"] .ascii-table { background: rgba(0,0,0,0.04); }
+[data-theme="light"] .code-block { background: rgba(0,0,0,0.04); }
+[data-theme="light"] .ascii-cell:hover { background: rgba(91,75,212,0.06); }
+[data-theme="light"] .term-card .tc-body code { background: rgba(230,126,0,0.06); }
 </style>
 </head>
 <body>
 <div class="top-bar">
   <a href="../index.html" class="back-btn"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>返回</a>
   <h1>ASCII 码与字符</h1>
-  <span class="sub">'A' = 65 · char 本质是数字 · 字符运算</span>
+  <span class="sub"><code>'A' = 65</code> · <code>char</code> 本质是数字 · 字符运算</span>
 
   <button id="theme-toggle" style="margin-left:auto;background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1rem;color:var(--text-dim);transition:all 0.2s;" onclick="toggleTheme()" title="切换主题">🌙</button>
 </div>
@@ -101,7 +108,7 @@ const TOPICS = [
             <div class="tip-box" style="margin-top:0">
               <div class="tip-label">📌 char 本质是数字</div>
               <div class="tip-text">
-                C++ 的 <code>char</code> 类型存的是一个<strong>整数</strong>（0~127），只是显示时被"翻译"成字符。<br><br>
+                C++ 的 <span class="term" data-term="char"><code>char</code></span> 类型存的是一个<strong>整数</strong>（0~127），只是显示时被"翻译"成字符。<br><br>
                 <code>char c = 65;</code> 和 <code>char c = 'A';</code> <strong>完全等价</strong>。<br>
                 因为 'A' 的 <span class="term" data-term="ascii">ASCII 码</span> 就是 65。
               </div>
@@ -146,7 +153,7 @@ const TOPICS = [
           <strong>'0' = 48</strong>（数字零）<br>
           <strong>'A' = 65</strong>（大写A）<br>
           <strong>'a' = 97</strong>（小写a）<br>
-          <strong>'\0' = 0</strong>（空字符，字符串结尾）<br><br>
+          <strong><span class="term" data-term="nullchar">'\0' = 0</span></strong>（空字符，字符串结尾）<br><br>
           大写字母 65~90，小写字母 97~122。<br>
           大小写差 32：<code>'a' - 'A' = 32</code>
         </div>
@@ -239,12 +246,17 @@ function init() {
 }
 
 const TERM_DEFS = {
-  'ascii': { icon: '🔤', title: 'ASCII 码', body: 'American Standard Code for Information Interchange（美国信息交换标准代码）。<br><br>把 128 个常用字符（字母、数字、符号）编号为 0~127。<br><br>计算机底层只存数字，ASCII 就是"字符↔数字"的对照表。' }
+  'ascii': { icon: '🔤', title: 'ASCII 码', body: '计算机只认数字，那字母怎么办？答案是<strong>编号</strong>！<br><br>ASCII 就是一份<strong>"字符编号对照表"</strong>：给 128 个常用字符（字母、数字、标点）每个发一个号码，比如 <code>\'A\'</code> 是 65 号，<code>\'a\'</code> 是 97 号，<code>\'0\'</code> 是 48 号。<br><br>看到字符，查表就知道它的号码；看到号码，查表就知道是哪个字符，就像查字典一样。' },
+  'char': { icon: '🅰️', title: 'char（字符类型）', body: '<code>char</code> 是 C++ 里存<strong>一个字符</strong>的类型，比如 <code>\'A\'</code>、<code>\'7\'</code>、<code>\'?\'</code>。<br><br>有趣的是：char 本质上存的是<strong>一个数字</strong>（ASCII 码）！<code>char c = \'A\';</code> 和 <code>char c = 65;</code> 完全一样。<br><br>它只占 <strong>1 个字节</strong>，是最小的数据类型。Python 没有 char，它的 \'A\' 是字符串。' },
+  'nullchar': { icon: '🔚', title: '空字符 \\0', body: '<code>\'\\0\'</code> 是一个<strong>看不见的特殊字符</strong>，ASCII 码是 0。<br><br>它的作用是<strong>"字符串的结尾标记"</strong>：C++ 的字符串靠它知道"到哪里结束"。<br><br>比如存 <code>"Hi"</code>，内存里其实是 <code>\'H\'</code>、<code>\'i\'</code>、<code>\'\\0\'</code> 三个字符。<br><br>别把它和数字 <code>0</code>、字符 <code>\'0\'</code> 搞混——它什么都不显示，只是个"到此为止"的记号。' }
 };
 
+let TERMS_INITED = false;
 function initTerms() {
+  if (TERMS_INITED) return;
+  TERMS_INITED = true;
   let ct = null, cc = null;
-  function show(t) { if (t===ct&&cc) return; hide(); ct=t; const d=TERM_DEFS[t.dataset.term]; if(!d) return; cc=document.createElement('div'); cc.className='term-card show'; cc.innerHTML='<div class="tc-icon">'+d.icon+'</div><div class="tc-title">'+d.title+'</div><div class="tc-body">'+d.body+'</div>'; document.body.appendChild(cc); const r=t.getBoundingClientRect(); let l=r.left+r.width/2-170, p=r.bottom+8; if(l+340>innerWidth)l=innerWidth-350; if(p+200>innerHeight)p=r.top-208; if(l<10)l=10; cc.style.left=l+'px'; cc.style.top=p+'px'; }
+  function show(t) { if (t===ct&&cc) return; hide(); ct=t; const d=TERM_DEFS[t.dataset.term]; if(!d) return; cc=document.createElement('div'); cc.className='term-card show'; cc.innerHTML='<div class="tc-icon">'+d.icon+'</div><div class="tc-title">'+d.title+'</div><div class="tc-body">'+d.body+'</div>'; document.body.appendChild(cc); const r=t.getBoundingClientRect(), cw=cc.offsetWidth, ch=cc.offsetHeight, gap=8, m=10; let l=r.left+r.width/2-cw/2, p=r.bottom+gap; if(p+ch>innerHeight-m)p=r.top-ch-gap; if(p<m)p=m; if(l+cw>innerWidth-m)l=innerWidth-cw-m; if(l<m)l=m; cc.style.left=l+'px'; cc.style.top=p+'px'; }
   function hide() { if(cc){cc.remove();cc=null;} ct=null; }
   document.addEventListener('mouseover', e => { const t=e.target.closest('.term'); if(t) show(t); else if(!e.target.closest('.term-card')) hide(); });
 }

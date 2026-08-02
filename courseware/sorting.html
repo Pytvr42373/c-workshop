@@ -26,6 +26,10 @@
   .back-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
   .top-bar h1 { font-size: 1.3rem; font-weight: 700; background: linear-gradient(135deg, var(--accent2), var(--orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
   .top-bar .sub { font-size: 0.78rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
+  .next-link { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; }
+  .next-link a { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }
+  .next-link a:hover { border-color: var(--accent); color: var(--text); }
+  .next-link a svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
 
   .workspace { max-width: 1200px; margin: 0 auto; }
 
@@ -200,6 +204,7 @@
     .speed-control { margin-left: 0; }
   }
 
+  code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; color: var(--orange); background: rgba(255,145,0,0.08); padding: 1px 6px; border-radius: 4px; }
   /* ===== Light theme ===== */
   [data-theme="light"] {
     --bg: #f0f4ff; --surface: #ffffff; --surface2: #e8edf5; --border: #d0d8e8;
@@ -208,6 +213,7 @@
     --text: #1a1d3a; --text-dim: #3a3d5a; --py: #b8860b; --cpp: #00599c;
     --cell-bg: #eef2fa; --cell-border: #cdd6e6;
   }
+  [data-theme="light"] code { background: rgba(230,126,0,0.06); }
   [data-theme="light"] .tip-box { background: rgba(0,153,204,0.06); border-color: rgba(0,153,204,0.16); }
   [data-theme="light"] .danger-box { background: rgba(217,48,37,0.05); border-color: rgba(217,48,37,0.16); }
   [data-theme="light"] .term:hover { background: rgba(91,75,212,0.08); }
@@ -216,6 +222,21 @@
   [data-theme="light"] .memory-grid, [data-theme="light"] .mem-strip { background: rgba(0,0,0,0.04); }
   [data-theme="light"] .topic-btn.active { background: rgba(91,75,212,0.10); }
 
+
+[data-theme="light"] .step-info .stat { background: rgba(0,0,0,0.04); }
+[data-theme="light"] .step-desc { background: rgba(0,0,0,0.04); }
+[data-theme="light"] .code-block .line.highlight { background: rgba(91,75,212,0.10); }
+[data-theme="light"] .code-block .line.highlight-compare { background: rgba(194,170,0,0.08); }
+[data-theme="light"] .code-block .line.highlight-swap { background: rgba(217,48,37,0.06); }
+[data-theme="light"] .code-block .line.highlight-sorted { background: rgba(0,184,107,0.08); }
+[data-theme="light"] .code-block .line.highlight-key { background: rgba(230,126,0,0.08); }
+[data-theme="light"] .flow-btn.danger:hover { background: rgba(217,48,37,0.05); }
+[data-theme="light"] .flow-btn:hover { background: rgba(91,75,212,0.06); }
+[data-theme="light"] .flow-btn.primary { background: rgba(91,75,212,0.08); }
+[data-theme="light"] .flow-btn.primary:hover { background: rgba(91,75,212,0.15); }
+[data-theme="light"] .panel-header .action { background: rgba(91,75,212,0.06); }
+[data-theme="light"] .panel-header .action:hover { background: rgba(91,75,212,0.10); }
+[data-theme="light"] .spinner-btn:hover { background: rgba(91,75,212,0.08); }
 </style>
 </head>
 <body>
@@ -725,7 +746,7 @@ function updateStepInfo(step) {
   document.getElementById('step-counter').textContent = `${currentStep + 1} / ${steps.length}`;
   document.getElementById('cmp-count').textContent = cmpCount;
   document.getElementById('swap-count').textContent = swapCount;
-  document.getElementById('step-desc').textContent = step.desc || '';
+  document.getElementById('step-desc').innerHTML = fmtCode(step.desc || '');
 }
 
 function updateControls() {
@@ -812,10 +833,11 @@ function syncCodeView() {
 
   // Code view visualization
   renderBars('code-vis', step, true);
-  document.getElementById('code-step-desc').textContent = step.desc || '';
+  document.getElementById('code-step-desc').innerHTML = fmtCode(step.desc || '');
   document.getElementById('code-step-counter').textContent = `${currentStep + 1} / ${steps.length}`;
 }
 
+function fmtCode(s) { var e = String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); return e.replace(/&lt;(?:iostream|cstdio|cmath|string|iomanip|algorithm|cstring|vector|queue|stack|map|set|cctype|cstdlib)&gt;|using\s+namespace\s+std|std::\w+|#[a-zA-Z]+|%[-+0# ]*\d*(?:\.\d+)?[diufFeEgGxXoscp]|\b\w+\([^()]*\)|\b\w+\[[^\]]*\]|\((?:int|double|float|char|long|short)\)\s*\w+|\b\w+-&gt;\w+|\b\w+(?:\+\+|--)|(?:\+\+|--)\w+|\b\w+ ?(?:\+=|-=|\*=|\/=|%=|==|!=|&gt;=|&lt;=|&gt;|&lt;) ?[\w.+\-*/%]+|\b\w+=\w+|&lt;&lt;|&gt;&gt;|&amp;\w+|\*\w+|\b\d+ ?[%\/] ?\d+\b|\b(?:break|continue|return|if|else|for|while|switch|case|default|sizeof|struct|int|double|char|float|long|short|bool|void|unsigned|cout|cin|endl|printf|scanf|main|sqrt|pow|getline|swap|using|namespace|std)\b/g, m => '<code>'+m+'</code>'); }
 function escapeHtml(s) {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }

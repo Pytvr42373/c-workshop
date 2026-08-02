@@ -23,6 +23,10 @@
   .back-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
   .top-bar h1 { font-size: 1.3rem; font-weight: 700; background: linear-gradient(135deg, var(--accent2), var(--green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
   .top-bar .sub { font-size: 0.78rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
+  .next-link { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; }
+  .next-link a { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }
+  .next-link a:hover { border-color: var(--accent); color: var(--text); }
+  .next-link a svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
 
   .workspace { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
   @media (max-width: 800px) { .workspace { grid-template-columns: 1fr; } }
@@ -64,6 +68,7 @@
   .state-item { padding: 6px 12px; border-radius: 6px; background: rgba(0,0,0,0.2); font-size: 0.72rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
   .state-item strong { color: var(--accent2); font-weight: 600; }
 
+  code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; color: var(--orange); background: rgba(255,145,0,0.08); padding: 1px 6px; border-radius: 4px; }
   /* ===== Light theme ===== */
   [data-theme="light"] {
     --bg: #f0f4ff; --surface: #ffffff; --surface2: #e8edf5; --border: #d0d8e8;
@@ -72,6 +77,7 @@
     --text: #1a1d3a; --text-dim: #3a3d5a; --py: #b8860b; --cpp: #00599c;
     --cell-bg: #eef2fa; --cell-border: #cdd6e6;
   }
+  [data-theme="light"] code { background: rgba(230,126,0,0.06); }
   [data-theme="light"] .tip-box { background: rgba(0,153,204,0.06); border-color: rgba(0,153,204,0.16); }
   [data-theme="light"] .danger-box { background: rgba(217,48,37,0.05); border-color: rgba(217,48,37,0.16); }
   [data-theme="light"] .term:hover { background: rgba(91,75,212,0.08); }
@@ -80,6 +86,11 @@
   [data-theme="light"] .memory-grid, [data-theme="light"] .mem-strip { background: rgba(0,0,0,0.04); }
   [data-theme="light"] .topic-btn.active { background: rgba(91,75,212,0.10); }
 
+
+[data-theme="light"] .io-simulator { background: rgba(0,0,0,0.04); }
+[data-theme="light"] .state-item { background: rgba(0,0,0,0.04); }
+[data-theme="light"] .format-table tr:hover { background: rgba(91,75,212,0.04); }
+[data-theme="light"] .panel-header .action:hover { background: rgba(91,75,212,0.10); }
 </style>
 </head>
 <body>
@@ -90,7 +101,7 @@
     返回
   </a>
   <h1>输入输出</h1>
-  <span class="sub">printf · scanf · 格式化 · 竞赛技巧</span>
+  <span class="sub"><code>printf</code> · <code>scanf</code> · 格式化 · 竞赛技巧</span>
 
   <button id="theme-toggle" style="margin-left:auto;background:none;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:1rem;color:var(--text-dim);transition:all 0.2s;" onclick="toggleTheme()" title="切换主题">🌙</button>
 </div>
@@ -147,7 +158,7 @@ const EXAMPLES = [
       '混合: 42 + 3.14 = 45.14'
     ],
     formatRef: true,
-    info: 'printf 用 %d, %f, %c 等格式占位符输出不同类型'
+    info: '<code>printf</code> 用 <code>%d</code>, <code>%f</code>, <code>%c</code> 等格式占位符输出不同类型'
   },
   {
     name: 'scanf 输入',
@@ -167,7 +178,7 @@ const EXAMPLES = [
       '年龄: 18, 身高: 1.8'
     ],
     formatRef: false,
-    info: 'scanf 需要 & 取地址，%d 读整数，%f 读浮点数'
+    info: '<code>scanf</code> 需要 <code>&amp;</code> 取地址，<code>%d</code> 读整数，<code>%f</code> 读浮点数'
   },
   {
     name: '宽度与对齐',
@@ -197,7 +208,7 @@ const EXAMPLES = [
       '4567  '
     ],
     formatRef: true,
-    info: '%6d 右对齐占6格，%-6d 左对齐，对齐输出表格数据'
+    info: '<code>%6d</code> 右对齐占6格，<code>%-6d</code> 左对齐，对齐输出表格数据'
   },
   {
     name: '小数精度',
@@ -221,7 +232,7 @@ const EXAMPLES = [
       '科学计数: 3.141593e+00'
     ],
     formatRef: true,
-    info: '%.nf 控制小数位数，%m.nf 同时控制宽度和精度'
+    info: '<code>%.nf</code> 控制小数位数，<code>%m.nf</code> 同时控制宽度和精度'
   },
   {
     name: '竞赛常用技巧',
@@ -247,7 +258,7 @@ const EXAMPLES = [
       '补零: 0042'
     ],
     formatRef: true,
-    info: '%x 十六进制，%04d 补前导零，竞赛中常用'
+    info: '<code>%x</code> 十六进制，<code>%04d</code> 补前导零，竞赛中常用'
   }
 ];
 

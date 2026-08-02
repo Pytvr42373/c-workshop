@@ -20,6 +20,10 @@
   .back-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
   .top-bar h1 { font-size: 1.3rem; font-weight: 700; background: linear-gradient(135deg, var(--cyan), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
   .top-bar .sub { font-size: 0.78rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace; }
+  .next-link { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; }
+  .next-link a { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }
+  .next-link a:hover { border-color: var(--accent); color: var(--text); }
+  .next-link a svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
   .workspace { max-width: 1100px; margin: 0 auto; }
 
   .topic-nav { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
@@ -103,10 +107,6 @@
   .mem-card .mc-body strong { color: var(--text); }
   .mem-card .mc-body code { font-family: 'JetBrains Mono', monospace; color: var(--orange); }
 
-  .next-link { display: flex; justify-content: space-between; margin-top: 24px; }
-  .next-link a { display: flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--border); color: var(--text-dim); text-decoration: none; font-size: 0.82rem; font-weight: 600; transition: all 0.2s; }
-  .next-link a:hover { border-color: var(--accent); color: var(--text); }
-  .next-link a svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 2; }
 
   .step-info { margin-top: 10px; padding: 10px 14px; background: rgba(108,92,231,0.08); border-radius: 8px; font-size: 0.85rem; color: var(--accent2); font-family: 'Inter', sans-serif; line-height: 1.5; }
 
@@ -116,6 +116,7 @@
   .compare-table .py-col { color: var(--py); }
   .compare-table .cpp-col { color: var(--cyan); }
 
+  code { font-family: 'JetBrains Mono', monospace; font-size: 0.85em; color: var(--orange); background: rgba(255,145,0,0.08); padding: 1px 6px; border-radius: 4px; }
   /* ===== Light theme ===== */
   [data-theme="light"] {
     --bg: #f0f4ff; --surface: #ffffff; --surface2: #e8edf5; --border: #d0d8e8;
@@ -123,6 +124,7 @@
     --orange: #e67e00; --pink: #d6336c; --red: #d93025; --yellow: #e6a800;
     --text: #1a1d3a; --text-dim: #3a3d5a;
   }
+  [data-theme="light"] code { background: rgba(230,126,0,0.06); }
   [data-theme="light"] .topic-btn.active { border-color: var(--accent); background: rgba(91,75,212,0.10); }
   [data-theme="light"] .tip-box { background: rgba(0,153,204,0.05); border-color: rgba(0,153,204,0.12); }
   [data-theme="light"] .danger-box { background: rgba(217,48,37,0.05); border-color: rgba(217,48,37,0.12); }
@@ -142,6 +144,15 @@
   [data-theme="light"] .mem-card { box-shadow: 0 8px 32px rgba(91,75,212,0.17); }
   [data-theme="light"] .step-info { background: rgba(91,75,212,0.06); }
   [data-theme="light"] .compare-table td { border-bottom-color: rgba(208,216,232,0.7); }
+
+[data-theme="light"] .mem-type-row { border-bottom-color: rgba(208,216,232,0.5); }
+[data-theme="light"] .mem-type-row:hover { background: rgba(91,75,212,0.04); }
+[data-theme="light"] .mem-grid-bar .slot { border-color: rgba(208,216,232,0.5); }
+[data-theme="light"] .step-info { background: rgba(91,75,212,0.06); }
+[data-theme="light"] .hw-cpu { background: rgba(91,75,212,0.06); }
+[data-theme="light"] .hw-ram { background: rgba(0,184,107,0.06); }
+[data-theme="light"] .hw-disk { background: rgba(230,126,0,0.06); }
+[data-theme="light"] .hw-io { background: rgba(0,153,204,0.06); }
 </style>
 </head>
 <body>
@@ -183,7 +194,7 @@
   </div>
 
   <div class="next-link">
-    <a href="binary-basics.html">
+    <a href="binary-basics.html" style="margin-left:auto;">
       下一页：二进制与数据表示
       <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
     </a>
@@ -224,9 +235,9 @@ const TOPICS = [
       <div class="tip-box" style="margin-top:0">
         <div class="tip-label">📌 计算机四大核心部件</div>
         <div class="tip-text">
-          <strong>CPU</strong>（中央处理器）：计算机的"大脑"，负责执行指令、做运算。<br><br>
+          <span class="term" data-term="cpu">CPU</span>（中央处理器）：计算机的"大脑"，负责执行指令、做运算。<br><br>
           <strong>内存</strong>（<span class="term" data-term="ram">RAM</span>）：临时存储正在运行的程序和数据。断电即消失。<br><br>
-          <strong>硬盘</strong>（SSD/HDD）：永久存储文件、操作系统、程序代码。断电不消失。<br><br>
+          <span class="term" data-term="disk">硬盘</span>（SSD/HDD）：永久存储文件、操作系统、程序代码。断电不消失。<br><br>
           <strong>输入/输出设备</strong>：键盘（输入）、显示器（输出）、鼠标等。
         </div>
       </div>
@@ -330,7 +341,7 @@ const TOPICS = [
         <div class="tip-label">📌 从代码到运行的完整流程</div>
         <div class="tip-text">
           <strong>① 写代码</strong>：在硬盘上创建 <code>hello.cpp</code> 文件<br>
-          <strong>② 编译</strong>：编译器（g++）把 <code>.cpp</code> 翻译成机器码，生成 <code>hello.exe</code><br>
+          <strong>② 编译</strong>：<span class="term" data-term="compiler">编译器</span>（g++）把 <code>.cpp</code> 翻译成<span class="term" data-term="machinecode">机器码</span>，生成 <code>hello.exe</code><br>
           <strong>③ 运行</strong>：操作系统把 <code>.exe</code> 从硬盘加载到<strong>内存</strong><br>
           <strong>④ 执行</strong>：<strong>CPU</strong> 从内存读取指令，逐条执行<br>
           <strong>⑤ 输出</strong>：<code>cout</code> 把结果送到显示器<br><br>
@@ -378,7 +389,7 @@ const TOPICS = [
         <div class="tip-label">📌 为什么竞赛用 C++ 不用 Python</div>
         <div class="tip-text">
           <strong>Python</strong> 是<span class="term" data-term="interpreted">解释型语言</span>：运行时逐行翻译，每行都要"现场翻译"。<br><br>
-          <strong>C++</strong> 是<span class="term" data-term="compiled">编译型语言</span>：提前把整个程序翻译成机器码，运行时 CPU 直接执行。<br><br>
+          <strong>C++</strong> 是<span class="term" data-term="compiled">编译型语言</span>：提前把整个程序翻译成<span class="term" data-term="machinecode">机器码</span>，运行时 CPU 直接执行。<br><br>
           竞赛题目数据量大（百万级），Python 容易<strong>超时</strong>（TLE），C++ 几乎不会。
         </div>
       </div>
@@ -524,12 +535,16 @@ function init() {
 
 // === 专有名词 tooltip ===
 const TERM_DEFS = {
-  'ram': { icon: '⚡', title: 'RAM（随机存取存储器）', body: '就是"内存"。RAM = Random Access Memory。<br><br>特点是<strong>断电即消失</strong>（易失性），所以你程序运行结束后，变量就没了。<br><br>速度比硬盘快 100~1000 倍，但容量小（通常 8~32 GB）。' },
-  'address': { icon: '🏠', title: '地址（Address）', body: '内存里每个格子（字节）都有一个编号，叫<strong>地址</strong>，就像门牌号。<br><br>第一个格子是 0 号，第二个是 1 号…… 从 0 开始数，和数组下标一样。<br><br>变量存在内存里，就是占用了几个连续的格子。CPU 凭地址找到变量、读或改它的值。' },
+  'ram': { icon: '⚡', title: 'RAM（内存）', body: 'RAM 就是我们常说的<strong>"内存"</strong>。<br><br>它像一张<strong>草稿纸</strong>：程序运行时把数据写在上面，<strong>一断电，纸上的内容就全没了</strong>，所以关机后变量就消失了。<br><br>它读写飞快（比硬盘快成百上千倍），但空间有限，装不下太多东西。' },
+  'address': { icon: '🏠', title: '地址（Address）', body: '内存里的每个小格子都有一个<strong>编号</strong>，这个编号就叫<strong>地址</strong>，就像每家门口的<strong>门牌号</strong>。<br><br>编号从 <strong>0</strong> 开始：第一个格子是 0 号，第二个是 1 号……（和数组下标一样从 0 数）。<br><br>变量住进内存，就是占了几个连续的格子。想找它？报出地址就行！' },
   'hexaddr': { icon: '🔢', title: '为什么地址写成 0x00？', body: '你有时会看到地址写成 <code>0x00</code>、<code>0x7fff</code> 这种样子。<br><br>其实它就是格子的编号，只是用了<strong>十六进制</strong>来写（逢 16 进 1）。<br><br><code>0x</code> 只是"接下来是十六进制"的标记，就像人民币符号 ¥ 表示"接下来是钱"。<br><br>换算：<code>0x00</code> = 第 0 号，<code>0x04</code> = 第 4 号，<code>0x0A</code> = 第 10 号。<br><br>为什么用十六进制？因为内存地址经常很大（几十亿），用十六进制写更短、更整齐。对你来说，<strong>知道它就是个编号就行</strong>，初学不用纠结换算。' },
-  'pointer': { icon: '🎯', title: '指针（Pointer）', body: '存地址的变量。<br><br>普通变量存<strong>值</strong>（如 <code>int a = 42</code>），指针存<strong>地址</strong>（如 <code>int *p = &a</code>，p 存的是 a 的地址）。<br><br>Python 没有指针，因为 Python 帮你管理了所有地址。' },
-  'interpreted': { icon: '🐍', title: '解释型语言', body: '运行时逐行翻译代码。Python、JavaScript 都是解释型。<br><br>优点：写完直接跑，方便调试。<br>缺点：每次运行都要翻译，速度慢。' },
-  'compiled': { icon: '⚡', title: '编译型语言', body: '运行前先把整个程序翻译成机器码。C、C++、Rust 都是编译型。<br><br>优点：运行速度快（CPU 直接执行）。<br>缺点：每次改代码都要重新编译。' }
+  'pointer': { icon: '🎯', title: '指针（Pointer）', body: '指针是一种<strong>专门记地址</strong>的变量。<br><br>普通变量记的是<strong>东西</strong>（比如 <code>int a = 42</code> 记了 42）；指针记的是<strong>门牌号</strong>（比如 <code>int *p = &a</code>，p 记的是 a 住在哪）。<br><br>就像纸条上写的不是礼物本身，而是"礼物在 3 号柜"。<br><br>（代码看不懂没关系，后面会专门讲指针。）' },
+  'interpreted': { icon: '🐍', title: '解释型语言', body: '像请了位<strong>现场翻译</strong>：程序一边运行，翻译官一边逐行把代码翻给计算机听。Python、JavaScript 都这样。<br><br>好处：写完马上能跑，出错好发现。<br>小缺点：每次运行都要现场翻译，所以慢一点。' },
+  'compiled': { icon: '⚡', title: '编译型语言', body: '像<strong>先把整本书翻译好</strong>再出版：运行前，编译器把整个程序一次性翻译成计算机能直接懂的话。C、C++、Rust 都这样。<br><br>好处：运行时不用翻译，速度飞快。<br>小缺点：改一个字，整本书要重新翻译一遍（重新编译）。' },
+  'cpu': { icon: '🧠', title: 'CPU（中央处理器）', body: 'CPU 是计算机的<strong>"大脑"</strong>，负责思考和计算。<br><br>你写的每一行代码，最终都变成 CPU 一条条执行的<strong>指令</strong>。<br><br>它速度极快（每秒几十亿次运算），但只能处理<strong>内存里</strong>的数据——所以程序运行前要先"搬"进内存。' },
+  'disk': { icon: '💾', title: '硬盘（SSD/HDD）', body: '硬盘是<strong>永久仓库</strong>：你的文件、照片、程序代码都存在这里，<strong>断电也不会消失</strong>。<br><br>它和内存（草稿纸）正好相反：内存一断电就清空，硬盘不会。<br><br>但硬盘比内存<strong>慢得多</strong>，所以程序运行时，要先从硬盘"搬"到内存里。' },
+  'machinecode': { icon: '🤖', title: '机器码', body: '机器码是<strong>CPU 唯一能直接听懂的语言</strong>，全是一串串 0 和 1。<br><br>你写的 C++ 代码（<code>cout << "Hello";</code>）CPU 看不懂，必须先<strong>翻译</strong>成机器码才能执行。<br><br>这个"翻译"工作就是<strong>编译</strong>。' },
+  'compiler': { icon: '⚙️', title: '编译器（g++）', body: '编译器是<strong>翻译官</strong>：把你写的 C++ 源代码，一次性翻译成 CPU 能懂的<strong>机器码</strong>，生成可执行文件（<code>.exe</code>）。<br><br>我们用的编译器叫 <code>g++</code>。<br><br>翻译好之后，运行时就再也不需要它了——CPU 直接执行机器码，所以 C++ 快。' }
 };
 
 let TERMS_INITED = false;
@@ -550,11 +565,13 @@ function initTerms() {
     card.innerHTML = '<div class="tc-icon">' + def.icon + '</div><div class="tc-title">' + def.title + '</div><div class="tc-body">' + def.body + '</div>';
     document.body.appendChild(card);
     const rect = term.getBoundingClientRect();
-    let left = rect.left + rect.width / 2 - 170;
-    let top = rect.bottom + 8;
-    if (left + 340 > window.innerWidth) left = window.innerWidth - 350;
-    if (top + 200 > window.innerHeight) top = rect.top - 208;
-    if (left < 10) left = 10;
+    const cw = card.offsetWidth, ch = card.offsetHeight, gap = 8, m = 10;
+    let left = rect.left + rect.width / 2 - cw / 2;
+    let top = rect.bottom + gap;
+    if (top + ch > window.innerHeight - m) top = rect.top - ch - gap;
+    if (top < m) top = m;
+    if (left + cw > window.innerWidth - m) left = window.innerWidth - cw - m;
+    if (left < m) left = m;
     card.style.left = left + 'px';
     card.style.top = top + 'px';
     currentCard = card;
